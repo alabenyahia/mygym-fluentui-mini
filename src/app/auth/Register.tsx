@@ -7,7 +7,7 @@ import {
   Image,
 } from "@fluentui/react-components";
 import { useMediaQuery } from "react-responsive";
-import { Formik, Field, Form, ErrorMessage, useField } from "formik";
+import { Formik, Form, useField } from "formik";
 import * as Yup from "yup";
 
 const useRegisterStyles = makeStyles({
