@@ -9,6 +9,8 @@ import {
 import { useMediaQuery } from "react-responsive";
 import { Formik, Form, useField } from "formik";
 import * as Yup from "yup";
+import useRegister from "./hooks/useRegister.tsx";
+import { RegisterDataType } from "src/utils/types/main";
 
 const useRegisterStyles = makeStyles({
   card: {
@@ -44,8 +46,10 @@ const useRegisterFormStyles = makeStyles({
   },
 });
 
+
 function RegisterForm() {
   const styles = useRegisterFormStyles();
+  const { registerMutation } = useRegister();
   return (
     <div>
       <div
@@ -63,7 +67,13 @@ function RegisterForm() {
         <Title1>Create account</Title1>
       </div>
       <Formik
-        initialValues={{ name: "", gymName: "", email: "", password: "" }}
+        initialValues={{
+          name: "",
+          gymName: "",
+          email: "",
+          password: "",
+          passwordConfirm: "",
+        }}
         validationSchema={Yup.object({
           name: Yup.string().required("Your name is required"),
           gymName: Yup.string().required("Your gym name is required"),
@@ -74,11 +84,20 @@ function RegisterForm() {
             .required("Your password is required")
             .min(8, "Password must be at least 8 characters"),
         })}
-        onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            setSubmitting(false);
-          }, 400);
+        onSubmit={(values: RegisterDataType, { resetForm }) => {
+          registerMutation.mutate({
+            ...values,
+            passwordConfirm: values.password,
+          });
+          resetForm({
+            values: {
+              name: "",
+              gymName: "",
+              email: "",
+              password: "",
+              passwordConfirm: "",
+            },
+          });
         }}
       >
         <Form style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -100,7 +119,11 @@ function RegisterForm() {
               </Button>
             </div>
 
-            <Button type="submit" appearance="primary">
+            <Button
+              type="submit"
+              appearance="primary"
+              disabled={registerMutation.isPending}
+            >
               Create
             </Button>
           </div>
