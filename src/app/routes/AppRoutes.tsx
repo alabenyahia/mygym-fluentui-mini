@@ -1,7 +1,7 @@
 import { Routes , Route } from "react-router-dom";
-import Login from "src/app/auth/Login";
-import Register from "src/app/auth/Register";
-import NotFound from "./not-found.tsx";
+import Login from "src/app/pages/auth/Login";
+import Register from "src/app/pages/auth/Register";
+import NotFound from "src/app/pages/not-found/NotFound";
 
 export default function AppRoutes() {
   return <Routes>

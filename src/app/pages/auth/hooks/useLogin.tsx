@@ -1,4 +1,4 @@
-import pb from "src/utils/pocketbase";
+import pb from "src/utils/db/pocketbase";
 import { useMutation } from "@tanstack/react-query";
 import { LoginDataType } from "src/utils/types/main";
 import {

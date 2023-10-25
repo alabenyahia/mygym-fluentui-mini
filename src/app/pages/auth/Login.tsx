@@ -9,13 +9,13 @@ import {
 import { useMediaQuery } from "react-responsive";
 import { Formik, Form, useField } from "formik";
 import * as Yup from "yup";
-import useLogin from "./hooks/useLogin.tsx";
+import useLogin from "src/app/pages/auth/hooks/useLogin";
 import { LoginDataType } from "src/utils/types/main";
 import { Toaster } from "@fluentui/react-components";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
 import { isDarkTheme } from "src/utils/atoms/main";
-import TopBar from "./components/TopBar.tsx";
+import TopBar from "src/app/pages/auth/components/TopBar";
 
 const useLoginStyles = makeStyles({
   card: {
