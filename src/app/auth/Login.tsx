@@ -5,8 +5,6 @@ import {
   Button,
   makeStyles,
   Image,
-  Tooltip,
-  ToggleButton,
 } from "@fluentui/react-components";
 import { useMediaQuery } from "react-responsive";
 import { Formik, Form, useField } from "formik";
@@ -15,10 +13,9 @@ import useLogin from "./hooks/useLogin.tsx";
 import { LoginDataType } from "src/utils/types/main";
 import { Toaster } from "@fluentui/react-components";
 import { useNavigate } from "react-router-dom";
-import {
-  LightbulbPerson24Filled,
-  LightbulbPerson24Regular,
-} from "@fluentui/react-icons";
+import { useAtom } from "jotai";
+import { isDarkTheme } from "src/utils/atoms/main";
+import TopBar from "./components/TopBar.tsx";
 
 const useLoginStyles = makeStyles({
   card: {
@@ -26,39 +23,38 @@ const useLoginStyles = makeStyles({
     maxWidth: "100%",
     height: "fit-content",
   },
-  togglebtn: {
-    alignSelf: "flex-end",
-    marginRight: "8px",
-    marginTop: "8px",
-  },
 });
 
 export default function Login() {
   const isMobile = useMediaQuery({ query: "(max-width: 920px)" });
   const styles = useLoginStyles();
+  const [isDark, setIsDark] = useAtom(isDarkTheme);
+
 
   return isMobile ? (
-    <LoginForm />
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        padding: "16px",
+      }}
+    >
+      <TopBar />
+      <LoginForm />
+    </div>
   ) : (
     <div
       style={{
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        backgroundImage: "linear-gradient(-20deg, #e9defa 0%, #fbfcdb 100%)",
+        backgroundImage: isDark
+          ? "linear-gradient(62deg, #47669a 0%, #604362 100%)"
+          : "linear-gradient(-20deg, #e9defa 0%, #fbfcdb 100%)",
       }}
     >
-      <Tooltip content="Switch dark mode" relationship="label">
-        <ToggleButton
-          className={styles.togglebtn}
-          aria-label="Switch dark mode icon"
-          checked={true}
-          icon={
-            true ? <LightbulbPerson24Filled /> : <LightbulbPerson24Regular />
-          }
-          onClick={() => false}
-        />
-      </Tooltip>
+      <TopBar />
       <div style={{ minHeight: "100%", placeSelf: "center", margin: "auto" }}>
         <Card className={styles.card}>
           <LoginForm />

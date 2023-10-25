@@ -2,14 +2,16 @@ import { FluentProvider } from "@fluentui/react-components";
 import { darkTheme, lightTheme } from "../themeConfig.ts";
 import AppRoutes from "../app-routes.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { isDarkTheme } from "./utils/atoms/main.ts";
+import { useAtom } from "jotai";
 
 const queryClient = new QueryClient();
 
 function App() {
-  const isDarkTheme = false;
+  const [isDark, setIsDark] = useAtom(isDarkTheme);
 
   return (
-    <FluentProvider theme={isDarkTheme ? darkTheme : lightTheme}>
+    <FluentProvider theme={isDark ? darkTheme : lightTheme}>
       <QueryClientProvider client={queryClient}>
         <AppRoutes />
       </QueryClientProvider>
