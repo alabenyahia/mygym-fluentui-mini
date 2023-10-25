@@ -25,7 +25,10 @@ export default function useRegister() {
         <Toast>
           <ToastTitle>Congratulations! registered successfully</ToastTitle>
         </Toast>,
-        { timeout: 2500, intent: "success" }
+        {
+          timeout: 1200,
+          intent: "success",
+        }
       );
     },
     onError: ({ data }: any) => {

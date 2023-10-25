@@ -25,11 +25,13 @@ export default function useLogin() {
         <Toast>
           <ToastTitle>Login successfull!</ToastTitle>
         </Toast>,
-        { timeout: 2500, intent: "success" }
+        {
+          timeout: 400,
+          intent: "success",
+        }
       );
     },
     onError: (error: any) => {
-
       dispatchToast(
         <Toast>
           <ToastTitle>

@@ -4,16 +4,25 @@ import AppRoutes from "src/app/routes/AppRoutes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { isDarkTheme } from "./utils/atoms/main.ts";
 import { useAtom } from "jotai";
+import { DevTools } from "jotai-devtools";
+import useRefresh from "src/app/pages/auth/hooks/useRefresh";
+import { useEffect } from "react";
 
 const queryClient = new QueryClient();
 
 function App() {
   const [isDark, setIsDark] = useAtom(isDarkTheme);
+  const { refreshSession } = useRefresh();
+
+  useEffect(() => {
+    refreshSession();
+  }, []);
 
   return (
     <FluentProvider theme={isDark ? darkTheme : lightTheme}>
       <QueryClientProvider client={queryClient}>
         <AppRoutes />
+        <DevTools />
       </QueryClientProvider>
     </FluentProvider>
   );

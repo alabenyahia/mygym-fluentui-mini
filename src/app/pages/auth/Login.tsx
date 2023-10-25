@@ -30,7 +30,6 @@ export default function Login() {
   const styles = useLoginStyles();
   const [isDark, setIsDark] = useAtom(isDarkTheme);
 
-
   return isMobile ? (
     <div
       style={{
@@ -121,6 +120,7 @@ function LoginForm() {
                     password: "",
                   },
                 });
+                navigate("/");
               },
             }
           );
