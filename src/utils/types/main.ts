@@ -5,3 +5,8 @@ export type RegisterDataType = {
   password: string;
   passwordConfirm: string;
 };
+
+export type LoginDataType = {
+  email: string;
+  password: string;
+};

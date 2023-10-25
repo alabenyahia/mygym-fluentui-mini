@@ -5,18 +5,31 @@ import {
   Button,
   makeStyles,
   Image,
+  Tooltip,
+  ToggleButton,
 } from "@fluentui/react-components";
 import { useMediaQuery } from "react-responsive";
 import { Formik, Form, useField } from "formik";
 import * as Yup from "yup";
 import useRegister from "./hooks/useRegister.tsx";
 import { RegisterDataType } from "src/utils/types/main";
+import { Toaster } from "@fluentui/react-components";
+import { useNavigate } from "react-router-dom";
+import {
+  LightbulbPerson24Filled,
+  LightbulbPerson24Regular,
+} from "@fluentui/react-icons";
 
 const useRegisterStyles = makeStyles({
   card: {
     width: "460px",
     maxWidth: "100%",
     height: "fit-content",
+  },
+  togglebtn: {
+    alignSelf: "flex-end",
+    marginRight: "8px",
+    marginTop: "8px",
   },
 });
 
@@ -27,9 +40,31 @@ export default function Register() {
   return isMobile ? (
     <RegisterForm />
   ) : (
-    <Card className={styles.card}>
-      <RegisterForm />
-    </Card>
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        backgroundImage: "linear-gradient(-20deg, #e9defa 0%, #fbfcdb 100%)",
+      }}
+    >
+      <Tooltip content="Switch dark mode" relationship="label">
+        <ToggleButton
+          className={styles.togglebtn}
+          aria-label="Switch dark mode icon"
+          checked={true}
+          icon={
+            true ? <LightbulbPerson24Filled /> : <LightbulbPerson24Regular />
+          }
+          onClick={() => false}
+        />
+      </Tooltip>
+      <div style={{ minHeight: "100%", placeSelf: "center", margin: "auto" }}>
+        <Card className={styles.card}>
+          <RegisterForm />
+        </Card>
+      </div>
+    </div>
   );
 }
 
@@ -46,10 +81,11 @@ const useRegisterFormStyles = makeStyles({
   },
 });
 
-
 function RegisterForm() {
   const styles = useRegisterFormStyles();
-  const { registerMutation } = useRegister();
+  const { registerMutation, registerToasterId } = useRegister();
+  const navigate = useNavigate();
+
   return (
     <div>
       <div
@@ -85,19 +121,25 @@ function RegisterForm() {
             .min(8, "Password must be at least 8 characters"),
         })}
         onSubmit={(values: RegisterDataType, { resetForm }) => {
-          registerMutation.mutate({
-            ...values,
-            passwordConfirm: values.password,
-          });
-          resetForm({
-            values: {
-              name: "",
-              gymName: "",
-              email: "",
-              password: "",
-              passwordConfirm: "",
+          registerMutation.mutate(
+            {
+              ...values,
+              passwordConfirm: values.password,
             },
-          });
+            {
+              onSuccess: () => {
+                resetForm({
+                  values: {
+                    name: "",
+                    gymName: "",
+                    email: "",
+                    password: "",
+                    passwordConfirm: "",
+                  },
+                });
+              },
+            }
+          );
         }}
       >
         <Form style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -114,7 +156,11 @@ function RegisterForm() {
           >
             <div style={{ display: "flex", alignItems: "center" }}>
               <span>Have an account?</span>
-              <Button appearance="transparent" className={styles.loginButton}>
+              <Button
+                appearance="transparent"
+                className={styles.loginButton}
+                onClick={() => navigate("/login")}
+              >
                 Login
               </Button>
             </div>
@@ -129,6 +175,7 @@ function RegisterForm() {
           </div>
         </Form>
       </Formik>
+      <Toaster toasterId={registerToasterId} />
     </div>
   );
 }

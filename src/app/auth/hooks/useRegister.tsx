@@ -1,10 +1,17 @@
 import pb from "src/utils/pocketbase";
 import { useMutation } from "@tanstack/react-query";
 import { RegisterDataType } from "src/utils/types/main";
-
-
+import {
+  useId,
+  ToastTitle,
+  useToastController,
+  Toast,
+} from "@fluentui/react-components";
 
 export default function useRegister() {
+  const registerToasterId = useId("registerToaster");
+  const { dispatchToast } = useToastController(registerToasterId);
+
   async function register(data: RegisterDataType) {
     const user = await pb.collection("users").create(data);
     return user;
@@ -14,17 +21,28 @@ export default function useRegister() {
   const registerMutation = useMutation({
     mutationFn: register,
     onSuccess: () => {
-      console.log("user created!");
+      dispatchToast(
+        <Toast>
+          <ToastTitle>Congratulations! registered successfully</ToastTitle>
+        </Toast>,
+        { timeout: 2500, intent: "success" }
+      );
     },
     onError: ({ data }: any) => {
       const { data: errorData }: any = data;
-      if (errorData.email.message) {
-        console.log(errorData.email.message);
-      } else {
-        console.log(errorData);
-      }
+
+      dispatchToast(
+        <Toast>
+          <ToastTitle>
+            {errorData.email?.message
+              ? errorData.email?.message
+              : "Error occured!"}
+          </ToastTitle>
+        </Toast>,
+        { timeout: 2500, intent: "error" }
+      );
     },
   });
 
-  return { registerMutation };
+  return { registerMutation, registerToasterId };
 }
