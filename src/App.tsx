@@ -22,7 +22,7 @@ function App() {
     <FluentProvider theme={isDark ? darkTheme : lightTheme}>
       <QueryClientProvider client={queryClient}>
         <AppRoutes />
-        <DevTools />
+        {/* <DevTools /> */}
       </QueryClientProvider>
     </FluentProvider>
   );

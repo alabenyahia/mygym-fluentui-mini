@@ -12,11 +12,13 @@ import {
   Divider,
 } from "@fluentui/react-components";
 import { Link } from "react-router-dom";
-import useLogout from "src/app//pages/auth/hooks/useLogout";
+import useLogout from "src/app/pages/auth/hooks/useLogout";
 import {
   Settings24Regular,
   PersonCircle24Regular,
 } from "@fluentui/react-icons";
+import { useAtom } from "jotai";
+import { isDarkTheme } from "src/utils/atoms/main";
 
 const useAvatarMenuStyles = makeStyles({
   menuPopover: {
@@ -69,12 +71,13 @@ const useCardItemStyles = makeStyles({
 function CardItem() {
   const styles = useCardItemStyles();
   const { logout } = useLogout();
+  const [isDark, setIsDark] = useAtom(isDarkTheme);
   return (
     <Card className={styles.card} size="small" role="listitem">
       <div>
         <div
           style={{
-            backgroundColor: "#f0f0f0",
+            backgroundColor: isDark ? "#373737" : "#f0f0f0",
             marginBottom: "8px",
           }}
         >
