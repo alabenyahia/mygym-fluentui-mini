@@ -1,17 +1,20 @@
 import useLogout from "../auth/hooks/useLogout";
+import MobileLayout from "src/app/layouts/MobileLayout";
 
 export default function Dashboard() {
   const { logout } = useLogout();
   return (
     <div>
-      <h1>DASHBOARD</h1>
-      <button
-        onClick={() => {
-          logout();
-        }}
-      >
-        LOGOUT
-      </button>
+      <MobileLayout>
+        <h1>DASHBOARD</h1>
+        <button
+          onClick={() => {
+            logout();
+          }}
+        >
+          LOGOUT
+        </button>
+      </MobileLayout>
     </div>
   );
 }
