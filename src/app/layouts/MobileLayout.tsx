@@ -52,6 +52,7 @@ export default function MobileLayout({ children }: any) {
           height: "48px",
           width: "100%",
           padding: "8px",
+          position: "sticky",
         }}
       >
         <nav
@@ -71,7 +72,7 @@ export default function MobileLayout({ children }: any) {
             <Image src="/icons/mygym-logo.png" fit="cover" />
           </div>
 
-          <div>
+          <div style={{display: "flex", alignItems: "center", gap: "8px"}}>
             <ToggleDarkMode />
             <AvatarMenu />
           </div>

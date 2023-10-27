@@ -19,6 +19,7 @@ import {
 } from "@fluentui/react-icons";
 import { useAtom } from "jotai";
 import { isDarkTheme } from "src/utils/atoms/main";
+import { AnyCnameRecord } from "dns";
 
 const useAvatarMenuStyles = makeStyles({
   menuPopover: {
@@ -30,7 +31,7 @@ const useAvatarMenuStyles = makeStyles({
   },
 });
 
-export default function avatarMenu() {
+export default function avatarMenu({isDekstop}: any) {
   const styles = useAvatarMenuStyles();
 
   return (
@@ -39,10 +40,12 @@ export default function avatarMenu() {
         <Button
           appearance="outline"
           shape="circular"
+          size={isDekstop ? "large" : "medium"}
           icon={
             <Avatar
               name={pb.authStore.model?.name}
               image={pb.authStore.model?.avatar}
+              size={isDekstop ? 56 : 32}
             />
           }
         ></Button>

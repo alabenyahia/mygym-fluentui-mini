@@ -20,9 +20,9 @@ export default function DesktopLayout({ children }: any) {
 
   return (
     <div style={{ display: "flex" }}>
-      <nav
+      <aside
         style={{
-          width: "60px",
+          width: "72px",
           minHeight: "100vh",
           height: "100%",
           backgroundColor: isDark ? "#373737" : "#f0f0f0",
@@ -30,6 +30,8 @@ export default function DesktopLayout({ children }: any) {
           display: "flex",
           justifyContent: "space-between",
           flexDirection: "column",
+          position: "sticky",
+          borderRight: isDark ? "1px solid #252525  " : "1px solid #d7dde4"
         }}
       >
         <div
@@ -39,9 +41,11 @@ export default function DesktopLayout({ children }: any) {
             alignItems: "center",
           }}
         >
-          <div style={{ width: 42, height: 42 }}>
+          <div style={{ width: 56, height: 56 }}>
             <Image src="/icons/mygym-logo.png" fit="cover" />
-            <div></div>
+            <div>
+                <h1>FINISH DIS</h1>
+            </div>
           </div>
         </div>
 
@@ -54,9 +58,9 @@ export default function DesktopLayout({ children }: any) {
           }}
         >
           <ToggleDarkMode />
-          <AvatarMenu />
+          <AvatarMenu isDekstop={true}/>
         </div>
-      </nav>
+      </aside>
 
       <main style={{ minHeight: "100vh", height: "100%", flex: 1 }}>
         <Card className={styles.card}>
