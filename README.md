@@ -1,4 +1,4 @@
-# React + TypeScript + Vite
+# DELETE pb_data & pb_migrations <these are pocketbase folders> (they got pushed by mistake)
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
