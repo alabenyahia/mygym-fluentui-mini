@@ -24,6 +24,9 @@ import {
   SportBasketball24Regular,
   PersonSquare24Regular,
   People24Regular,
+  DriveTrain24Filled,
+  ReceiptMoney24Regular,
+  BarcodeScanner24Regular
 } from "@fluentui/react-icons";
 import { useState } from "react";
 import pb from "src/utils/db/pocketbase";
@@ -158,7 +161,10 @@ const manageData = [
     path: "/manage/programs",
   },
   { name: "Classes", icon: <Class24Regular />, path: "/manage/classes" },
-  { name: "Staff", icon: <PeopleTeam24Regular />, path: "/manage/staff" },
+  { name: "Gym staff", icon: <PeopleTeam24Regular />, path: "/manage/gymstaff" },
+  { name: "Coaches", icon: <DriveTrain24Filled />, path: "/manage/coaches" },
+  { name: "Discount codes", icon: <BarcodeScanner24Regular />, path: "/manage/discountcodes" },
+  { name: "Transactions", icon: <ReceiptMoney24Regular />, path: "/manage/transactions" },
 ];
 
 function DrawerContent() {
@@ -210,6 +216,7 @@ function DrawerContent() {
         {manageData.map((item) => {
           return (
             <Button
+            key={item.name}
               appearance={isAction(item.path) ? "primary" : "subtle"}
               icon={item.icon}
               className={styles.btns}

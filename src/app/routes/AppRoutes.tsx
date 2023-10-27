@@ -1,10 +1,23 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "src/app/pages/auth/Login";
 import Register from "src/app/pages/auth/Register";
 import NotFound from "src/app/pages/not-found/NotFound";
 import { RequireAuth } from "./RequireAuth";
 import { RequireLoggedOut } from "./RequireLoggedOut";
 import Dashboard from "src/app/pages/dashboard/Dashboard";
+import {
+  Classes,
+  Coaches,
+  DiscountCodes,
+  GymStaff,
+  Members,
+  Memberships,
+  Programs,
+  Transactions,
+} from "src/app/pages/manage";
+import Reports from "src/app/pages/reports/Reports";
+import Communication from "src/app/pages/communication/Communication";
+import LayoutDefaultRoute from "./LayoutDefaultRoute";
 
 export default function AppRoutes() {
   return (
@@ -15,10 +28,52 @@ export default function AppRoutes() {
       </Route>
 
       <Route element={<RequireAuth />}>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={<LayoutDefaultRoute element={Dashboard} />} />
+
+        <Route
+          path="/manage/members"
+          element={<LayoutDefaultRoute element={Members} />}
+        />
+        <Route
+          path="/manage/memberships"
+          element={<LayoutDefaultRoute element={Memberships} />}
+        />
+        <Route
+          path="/manage/programs"
+          element={<LayoutDefaultRoute element={Programs} />}
+        />
+        <Route
+          path="/manage/classes"
+          element={<LayoutDefaultRoute element={Classes} />}
+        />
+        <Route
+          path="/manage/discountcodes"
+          element={<LayoutDefaultRoute element={DiscountCodes} />}
+        />
+        <Route
+          path="/manage/gymstaff"
+          element={<LayoutDefaultRoute element={GymStaff} />}
+        />
+        <Route
+          path="/manage/coaches"
+          element={<LayoutDefaultRoute element={Coaches} />}
+        />
+        <Route
+          path="/manage/transactions"
+          element={<LayoutDefaultRoute element={Transactions} />}
+        />
+
+        <Route
+          path="/reports"
+          element={<LayoutDefaultRoute element={Reports} />}
+        />
+        <Route
+          path="/communication"
+          element={<LayoutDefaultRoute element={Communication} />}
+        />
       </Route>
 
-      <Route path="*" element={<NotFound />} />
+      <Route path="*" element={<LayoutDefaultRoute element={NotFound} />} />
     </Routes>
   );
 }

@@ -27,6 +27,9 @@ import {
   SportBasketball24Regular,
   PersonSquare24Regular,
   People24Regular,
+  DriveTrain24Filled,
+  ReceiptMoney24Regular,
+  BarcodeScanner24Regular,
 } from "@fluentui/react-icons";
 
 const useDesktopLayoutStyles = makeStyles({
@@ -110,7 +113,22 @@ const manageData = [
     path: "/manage/programs",
   },
   { name: "Classes", icon: <Class24Regular />, path: "/manage/classes" },
-  { name: "Staff", icon: <PeopleTeam24Regular />, path: "/manage/staff" },
+  {
+    name: "Gym staff",
+    icon: <PeopleTeam24Regular />,
+    path: "/manage/gymstaff",
+  },
+  { name: "Coaches", icon: <DriveTrain24Filled />, path: "/manage/coaches" },
+  {
+    name: "Discount codes",
+    icon: <BarcodeScanner24Regular />,
+    path: "/manage/discountcodes",
+  },
+  {
+    name: "Transactions",
+    icon: <ReceiptMoney24Regular />,
+    path: "/manage/transactions",
+  },
 ];
 
 const useManageDrawerBodyStyles = makeStyles({
@@ -124,7 +142,7 @@ function ManageDrawerBody() {
   const styles = useManageDrawerBodyStyles();
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   return (
     <div
       style={{
@@ -132,12 +150,18 @@ function ManageDrawerBody() {
       }}
     >
       <div
-        style={{ marginLeft: "7px", display: "flex", flexDirection: "column", gap: "3px" }}
+        style={{
+          marginLeft: "7px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "3px",
+        }}
       >
         {manageData.map((item) => {
           const isActive = location.pathname === item.path;
           return (
             <Button
+              key={item.name}
               appearance={isActive ? "primary" : "subtle"}
               icon={item.icon}
               className={styles.btns}
@@ -154,7 +178,13 @@ function ManageDrawerBody() {
 
 function ManageSidebar() {
   return (
-    <DrawerInline open style={{ width: "190px", boxShadow: "0 0 2px rgba(0,0,0,0.24), 0 2px 4px rgba(0,0,0,0.28)" }}>
+    <DrawerInline
+      open
+      style={{
+        width: "200px",
+        boxShadow: "0 0 2px rgba(0,0,0,0.24), 0 2px 4px rgba(0,0,0,0.28)",
+      }}
+    >
       <DrawerHeader>
         <DrawerHeaderTitle>Manage</DrawerHeaderTitle>
       </DrawerHeader>
@@ -182,7 +212,7 @@ function SidebarBtns() {
         <Caption2Strong>Dashboard</Caption2Strong>
       </SideBarBtn>
 
-      <SideBarBtn path="/manage/">
+      <SideBarBtn path="/manage/members">
         <CalendarSettings24Regular />
         <Caption2Strong>Manage</Caption2Strong>
       </SideBarBtn>
@@ -211,7 +241,12 @@ const useSidebarBtnStyles = makeStyles({
 
 function SideBarBtn({ children, path }: any) {
   const location = useLocation();
-  const isActive = location.pathname.includes(path);
+  let isActive = false;
+  if (path === "/") {
+    isActive = location.pathname === path;
+  } else {
+    isActive = location.pathname.includes(path);
+  }
 
   const styles = useSidebarBtnStyles();
   const navigate = useNavigate();
