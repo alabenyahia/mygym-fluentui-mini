@@ -1,10 +1,20 @@
 import { useAtom } from "jotai";
 import { isDarkTheme } from "src/utils/atoms/main.ts";
-import { Caption2Strong, Image } from "@fluentui/react-components";
+import {
+  Caption2Strong,
+  Image,
+  makeStyles,
+  Card,
+  Button,
+} from "@fluentui/react-components";
 import AvatarMenu from "./components/AvatarMenu.tsx";
 import ToggleDarkMode from "./components/ToggleDarkMode.tsx";
-import { makeStyles, Card } from "@fluentui/react-components";
-import { Button } from "@fluentui/react-components";
+import {
+  DrawerBody,
+  DrawerHeader,
+  DrawerHeaderTitle,
+  DrawerInline,
+} from "@fluentui/react-components/unstable";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import {
@@ -12,6 +22,11 @@ import {
   CalendarSettings24Regular,
   ChartMultiple24Regular,
   Send24Regular,
+  PeopleTeam24Regular,
+  Class24Regular,
+  SportBasketball24Regular,
+  PersonSquare24Regular,
+  People24Regular,
 } from "@fluentui/react-icons";
 
 const useDesktopLayoutStyles = makeStyles({
@@ -24,7 +39,7 @@ const useDesktopLayoutStyles = makeStyles({
 
 export default function DesktopLayout({ children }: any) {
   const [isDark, setIsDark] = useAtom(isDarkTheme);
-
+  const location = useLocation();
   const styles = useDesktopLayoutStyles();
 
   return (
@@ -40,7 +55,7 @@ export default function DesktopLayout({ children }: any) {
           justifyContent: "space-between",
           flexDirection: "column",
           position: "sticky",
-          borderRight: isDark ? "1px solid #252525  " : "1px solid #d7dde4",
+          // borderRight: isDark ? "1px solid #141414  " : "1px solid #d7dde4",
         }}
       >
         <div
@@ -70,6 +85,8 @@ export default function DesktopLayout({ children }: any) {
           <AvatarMenu isDekstop={true} />
         </div>
       </aside>
+      <ManageSidebar />
+      {/* {location.pathname.includes("/manage") && <ManageSidebar />} */}
 
       <main style={{ minHeight: "100vh", height: "100%", flex: 1 }}>
         <Card className={styles.card}>
@@ -77,6 +94,75 @@ export default function DesktopLayout({ children }: any) {
         </Card>
       </main>
     </div>
+  );
+}
+
+const manageData = [
+  { name: "Members", icon: <People24Regular />, path: "/manage/members" },
+  {
+    name: "Memberships",
+    icon: <PersonSquare24Regular />,
+    path: "/manage/memberships",
+  },
+  {
+    name: "Programs",
+    icon: <SportBasketball24Regular />,
+    path: "/manage/programs",
+  },
+  { name: "Classes", icon: <Class24Regular />, path: "/manage/classes" },
+  { name: "Staff", icon: <PeopleTeam24Regular />, path: "/manage/staff" },
+];
+
+const useManageDrawerBodyStyles = makeStyles({
+  btns: {
+    justifyContent: "flex-start",
+    paddingLeft: 0,
+  },
+});
+
+function ManageDrawerBody() {
+  const styles = useManageDrawerBodyStyles();
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  return (
+    <div
+      style={{
+        marginTop: "12px",
+      }}
+    >
+      <div
+        style={{ marginLeft: "7px", display: "flex", flexDirection: "column", gap: "3px" }}
+      >
+        {manageData.map((item) => {
+          const isActive = location.pathname === item.path;
+          return (
+            <Button
+              appearance={isActive ? "primary" : "subtle"}
+              icon={item.icon}
+              className={styles.btns}
+              onClick={() => navigate(item.path)}
+            >
+              {item.name}
+            </Button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function ManageSidebar() {
+  return (
+    <DrawerInline open style={{ width: "190px", boxShadow: "0 0 2px rgba(0,0,0,0.24), 0 2px 4px rgba(0,0,0,0.28)" }}>
+      <DrawerHeader>
+        <DrawerHeaderTitle>Manage</DrawerHeaderTitle>
+      </DrawerHeader>
+
+      <DrawerBody>
+        <ManageDrawerBody />
+      </DrawerBody>
+    </DrawerInline>
   );
 }
 
