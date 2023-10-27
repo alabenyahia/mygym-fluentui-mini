@@ -31,7 +31,7 @@ import AvatarMenu from "src/app/layouts/components/AvatarMenu";
 import ToggleDarkMode from "./components/ToggleDarkMode";
 import { useAtom } from "jotai";
 import { isDarkTheme } from "src/utils/atoms/main.ts";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const useMobileLayoutStyles = makeStyles({
   card: {
@@ -72,7 +72,7 @@ export default function MobileLayout({ children }: any) {
             <Image src="/icons/mygym-logo.png" fit="cover" />
           </div>
 
-          <div style={{display: "flex", alignItems: "center", gap: "8px"}}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <ToggleDarkMode />
             <AvatarMenu />
           </div>
@@ -164,6 +164,10 @@ const manageData = [
 function DrawerContent() {
   const styles = useDrawerContentStyles();
   const navigate = useNavigate();
+  const location = useLocation();
+  function isAction(path: string) {
+    return location.pathname === path;
+  }
   return (
     <div
       style={{
@@ -174,7 +178,7 @@ function DrawerContent() {
       }}
     >
       <Button
-        appearance="subtle"
+        appearance={isAction("/") ? "primary" : "subtle"}
         icon={<Home24Regular />}
         className={styles.btns}
         onClick={() => navigate("/")}
@@ -182,7 +186,7 @@ function DrawerContent() {
         Dashboard
       </Button>
       <Button
-        appearance="subtle"
+        appearance={isAction("/reports") ? "primary" : "subtle"}
         icon={<ChartMultiple24Regular />}
         className={styles.btns}
         onClick={() => navigate("/reports")}
@@ -190,7 +194,7 @@ function DrawerContent() {
         Reports
       </Button>
       <Button
-        appearance="subtle"
+        appearance={isAction("/communication") ? "primary" : "subtle"}
         icon={<Send24Regular />}
         className={styles.btns}
         onClick={() => navigate("/communication")}
@@ -206,7 +210,7 @@ function DrawerContent() {
         {manageData.map((item) => {
           return (
             <Button
-              appearance="subtle"
+              appearance={isAction(item.path) ? "primary" : "subtle"}
               icon={item.icon}
               className={styles.btns}
               onClick={() => navigate(item.path)}
