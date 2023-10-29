@@ -10,3 +10,14 @@ export type LoginDataType = {
   email: string;
   password: string;
 };
+
+export type AddMemberDataType = {
+  name: string;
+  email: string;
+  phone: string;
+  registeredDate: string;
+  membershipId: string;
+  membershipExpirationDate: string;
+  assignedTo: string;
+  deletedAt: string;
+};
