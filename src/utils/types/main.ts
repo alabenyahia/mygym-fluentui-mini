@@ -21,3 +21,14 @@ export type AddMemberDataType = {
   assignedTo: string;
   deletedAt: string;
 };
+
+export type AddMembershipDataType = {
+  name: string;
+  price: number;
+  membershipType: 'time' | 'session';
+  timeType: 'day' | 'month';
+  timeQuantity: number;
+  sessionQuantity: number;
+  assignedTo: string;
+  deletedAt: string;
+};

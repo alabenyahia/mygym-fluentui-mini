@@ -26,7 +26,7 @@ import {
   People24Regular,
   DriveTrain24Filled,
   ReceiptMoney24Regular,
-  BarcodeScanner24Regular
+  BarcodeScanner24Regular,
 } from "@fluentui/react-icons";
 import { useState } from "react";
 import pb from "src/utils/db/pocketbase";
@@ -36,19 +36,19 @@ import { useAtom } from "jotai";
 import { isDarkTheme } from "src/utils/atoms/main.ts";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const useMobileLayoutStyles = makeStyles({
-  card: {
-    minHeight: "calc(100vh - 48px)",
-  },
-});
-
 export default function MobileLayout({ children }: any) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isDark, setIsDark] = useAtom(isDarkTheme);
 
-  const styles = useMobileLayoutStyles();
   return (
-    <div>
+    <div
+      style={{
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
+      }}
+    >
       <header
         style={{
           backgroundColor: isDark ? "#373737" : "#f0f0f0",
@@ -81,11 +81,9 @@ export default function MobileLayout({ children }: any) {
           </div>
         </nav>
       </header>
-      <main style={{ minHeight: "calc(100vh - 48px)" }}>
-        <Card className={styles.card}>
-          <div>{children}</div>
-        </Card>
-      </main>
+      <Card style={{ flex: 1 }}>
+        <div>{children}</div>
+      </Card>
       <MobileDrawer
         isDrawerOpen={isDrawerOpen}
         setIsDrawerOpen={setIsDrawerOpen}
@@ -161,10 +159,22 @@ const manageData = [
     path: "/manage/programs",
   },
   { name: "Classes", icon: <Class24Regular />, path: "/manage/classes" },
-  { name: "Gym staff", icon: <PeopleTeam24Regular />, path: "/manage/gymstaff" },
+  {
+    name: "Gym staff",
+    icon: <PeopleTeam24Regular />,
+    path: "/manage/gymstaff",
+  },
   { name: "Coaches", icon: <DriveTrain24Filled />, path: "/manage/coaches" },
-  { name: "Discount codes", icon: <BarcodeScanner24Regular />, path: "/manage/discountcodes" },
-  { name: "Transactions", icon: <ReceiptMoney24Regular />, path: "/manage/transactions" },
+  {
+    name: "Discount codes",
+    icon: <BarcodeScanner24Regular />,
+    path: "/manage/discountcodes",
+  },
+  {
+    name: "Transactions",
+    icon: <ReceiptMoney24Regular />,
+    path: "/manage/transactions",
+  },
 ];
 
 function DrawerContent() {
@@ -216,7 +226,7 @@ function DrawerContent() {
         {manageData.map((item) => {
           return (
             <Button
-            key={item.name}
+              key={item.name}
               appearance={isAction(item.path) ? "primary" : "subtle"}
               icon={item.icon}
               className={styles.btns}

@@ -32,21 +32,17 @@ import {
   BarcodeScanner24Regular,
 } from "@fluentui/react-icons";
 
-const useDesktopLayoutStyles = makeStyles({
-  card: {
-    width: "100%",
-    minHeight: "100vh",
-    height: "100%",
-  },
-});
-
 export default function DesktopLayout({ children }: any) {
   const [isDark, setIsDark] = useAtom(isDarkTheme);
-  const location = useLocation();
-  const styles = useDesktopLayoutStyles();
 
   return (
-    <div style={{ display: "flex" }}>
+    <div
+      style={{
+        height: "100vh",
+        display: "flex",
+        width: "100%",
+      }}
+    >
       <aside
         style={{
           width: "80px",
@@ -91,11 +87,9 @@ export default function DesktopLayout({ children }: any) {
       <ManageSidebar />
       {/* {location.pathname.includes("/manage") && <ManageSidebar />} */}
 
-      <main style={{ minHeight: "100vh", height: "100%", flex: 1 }}>
-        <Card className={styles.card}>
-          <div>{children}</div>
-        </Card>
-      </main>
+      <Card style={{ flex: 1 }}>
+        <div>{children}</div>
+      </Card>
     </div>
   );
 }
@@ -181,7 +175,8 @@ function ManageSidebar() {
     <DrawerInline
       open
       style={{
-        width: "200px",
+        width: "fit-content",
+        minWidth: "210px",
         boxShadow: "0 0 2px rgba(0,0,0,0.24), 0 2px 4px rgba(0,0,0,0.28)",
       }}
     >

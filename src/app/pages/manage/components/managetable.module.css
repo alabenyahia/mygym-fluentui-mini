@@ -1,0 +1,29 @@
+.container {
+    height: 100%;
+    width: fit-content;
+    padding-bottom: 16px!important;
+    min-width: 920px;
+    padding: 3px; /* THIS IS SO THAT THE INSIDE CARD CAN SHOW ITS SHADOW */
+}
+
+.table {
+    border-collapse: collapse;
+}
+
+.tr {
+    border-bottom: 1px solid #dddddd75;
+}
+
+.td {
+    padding: 8px 6px;
+}
+
+.th {
+    padding: 8px 6px;
+    cursor: pointer;
+}
+
+.thwrapper{
+    display: flex;
+    align-items: center;
+}
