@@ -84,8 +84,8 @@ export default function DesktopLayout({ children }: any) {
           <AvatarMenu isDekstop={true} />
         </div>
       </aside>
-      <ManageSidebar />
-      {/* {location.pathname.includes("/manage") && <ManageSidebar />} */}
+
+      {location.pathname.includes("/manage") && <ManageSidebar />} 
 
       <Card style={{ flex: 1 }}>
         <div>{children}</div>
