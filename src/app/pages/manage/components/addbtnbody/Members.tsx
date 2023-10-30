@@ -1,4 +1,4 @@
-import { Label, Dropdown, Field, Option } from "@fluentui/react-components";
+import { Label, Dropdown, Field, Option, Toaster } from "@fluentui/react-components";
 import useMemberships from "../../hooks/useMemberships";
 import { DatePicker } from "@fluentui/react-date-time";
 import { Formik, Form } from "formik";
@@ -11,7 +11,7 @@ import { useState } from "react";
 
 export default function Members() {
   const { membershipsQuery } = useMemberships();
-  const { memberMutation } = useMembers();
+  const { memberMutation, membersToasterId } = useMembers();
   const [registeredDate, setRegisteredDate] = useState<Date>(new Date());
   const [membershipId, setMembershipId] = useState("");
 
@@ -132,6 +132,7 @@ export default function Members() {
             </Dropdown>
           </div>
         ) : null}
+        <Toaster toasterId={membersToasterId} />
       </Form>
     </Formik>
   );
