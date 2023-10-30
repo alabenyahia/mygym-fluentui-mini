@@ -7,10 +7,11 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 import styles from "./managetable.module.css";
-import { Card, Spinner } from "@fluentui/react-components";
+import { Card, Spinner, Button, Body2 } from "@fluentui/react-components";
 import {
   ArrowSortDown20Regular,
   ArrowSortUp20Regular,
+  Add24Regular
 } from "@fluentui/react-icons";
 
 export default function ManageTable({
@@ -20,6 +21,8 @@ export default function ManageTable({
   data,
   isLoading,
   loadingText,
+  addBtnLabel,
+  addBtnOnClick
 }: any) {
   const [sorting, setSorting] = useState([]);
 
@@ -104,7 +107,16 @@ export default function ManageTable({
             ) : (
               <tr style={{ textAlign: "center" }} className={styles.tr}>
                 <td colSpan={100} className={styles.td}>
-                  No data...
+                  <div style={{display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", margin: "6px 0"}}>
+                    <Body2>No data found.</Body2>
+                    <Button
+                      icon={<Add24Regular />}
+                      size="medium"
+                      onClick={addBtnOnClick}
+                    >
+                      {addBtnLabel}
+                    </Button>
+                  </div>
                 </td>
               </tr>
             )}

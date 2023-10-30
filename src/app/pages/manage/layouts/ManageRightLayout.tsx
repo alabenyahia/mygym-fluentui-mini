@@ -65,6 +65,8 @@ export default function ManageRightLayout({
           data={tableData}
           isLoading={tableLoading}
           loadingText={tableLoadingText}
+          addBtnLabel={addBtnLabel}
+          addBtnOnClick={addBtnOnClick}
         />
       </div>
     </Card>
