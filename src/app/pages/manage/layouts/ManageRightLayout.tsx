@@ -4,6 +4,7 @@ import AppBreadcrumb from "../components/ManageBreadcrumb";
 import AppSeach from "../components/ManageSeach";
 import AppTable from "../components/ManageTable";
 import { useState } from "react";
+import { AddBtnClickedLayout } from "./AddBtnClickedLayout";
 
 export default function ManageRightLayout({
   tableColumns,
@@ -14,9 +15,9 @@ export default function ManageRightLayout({
   addBtnLabel,
   addBtnOnClick,
   filterBtnOnClick,
-
 }: any) {
   const [searching, setSearching] = useState("");
+  const [addBtnDrawerOpen, setAddBtnDrawerOpen] = useState(false);
 
   return (
     <Card style={{ flex: 1, boxShadow: "none" }}>
@@ -33,7 +34,7 @@ export default function ManageRightLayout({
           appearance="primary"
           icon={<Add24Regular />}
           size="medium"
-          onClick={addBtnOnClick}
+          onClick={() => setAddBtnDrawerOpen(true)}
         >
           {addBtnLabel}
         </Button>
@@ -45,7 +46,7 @@ export default function ManageRightLayout({
           alignItems: "center",
           justifyContent: "space-between",
           flexGrow: 0,
-          gap: "6px"
+          gap: "6px",
         }}
       >
         <AppSeach value={searching} setValue={setSearching} />
@@ -69,6 +70,12 @@ export default function ManageRightLayout({
           addBtnOnClick={addBtnOnClick}
         />
       </div>
+      <AddBtnClickedLayout
+        open={addBtnDrawerOpen}
+        setOpen={setAddBtnDrawerOpen}
+        title={addBtnLabel}
+        createBtnOnClick={() => console.log("CREATE BTN CLICKED!!")}
+      />
     </Card>
   );
 }
