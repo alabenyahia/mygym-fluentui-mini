@@ -7,14 +7,20 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 import styles from "./managetable.module.css";
-import { Card } from "@fluentui/react-components";
+import { Card, Spinner } from "@fluentui/react-components";
 import {
   ArrowSortDown20Regular,
   ArrowSortUp20Regular,
 } from "@fluentui/react-icons";
 
-
-export default function ManageTable({ searching, setSearching, columns, data }: any) {
+export default function ManageTable({
+  searching,
+  setSearching,
+  columns,
+  data,
+  isLoading,
+  loadingText,
+}: any) {
   const [sorting, setSorting] = useState([]);
 
   const table = useReactTable({
@@ -72,7 +78,13 @@ export default function ManageTable({ searching, setSearching, columns, data }: 
             })}
           </thead>
           <tbody>
-            {table.getRowModel().rows.length > 0 ? (
+            {isLoading ? (
+              <tr style={{ textAlign: "center" }} className={styles.tr}>
+                <td colSpan={100} className={styles.td}>
+                  <Spinner label={loadingText} />
+                </td>
+              </tr>
+            ) : table.getRowModel().rows.length > 0 ? (
               table.getRowModel().rows.map((row) => {
                 return (
                   <tr key={row.id} className={styles.tr}>

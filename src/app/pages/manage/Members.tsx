@@ -9,6 +9,8 @@ export default function Members() {
   const membersProps = {
     tableColumns: membersColumns,
     tableData: membersQuery.data || [],
+    tableLoading: membersQuery.isFetching || membersQuery.isLoading,
+    tableLoadingText: "Loading members...",
     breadcrumbItems: ["Manage", "Members"],
     addBtnLabel: "New member",
     addBtnOnClick: () => {

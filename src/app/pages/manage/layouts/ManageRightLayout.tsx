@@ -8,10 +8,13 @@ import { useState } from "react";
 export default function ManageRightLayout({
   tableColumns,
   tableData,
+  tableLoading,
+  tableLoadingText,
   breadcrumbItems,
   addBtnLabel,
   addBtnOnClick,
   filterBtnOnClick,
+
 }: any) {
   const [searching, setSearching] = useState("");
 
@@ -42,6 +45,7 @@ export default function ManageRightLayout({
           alignItems: "center",
           justifyContent: "space-between",
           flexGrow: 0,
+          gap: "6px"
         }}
       >
         <AppSeach value={searching} setValue={setSearching} />
@@ -59,6 +63,8 @@ export default function ManageRightLayout({
           setSearching={setSearching}
           columns={tableColumns}
           data={tableData}
+          isLoading={tableLoading}
+          loadingText={tableLoadingText}
         />
       </div>
     </Card>

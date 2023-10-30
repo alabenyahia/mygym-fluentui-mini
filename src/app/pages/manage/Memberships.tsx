@@ -10,6 +10,8 @@ export default function Memberships() {
   const membershipsProps = {
     tableColumns: membershipsColumns,
     tableData: membershipsQuery.data || [],
+    tableLoading: membershipsQuery.isFetching || membershipsQuery.isLoading,
+    tableLoadingText: "Loading memberships...",
     breadcrumbItems: ["Manage", "Memberships"],
     addBtnLabel: "New membership",
     addBtnOnClick: () => {
