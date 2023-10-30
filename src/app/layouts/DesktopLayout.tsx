@@ -128,7 +128,7 @@ const manageData = [
 const useManageDrawerBodyStyles = makeStyles({
   btns: {
     justifyContent: "flex-start",
-    paddingLeft: 0,
+    paddingLeft: "8px",
   },
 });
 
@@ -148,7 +148,7 @@ function ManageDrawerBody() {
           marginLeft: "7px",
           display: "flex",
           flexDirection: "column",
-          gap: "3px",
+          gap: "4px",
         }}
       >
         {manageData.map((item) => {

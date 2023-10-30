@@ -142,7 +142,7 @@ function MobileDrawer({
 const useDrawerContentStyles = makeStyles({
   btns: {
     justifyContent: "flex-start",
-    paddingLeft: 0,
+    paddingLeft: "8px",
   },
 });
 
@@ -221,7 +221,7 @@ function DrawerContent() {
 
       <DrawerHeaderTitle>Manage</DrawerHeaderTitle>
       <div
-        style={{ marginLeft: "12px", display: "flex", flexDirection: "column" }}
+        style={{ marginLeft: "12px", display: "flex", flexDirection: "column", gap: "4px" }}
       >
         {manageData.map((item) => {
           return (
