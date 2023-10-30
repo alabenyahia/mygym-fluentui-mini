@@ -9,6 +9,7 @@ import { Button } from "@fluentui/react-components";
 import { Dismiss24Regular } from "@fluentui/react-icons";
 import { useMediaQuery } from "react-responsive";
 
+
 export const AddBtnClickedLayout = ({
   children,
   open,
@@ -17,13 +18,14 @@ export const AddBtnClickedLayout = ({
   createBtnOnClick,
 }: any) => {
   const isMobile = useMediaQuery({ query: "(max-width: 920px)" });
+  
 
   return (
     <Drawer
       open={open}
       position="end"
       onOpenChange={(_, state) => setOpen(state.open)}
-      style={{ width: isMobile ? "100%" : "900px" }}
+      style={{ width: isMobile ? "100%" : "720px" }}
     >
       <DrawerHeader>
         <DrawerHeaderTitle
@@ -52,7 +54,7 @@ export const AddBtnClickedLayout = ({
           Cancel
         </Button>
 
-        <Button appearance="primary" size="large" onClick={createBtnOnClick}>
+        <Button type="submit" form="add-form" appearance="primary" size="large" onClick={createBtnOnClick}>
           Create
         </Button>
       </DrawerFooter>

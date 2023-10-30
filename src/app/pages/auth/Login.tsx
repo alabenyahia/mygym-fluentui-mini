@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
 import { isDarkTheme } from "src/utils/atoms/main";
 import TopBar from "src/app/pages/auth/components/TopBar";
+import { FormikInput } from "../manage/components/FormikInput";
 
 const useLoginStyles = makeStyles({
   card: {
@@ -127,8 +128,8 @@ function LoginForm() {
         }}
       >
         <Form style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          <MyInput placeholder="Email address" name="email" />
-          <MyInput placeholder="Password" type="password" name="password" />
+          <FormikInput placeholder="Email address" name="email" />
+          <FormikInput placeholder="Password" type="password" name="password" />
           <div
             style={{
               display: "flex",
@@ -162,21 +163,3 @@ function LoginForm() {
   );
 }
 
-const useMyInputStyles = makeStyles({
-  input: {
-    width: "100%",
-  },
-});
-
-const MyInput = ({ ...props }: any) => {
-  const [field, meta] = useField(props);
-  const styles = useMyInputStyles();
-  return (
-    <div>
-      <Input className={styles.input} {...field} {...props} />
-      {meta.touched && meta.error ? (
-        <div style={{ color: "red" }}>{meta.error}</div>
-      ) : null}
-    </div>
-  );
-};

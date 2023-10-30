@@ -7,6 +7,7 @@ import { useState } from "react";
 import { AddBtnClickedLayout } from "./AddBtnClickedLayout";
 
 export default function ManageRightLayout({
+  children,
   tableColumns,
   tableData,
   tableLoading,
@@ -75,7 +76,9 @@ export default function ManageRightLayout({
         setOpen={setAddBtnDrawerOpen}
         title={addBtnLabel}
         createBtnOnClick={() => console.log("CREATE BTN CLICKED!!")}
-      />
+      >
+        {children}
+      </AddBtnClickedLayout>
     </Card>
   );
 }
