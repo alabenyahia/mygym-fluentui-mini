@@ -15,7 +15,6 @@ export const AddBtnClickedLayout = ({
   open,
   setOpen,
   title,
-  createBtnOnClick,
 }: any) => {
   const isMobile = useMediaQuery({ query: "(max-width: 920px)" });
   const isMutatingMembers = useIsMutating({
@@ -61,7 +60,6 @@ export const AddBtnClickedLayout = ({
           form="add-form"
           appearance="primary"
           size="large"
-          onClick={createBtnOnClick}
           disabled={isMutatingMembers > 0}
         >
           Create

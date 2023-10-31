@@ -26,6 +26,13 @@ export default function useMembers() {
     return member;
   }
 
+  async function updateMember(id: string, data: any) {
+    const member = await pb
+      .collection("members")
+      .update(id, data, { expand: "membership" });
+    return member;
+  }
+
   //Queries
   const membersQuery = useQuery({ queryKey: ["members"], queryFn: getMembers });
 
@@ -57,5 +64,65 @@ export default function useMembers() {
     },
   });
 
-  return { memberMutation, membersQuery, membersToasterId };
+  const memberUpdateMutation = useMutation({
+    mutationKey: ["memberUpdate"],
+    mutationFn: ({id, data}: any) => updateMember(id, data) ,
+    onSuccess: (data, variables) => {
+      dispatchToast(
+        <Toast>
+          <ToastTitle>Member updated successfully!</ToastTitle>
+        </Toast>,
+        {
+          timeout: 1500,
+          intent: "success",
+        }
+      );
+      queryClient.setQueryData(["members", { id: variables.id }], data);
+    },
+    onError: ({ data }: any) => {
+      //const { data: errorData }: any = data;
+      console.log("error updating member", data);
+      dispatchToast(
+        <Toast>
+          <ToastTitle>Error occured!</ToastTitle>
+        </Toast>,
+        { timeout: 1500, intent: "error" }
+      );
+    },
+  });
+
+  const memberDeleteMutation = useMutation({
+    mutationKey: ["memberDelete"],
+    mutationFn: ({id, data}: any) => updateMember(id, data) ,
+    onSuccess: () => {
+      dispatchToast(
+        <Toast>
+          <ToastTitle>Member deleted successfully!</ToastTitle>
+        </Toast>,
+        {
+          timeout: 1500,
+          intent: "success",
+        }
+      );
+      queryClient.invalidateQueries({ queryKey: ["members"] });
+    },
+    onError: ({ data }: any) => {
+      //const { data: errorData }: any = data;
+      console.log("error deleting member", data);
+      dispatchToast(
+        <Toast>
+          <ToastTitle>Error occured!</ToastTitle>
+        </Toast>,
+        { timeout: 1500, intent: "error" }
+      );
+    },
+  });
+
+  return {
+    memberMutation,
+    membersQuery,
+    memberUpdateMutation,
+    memberDeleteMutation,
+    membersToasterId,
+  };
 }

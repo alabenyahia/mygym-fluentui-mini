@@ -1,5 +1,5 @@
 import ManageRightLayout from "./layouts/ManageRightLayout";
-import { membersColumns } from "./data/main";
+import { useColumns } from "./data/main";
 import { Toaster } from "@fluentui/react-components";
 import useMembers from "./hooks/useMembers";
 import AddBtnBody from "./components/addbtnbody/Members";
@@ -7,6 +7,7 @@ import moment from "moment";
 
 export default function Members() {
   const { membersQuery, membersToasterId } = useMembers();
+  const {membersColumns} = useColumns()
 
   const tableData = membersQuery.data
     ? membersQuery.data.map((member) => {

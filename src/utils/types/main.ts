@@ -1,3 +1,5 @@
+import { Moment } from "moment";
+
 export type RegisterDataType = {
   name: string;
   gymName: string;
@@ -15,11 +17,11 @@ export type AddMemberDataType = {
   name: string;
   email: string;
   phone: string;
-  registeredDate: string;
+  registeredDate: Date | Moment | "";
   membership: string;
-  membershipExpirationDate: string;
+  membershipExpirationDate: Date | Moment | "";
   assignedTo: string;
-  deletedAt: string;
+  deletedAt: Date | Moment | "";
 };
 
 export type AddMembershipDataType = {
@@ -30,5 +32,5 @@ export type AddMembershipDataType = {
   timeQuantity: number;
   sessionQuantity: number;
   assignedTo: string;
-  deletedAt: string;
+  deletedAt: Date | Moment | "";
 };

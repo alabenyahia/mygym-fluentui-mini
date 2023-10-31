@@ -68,14 +68,14 @@ export default function ManageRightLayout({
           isLoading={tableLoading}
           loadingText={tableLoadingText}
           addBtnLabel={addBtnLabel}
-          addBtnOnClick={addBtnOnClick}
+          addBtnOnClick={() => setAddBtnDrawerOpen(true)}
         />
       </div>
       <AddBtnClickedLayout
         open={addBtnDrawerOpen}
         setOpen={setAddBtnDrawerOpen}
         title={addBtnLabel}
-        createBtnOnClick={() => console.log("CREATE BTN CLICKED!!")}
+        
       >
         {children}
       </AddBtnClickedLayout>
