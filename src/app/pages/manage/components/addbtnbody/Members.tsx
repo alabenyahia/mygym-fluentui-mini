@@ -18,7 +18,7 @@ import { useState } from "react";
 
 export default function Members() {
   const { membershipsQuery } = useMemberships();
-  const { memberMutation, membersToasterId } = useMembers();
+  const { memberMutation } = useMembers();
   const [registeredDate, setRegisteredDate] = useState<Date>(new Date());
   const [membership, setMembership] = useState("");
 
@@ -149,7 +149,6 @@ export default function Members() {
             ) : null}
           </>
         )}
-        <Toaster toasterId={membersToasterId} />
       </Form>
     </Formik>
   );

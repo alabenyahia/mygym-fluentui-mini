@@ -1,13 +1,13 @@
-import { useColumns } from "./data/main";
+import { useColumns } from "./table-columns/main";
 import ManageRightLayout from "./layouts/ManageRightLayout";
 import { Toaster } from "@fluentui/react-components";
 import useMemberships from "./hooks/useMemberships";
 
 export default function Memberships() {
-  const { membershipMutation, membershipsQuery, membershipsToasterId } =
+  const { membershipMutation, membershipsQuery } =
     useMemberships();
   const { membershipsColumns } = useColumns();
-  
+
   const membershipsProps = {
     tableColumns: membershipsColumns,
     tableData: membershipsQuery.data || [],
@@ -26,7 +26,6 @@ export default function Memberships() {
   return (
     <>
       <ManageRightLayout {...membershipsProps} />
-      <Toaster toasterId={membershipsToasterId} />
     </>
   );
 }

@@ -1,16 +1,9 @@
 import pb from "src/utils/db/pocketbase";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { AddMemberDataType } from "src/utils/types/main";
-import {
-  useId,
-  ToastTitle,
-  useToastController,
-  Toast,
-} from "@fluentui/react-components";
+import toast from "react-hot-toast";
 
 export default function useMembers() {
-  const membersToasterId = useId("membersToaster");
-  const { dispatchToast } = useToastController(membersToasterId);
   const queryClient = useQueryClient();
 
   async function getMembers() {
@@ -41,80 +34,41 @@ export default function useMembers() {
     mutationKey: ["members"],
     mutationFn: addMember,
     onSuccess: () => {
-      dispatchToast(
-        <Toast>
-          <ToastTitle>Member added successfully!</ToastTitle>
-        </Toast>,
-        {
-          timeout: 1500,
-          intent: "success",
-        }
-      );
+      toast.success("Member created successfully!");
       queryClient.invalidateQueries({ queryKey: ["members"] });
     },
     onError: ({ data }: any) => {
       //const { data: errorData }: any = data;
+      toast.error("Error occured while creating member!");
       console.log("error creating member", data);
-      dispatchToast(
-        <Toast>
-          <ToastTitle>Error occured!</ToastTitle>
-        </Toast>,
-        { timeout: 1500, intent: "error" }
-      );
     },
   });
 
   const memberUpdateMutation = useMutation({
     mutationKey: ["memberUpdate"],
-    mutationFn: ({id, data}: any) => updateMember(id, data) ,
+    mutationFn: ({ id, data }: any) => updateMember(id, data),
     onSuccess: (data, variables) => {
-      dispatchToast(
-        <Toast>
-          <ToastTitle>Member updated successfully!</ToastTitle>
-        </Toast>,
-        {
-          timeout: 1500,
-          intent: "success",
-        }
-      );
+      toast.success("Member updated successfully!");
       queryClient.setQueryData(["members", { id: variables.id }], data);
     },
     onError: ({ data }: any) => {
       //const { data: errorData }: any = data;
+      toast.error("Error occured while updating member!");
       console.log("error updating member", data);
-      dispatchToast(
-        <Toast>
-          <ToastTitle>Error occured!</ToastTitle>
-        </Toast>,
-        { timeout: 1500, intent: "error" }
-      );
     },
   });
 
   const memberDeleteMutation = useMutation({
     mutationKey: ["memberDelete"],
-    mutationFn: ({id, data}: any) => updateMember(id, data) ,
+    mutationFn: ({ id, data }: any) => updateMember(id, data),
     onSuccess: () => {
-      dispatchToast(
-        <Toast>
-          <ToastTitle>Member deleted successfully!</ToastTitle>
-        </Toast>,
-        {
-          timeout: 1500,
-          intent: "success",
-        }
-      );
+      toast.success("Member deleted successfully!");
       queryClient.invalidateQueries({ queryKey: ["members"] });
     },
     onError: ({ data }: any) => {
       //const { data: errorData }: any = data;
+      toast.error("Error occured while deleting member!");
       console.log("error deleting member", data);
-      dispatchToast(
-        <Toast>
-          <ToastTitle>Error occured!</ToastTitle>
-        </Toast>,
-        { timeout: 1500, intent: "error" }
-      );
     },
   });
 
@@ -123,6 +77,5 @@ export default function useMembers() {
     membersQuery,
     memberUpdateMutation,
     memberDeleteMutation,
-    membersToasterId,
   };
 }

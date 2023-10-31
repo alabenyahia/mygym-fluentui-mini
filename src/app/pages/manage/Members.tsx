@@ -1,12 +1,12 @@
 import ManageRightLayout from "./layouts/ManageRightLayout";
-import { useColumns } from "./data/main";
+import { useColumns } from "./table-columns/main";
 import { Toaster } from "@fluentui/react-components";
 import useMembers from "./hooks/useMembers";
 import AddBtnBody from "./components/addbtnbody/Members";
 import moment from "moment";
 
 export default function Members() {
-  const { membersQuery, membersToasterId } = useMembers();
+  const { membersQuery } = useMembers();
   const {membersColumns} = useColumns()
 
   const tableData = membersQuery.data
@@ -45,7 +45,6 @@ export default function Members() {
       <ManageRightLayout {...membersProps}>
         <AddBtnBody />
       </ManageRightLayout>
-      <Toaster toasterId={membersToasterId} />
     </>
   );
 }

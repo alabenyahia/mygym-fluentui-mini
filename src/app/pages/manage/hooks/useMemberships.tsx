@@ -1,17 +1,9 @@
 import pb from "src/utils/db/pocketbase";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { AddMembershipDataType } from "src/utils/types/main";
-import {
-  useId,
-  ToastTitle,
-  useToastController,
-  Toast,
-} from "@fluentui/react-components";
 
 
 export default function useMemberships() {
-  const membershipsToasterId = useId("membershipsToaster");
-  const { dispatchToast } = useToastController(membershipsToasterId);
   const queryClient = useQueryClient();
 
   async function getMemberships() {
@@ -37,28 +29,15 @@ export default function useMemberships() {
     mutationKey: ["memberships"],
     mutationFn: addMembership,
     onSuccess: () => {
-      dispatchToast(
-        <Toast>
-          <ToastTitle>Membership added successfully!</ToastTitle>
-        </Toast>,
-        {
-          timeout: 1500,
-          intent: "success",
-        }
-      );
+      
       queryClient.invalidateQueries({ queryKey: ["memberships"] });
     },
     onError: ({ data }: any) => {
       //const { data: errorData }: any = data;
       console.log("error creating membership", data);
-      dispatchToast(
-        <Toast>
-          <ToastTitle>Error occured!</ToastTitle>
-        </Toast>,
-        { timeout: 1500, intent: "error" }
-      );
+      
     },
   });
 
-  return { membershipMutation, membershipsQuery, membershipsToasterId };
+  return { membershipMutation, membershipsQuery };
 }

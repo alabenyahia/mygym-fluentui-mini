@@ -79,7 +79,7 @@ const useRegisterFormStyles = makeStyles({
 
 function RegisterForm() {
   const styles = useRegisterFormStyles();
-  const { registerMutation, registerToasterId } = useRegister();
+  const { registerMutation } = useRegister();
   const navigate = useNavigate();
 
   return (
@@ -171,7 +171,6 @@ function RegisterForm() {
           </div>
         </Form>
       </Formik>
-      <Toaster toasterId={registerToasterId} />
     </div>
   );
 }

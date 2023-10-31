@@ -14,7 +14,6 @@ export default function ManageRightLayout({
   tableLoadingText,
   breadcrumbItems,
   addBtnLabel,
-  addBtnOnClick,
   filterBtnOnClick,
 }: any) {
   const [searching, setSearching] = useState("");
@@ -79,6 +78,7 @@ export default function ManageRightLayout({
       >
         {children}
       </AddBtnClickedLayout>
+      
     </Card>
   );
 }

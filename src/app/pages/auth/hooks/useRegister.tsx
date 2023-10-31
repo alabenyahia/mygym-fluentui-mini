@@ -9,8 +9,6 @@ import {
 } from "@fluentui/react-components";
 
 export default function useRegister() {
-  const registerToasterId = useId("registerToaster");
-  const { dispatchToast } = useToastController(registerToasterId);
 
   async function register(data: RegisterDataType) {
     const user = await pb.collection("users").create(data);
@@ -21,31 +19,13 @@ export default function useRegister() {
   const registerMutation = useMutation({
     mutationFn: register,
     onSuccess: () => {
-      dispatchToast(
-        <Toast>
-          <ToastTitle>Congratulations! registered successfully</ToastTitle>
-        </Toast>,
-        {
-          timeout: 1200,
-          intent: "success",
-        }
-      );
+
     },
     onError: ({ data }: any) => {
       const { data: errorData }: any = data;
 
-      dispatchToast(
-        <Toast>
-          <ToastTitle>
-            {errorData.email?.message
-              ? errorData.email?.message
-              : "Error occured!"}
-          </ToastTitle>
-        </Toast>,
-        { timeout: 2500, intent: "error" }
-      );
     },
   });
 
-  return { registerMutation, registerToasterId };
+  return { registerMutation };
 }

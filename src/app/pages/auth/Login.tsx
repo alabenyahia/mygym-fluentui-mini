@@ -79,7 +79,7 @@ const useLoginFormStyles = makeStyles({
 
 function LoginForm() {
   const styles = useLoginFormStyles();
-  const { loginMutation, loginToasterId } = useLogin();
+  const { loginMutation } = useLogin();
   const navigate = useNavigate();
 
   return (
@@ -158,7 +158,6 @@ function LoginForm() {
           </div>
         </Form>
       </Formik>
-      <Toaster toasterId={loginToasterId} />
     </div>
   );
 }
