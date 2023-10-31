@@ -8,7 +8,7 @@ import {
 import { Button } from "@fluentui/react-components";
 import { Dismiss24Regular } from "@fluentui/react-icons";
 import { useMediaQuery } from "react-responsive";
-
+import { useIsMutating } from "@tanstack/react-query";
 
 export const AddBtnClickedLayout = ({
   children,
@@ -18,7 +18,9 @@ export const AddBtnClickedLayout = ({
   createBtnOnClick,
 }: any) => {
   const isMobile = useMediaQuery({ query: "(max-width: 920px)" });
-  
+  const isMutatingMembers = useIsMutating({
+    mutationKey: ["members"],
+  });
 
   return (
     <Drawer
@@ -54,7 +56,14 @@ export const AddBtnClickedLayout = ({
           Cancel
         </Button>
 
-        <Button type="submit" form="add-form" appearance="primary" size="large" onClick={createBtnOnClick}>
+        <Button
+          type="submit"
+          form="add-form"
+          appearance="primary"
+          size="large"
+          onClick={createBtnOnClick}
+          disabled={isMutatingMembers > 0}
+        >
           Create
         </Button>
       </DrawerFooter>

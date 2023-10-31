@@ -30,6 +30,7 @@ export default function useMembers() {
 
   // Mutations
   const memberMutation = useMutation({
+    mutationKey: ["members"],
     mutationFn: addMember,
     onSuccess: () => {
       dispatchToast(
