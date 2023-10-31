@@ -10,8 +10,11 @@ export default function Members() {
 
   const tableData = membersQuery.data
     ? membersQuery.data.map((member) => {
+      const currency = "TND"
+      const membership =member.expand?.membership ? `${member.expand?.membership?.name} (${member.expand?.membership?.price}${currency})` : ""
         return {
           ...member,
+          membership,
           membershipExpirationDate: member.membershipExpirationDate
             ? moment(member.membershipExpirationDate).format("LL")
             : "",

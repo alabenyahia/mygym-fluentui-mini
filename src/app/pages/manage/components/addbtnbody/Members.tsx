@@ -20,7 +20,7 @@ export default function Members() {
   const { membershipsQuery } = useMemberships();
   const { memberMutation, membersToasterId } = useMembers();
   const [registeredDate, setRegisteredDate] = useState<Date>(new Date());
-  const [membershipId, setMembershipId] = useState("");
+  const [membership, setMembership] = useState("");
 
   return (
     <Formik
@@ -33,16 +33,16 @@ export default function Members() {
         name: Yup.string().required("Member name is required"),
       })}
       onSubmit={(values: any, { resetForm }) => {
-        const membership = membershipsQuery.data?.find(
-          (element) => element.id === membershipId
+        const mMembership = membershipsQuery.data?.find(
+          (element) => element.id === membership
         );
 
         let membershipExpirationDate: any = "";
-        if (membership) {
-          if (membership?.membershipType === "time") {
+        if (mMembership) {
+          if (mMembership?.membershipType === "time") {
             membershipExpirationDate = moment(registeredDate).add(
-              membership?.timeQuantity,
-              membership?.timeType === "month" ? "months" : "days"
+              mMembership?.timeQuantity,
+              mMembership?.timeType === "month" ? "months" : "days"
             );
           }
         }
@@ -50,7 +50,7 @@ export default function Members() {
         console.log("valls", {
           ...values,
           registeredDate,
-          membershipId,
+          membership,
           membershipExpirationDate,
           assignedTo: pb.authStore.model?.id,
           deletedAt: "",
@@ -60,7 +60,7 @@ export default function Members() {
           {
             ...values,
             registeredDate,
-            membershipId,
+            membership,
             membershipExpirationDate,
             assignedTo: pb.authStore.model?.id,
             deletedAt: "",
@@ -74,7 +74,7 @@ export default function Members() {
                   phone: "",
                 },
               });
-              setMembershipId("");
+              setMembership("");
               setRegisteredDate(new Date());
             },
           }
@@ -126,12 +126,12 @@ export default function Members() {
 
             {membershipsQuery.data && membershipsQuery.data?.length > 0 ? (
               <div style={{ display: "flex", flexDirection: "column" }}>
-                <label htmlFor="membershipId">Member membership</label>
+                <label htmlFor="membership">Member membership</label>
                 <Dropdown
-                  name="membershipId"
-                  id="membershipId"
+                  name="membership"
+                  id="membership"
                   onOptionSelect={(_, data) =>
-                    setMembershipId(data.optionValue as string)
+                    setMembership(data.optionValue as string)
                   }
                 >
                   {membershipsQuery.data?.map((membership: any) => {

@@ -16,7 +16,7 @@ export type AddMemberDataType = {
   email: string;
   phone: string;
   registeredDate: string;
-  membershipId: string;
+  membership: string;
   membershipExpirationDate: string;
   assignedTo: string;
   deletedAt: string;

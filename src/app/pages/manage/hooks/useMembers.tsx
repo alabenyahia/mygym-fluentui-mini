@@ -16,6 +16,7 @@ export default function useMembers() {
   async function getMembers() {
     const members = await pb.collection("members").getFullList({
       sort: "-created",
+      expand: "membership",
     });
     return members;
   }
