@@ -81,8 +81,8 @@ export default function MobileLayout({ children }: any) {
           </div>
         </nav>
       </header>
-      <Card style={{ flex: 1 }}>
-        <div>{children}</div>
+      <Card style={{ flex: 1, height: "100%" }}>
+        <div style={{ height: "100%" }}>{children}</div>
       </Card>
       <MobileDrawer
         isDrawerOpen={isDrawerOpen}

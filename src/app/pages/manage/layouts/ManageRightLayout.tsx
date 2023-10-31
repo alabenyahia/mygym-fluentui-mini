@@ -21,7 +21,7 @@ export default function ManageRightLayout({
   const [addBtnDrawerOpen, setAddBtnDrawerOpen] = useState(false);
 
   return (
-    <Card style={{ flex: 1, boxShadow: "none" }}>
+    <Card style={{ flex: 1, boxShadow: "none", height: "100%" }}>
       <div
         style={{
           display: "flex",
