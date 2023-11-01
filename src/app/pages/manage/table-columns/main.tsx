@@ -13,7 +13,6 @@ import {
   DialogContent,
   DialogBody,
   DialogActions,
-  Toaster,
 } from "@fluentui/react-components";
 
 import useMembers from "../hooks/useMembers";
@@ -21,8 +20,6 @@ import { useState } from "react";
 
 export const useColumns = () => {
   const { memberDeleteMutation } = useMembers();
-  const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
-  const [clickedRow, setClickedRow] = useState(null);
 
   const deleteMember = (data: any) => {
     const id = data.id;
@@ -30,7 +27,6 @@ export const useColumns = () => {
       id,
       data: { deletedAt: new Date() },
     });
-    setIsDeleteAlertOpen(false);
   };
 
   const membersActions = {
@@ -39,37 +35,7 @@ export const useColumns = () => {
     footer: "Actions",
     enableSorting: false,
     cell: (value: any) => (
-      <div style={{ textAlign: "end" }}>
-        <Menu>
-          <MenuTrigger disableButtonEnhancement>
-            <Button
-              size="small"
-              appearance="subtle"
-              icon={<MoreVertical24Regular />}
-            />
-          </MenuTrigger>
-
-          <MenuPopover>
-            <MenuList>
-              <MenuItem
-                onClick={() => {
-                  setIsDeleteAlertOpen(true);
-                  setClickedRow(value.row?.original);
-                }}
-                icon={<Delete24Regular />}
-              >
-                Delete
-              </MenuItem>
-            </MenuList>
-          </MenuPopover>
-        </Menu>
-        <DeleteAlert
-          open={isDeleteAlertOpen}
-          setOpen={setIsDeleteAlertOpen}
-          deleteFn={deleteMember}
-          data={clickedRow}
-        />
-      </div>
+      <ActionsCell data={value.row?.original} deleteFn={deleteMember} />
     ),
   };
 
@@ -138,6 +104,46 @@ export const useColumns = () => {
   ];
 
   return { membersColumns, membershipsColumns };
+};
+
+const ActionsCell = ({ data, deleteFn }: any) => {
+  const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+
+  return (
+    <div style={{ textAlign: "end" }}>
+      <Menu>
+        <MenuTrigger disableButtonEnhancement>
+          <Button
+            size="small"
+            appearance="subtle"
+            icon={<MoreVertical24Regular />}
+          />
+        </MenuTrigger>
+
+        <MenuPopover>
+          <MenuList>
+            <MenuItem
+              onClick={() => {
+                setIsDeleteAlertOpen(true);
+              }}
+              icon={<Delete24Regular />}
+            >
+              Delete
+            </MenuItem>
+          </MenuList>
+        </MenuPopover>
+      </Menu>
+      <DeleteAlert
+        open={isDeleteAlertOpen}
+        setOpen={setIsDeleteAlertOpen}
+        deleteFn={() => {
+          deleteFn(data);
+          setIsDeleteAlertOpen(false);
+        }}
+        data={data}
+      />
+    </div>
+  );
 };
 
 export const DeleteAlert = ({ open, setOpen, deleteFn, data }: any) => {
