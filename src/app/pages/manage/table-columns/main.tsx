@@ -13,6 +13,7 @@ import {
   DialogContent,
   DialogBody,
   DialogActions,
+  Spinner,
 } from "@fluentui/react-components";
 
 import useMembers from "../hooks/useMembers";
@@ -21,6 +22,7 @@ import { useState } from "react";
 export const useColumns = () => {
   const { memberDeleteMutation } = useMembers();
 
+  
   const deleteMember = (data: any) => {
     const id = data.id;
     memberDeleteMutation.mutate({
@@ -136,28 +138,29 @@ const ActionsCell = ({ data, deleteFn }: any) => {
       <DeleteAlert
         open={isDeleteAlertOpen}
         setOpen={setIsDeleteAlertOpen}
-        deleteFn={() => {
-          deleteFn(data);
-          setIsDeleteAlertOpen(false);
-        }}
+        deleteFn={deleteFn}
         data={data}
       />
     </div>
   );
 };
 
-export const DeleteAlert = ({ open, setOpen, deleteFn, data }: any) => {
+const DeleteAlert = ({ open, setOpen, deleteFn, data }: any) => {
+  //FIX BUG: Dialog is closing before the mutation(deleteFn) is finished
+
+  //Dialog is closing immediately after clicking create button i want it to close after mutation is settled
+  //I think the problem is because useMutation is rerending the component and the open state
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(_: any, data: any) => setOpen(data.open)}
-      modalType="alert"
-    >
+    <Dialog open={open} modalType="alert">
       <DialogSurface>
         <DialogBody>
           <DialogTitle>Delete the member?</DialogTitle>
           <DialogContent>
-            You are going to delete this member, are you sure?
+            {false ? (
+              <Spinner label="Loading..." />
+            ) : (
+              <span>You are going to delete this member, are you sure?</span>
+            )}
           </DialogContent>
           <DialogActions>
             <DialogTrigger disableButtonEnhancement>
