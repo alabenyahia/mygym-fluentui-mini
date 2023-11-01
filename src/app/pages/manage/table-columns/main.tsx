@@ -1,4 +1,8 @@
-import { MoreVertical24Regular, Delete24Regular } from "@fluentui/react-icons";
+import {
+  MoreVertical24Regular,
+  Delete24Regular,
+  Edit24Regular,
+} from "@fluentui/react-icons";
 import {
   Button,
   Menu,
@@ -18,11 +22,14 @@ import {
 
 import useMembers from "../hooks/useMembers";
 import { useState } from "react";
+import { atom, useAtom } from "jotai";
+
+export const ismEditDrawerOpen = atom(false);
+export const mEditData = atom(null);
 
 export const useColumns = () => {
   const { memberDeleteMutation } = useMembers();
 
-  
   const deleteMember = (data: any) => {
     const id = data.id;
     memberDeleteMutation.mutate({
@@ -110,7 +117,8 @@ export const useColumns = () => {
 
 const ActionsCell = ({ data, deleteFn }: any) => {
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
-
+  const [editData, setEditData] = useAtom(mEditData);
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = useAtom(ismEditDrawerOpen);
   return (
     <div style={{ textAlign: "end" }}>
       <Menu>
@@ -131,6 +139,16 @@ const ActionsCell = ({ data, deleteFn }: any) => {
               icon={<Delete24Regular />}
             >
               Delete
+            </MenuItem>
+
+            <MenuItem
+              onClick={() => {
+                setEditData(data);
+                setIsEditDrawerOpen(true);
+              }}
+              icon={<Edit24Regular />}
+            >
+              Edit
             </MenuItem>
           </MenuList>
         </MenuPopover>

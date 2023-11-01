@@ -20,6 +20,8 @@ export default function useMembers() {
   }
 
   async function updateMember(id: string, data: any) {
+    console.log("data from updatefn", data)
+    delete data.id;
     const member = await pb
       .collection("members")
       .update(id, data, { expand: "membership" });
@@ -47,14 +49,14 @@ export default function useMembers() {
   const memberUpdateMutation = useMutation({
     mutationKey: ["memberUpdate"],
     mutationFn: ({ id, data }: any) => updateMember(id, data),
-    onSuccess: (data, variables) => {
+    onSuccess: () => {
       toast.success("Member updated successfully!");
-      queryClient.setQueryData(["members", { id: variables.id }], data);
+      queryClient.invalidateQueries({ queryKey: ["members"] });
     },
-    onError: ({ data }: any) => {
+    onError: (err: any) => {
       //const { data: errorData }: any = data;
       toast.error("Error occured while updating member!");
-      console.log("error updating member", data);
+      console.log("error updating member", err);
     },
   });
 

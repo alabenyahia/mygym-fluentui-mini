@@ -5,6 +5,7 @@ import AppSeach from "../components/ManageSeach";
 import AppTable from "../components/ManageTable";
 import { useState } from "react";
 import { AddBtnClickedLayout } from "./AddBtnClickedLayout";
+import { EditBtnClickedLayout } from "./EditBtnClickedLayout";
 
 export default function ManageRightLayout({
   children,
@@ -78,6 +79,7 @@ export default function ManageRightLayout({
       >
         {children}
       </AddBtnClickedLayout>
+      <EditBtnClickedLayout/>
       
     </Card>
   );

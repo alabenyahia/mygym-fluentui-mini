@@ -3,7 +3,9 @@ import {
   Dropdown,
   Field,
   Option,
+  Toaster,
   Spinner,
+  SpinButton,
 } from "@fluentui/react-components";
 import useMemberships from "../../hooks/useMemberships";
 import { DatePicker } from "@fluentui/react-date-time";
@@ -14,19 +16,30 @@ import useMembers from "../../hooks/useMembers";
 import pb from "src/utils/db/pocketbase";
 import { FormikInput } from "../FormikInput";
 import { useState } from "react";
+import { useAtom } from "jotai";
+import { mEditData, ismEditDrawerOpen } from "../../table-columns/main";
 
 export default function Members() {
+  const [editData, setEditData]: any = useAtom(mEditData);
   const { membershipsQuery } = useMemberships();
-  const { memberMutation } = useMembers();
-  const [registeredDate, setRegisteredDate] = useState<Date>(new Date());
-  const [membership, setMembership] = useState("");
+  const { memberUpdateMutation } = useMembers();
+  const [registeredDate, setRegisteredDate] = useState<Date>(
+    editData?.registeredDate ? new Date(editData?.registeredDate) : new Date()
+  );
+  const [membership, setMembership] = useState(
+    editData?.expand?.membership?.id || ""
+  );
+
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = useAtom(ismEditDrawerOpen);
+
+  function editMember() {}
 
   return (
     <Formik
       initialValues={{
-        name: "",
-        email: "",
-        phone: "",
+        name: editData?.name || "",
+        email: editData?.email || "",
+        phone: editData?.phone || "",
       }}
       validationSchema={Yup.object({
         name: Yup.string().required("Member name is required"),
@@ -47,34 +60,32 @@ export default function Members() {
         }
 
         console.log("valls", {
-          ...values,
-          registeredDate,
-          membership,
-          membershipExpirationDate,
-          assignedTo: pb.authStore.model?.id,
-          deletedAt: "",
+          id: editData?.id,
+            data: {
+              ...values,
+              registeredDate,
+              membership,
+              membershipExpirationDate,
+            }
         });
 
-        memberMutation.mutate(
+        console.log("valls2", editData)
+
+        memberUpdateMutation.mutate(
           {
-            ...values,
-            registeredDate,
-            membership,
-            membershipExpirationDate,
-            assignedTo: pb.authStore.model?.id,
-            deletedAt: "",
+            id: editData?.id,
+            data: {
+              ...values,
+              registeredDate,
+              membership,
+              membershipExpirationDate,
+            }
+            
           },
           {
             onSuccess: () => {
-              resetForm({
-                values: {
-                  name: "",
-                  email: "",
-                  phone: "",
-                },
-              });
-              setMembership("");
-              setRegisteredDate(new Date());
+              setIsEditDrawerOpen(false);
+              //CLOSE MODAL
             },
           }
         );
@@ -84,7 +95,7 @@ export default function Members() {
         id="add-form"
         style={{ display: "flex", flexDirection: "column", gap: "8px" }}
       >
-        {memberMutation.isPending ? (
+        {memberUpdateMutation.isPending ? (
           <div>
             <Spinner label="Adding member..." />
           </div>
@@ -129,6 +140,8 @@ export default function Members() {
                 <Dropdown
                   name="membership"
                   id="membership"
+                  defaultValue={membership}
+                  defaultSelectedOptions={[membership]}
                   onOptionSelect={(_, data) =>
                     setMembership(data.optionValue as string)
                   }
@@ -145,7 +158,9 @@ export default function Members() {
                   })}
                 </Dropdown>
               </div>
-            ) : <Spinner label="Loading memberships..." />}
+            ) : (
+              <Spinner label="Loading memberships..." />
+            )}
           </>
         )}
       </Form>
