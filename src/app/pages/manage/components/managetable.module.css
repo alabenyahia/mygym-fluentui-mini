@@ -1,6 +1,6 @@
 .container {
     height: 100%;
-    width: fit-content;
+    width: 100%;
     padding-bottom: 16px!important;
     min-width: 920px;
     padding: 3px; /* THIS IS SO THAT THE INSIDE CARD CAN SHOW ITS SHADOW */
