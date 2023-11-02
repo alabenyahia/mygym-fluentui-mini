@@ -20,7 +20,7 @@ export default function useMemberships() {
 
   async function updateMembership(id: string, data: any) {
     delete data.id;
-    const membership = await pb.collection("membersships").update(id, data);
+    const membership = await pb.collection("memberships").update(id, data);
     return membership;
   }
 
