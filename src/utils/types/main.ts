@@ -34,3 +34,7 @@ export type AddMembershipDataType = {
   assignedTo: string;
   deletedAt: Date | Moment | "";
 };
+
+export type AddProgramDataType = {
+  name: string;
+};

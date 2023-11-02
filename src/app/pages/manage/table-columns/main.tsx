@@ -22,6 +22,7 @@ import {
 
 import useMembers from "../hooks/useMembers";
 import useMemberships from "../hooks/useMemberships";
+import usePrograms from "../hooks/usePrograms";
 import { useState } from "react";
 import { atom, useAtom } from "jotai";
 
@@ -31,6 +32,7 @@ export const mEditData = atom(null);
 export const useColumns = () => {
   const { memberDeleteMutation } = useMembers();
   const { membershipDeleteMutation } = useMemberships();
+  const { programDeleteMutation } = usePrograms();
 
   const deleteRow = (mutation: any, data: any) => {
     const id = data.id;
@@ -68,6 +70,22 @@ export const useColumns = () => {
         deleteFn={deleteRow}
         title="Delete membership?"
         desc="Are you sure you want to delete this membership?"
+      />
+    ),
+  };
+
+  const programsActions = {
+    header: "Actions",
+    accessorKey: "actions",
+    footer: "Actions",
+    enableSorting: false,
+    cell: (value: any) => (
+      <ActionsCell
+        mutation={programDeleteMutation}
+        data={value.row?.original}
+        deleteFn={deleteRow}
+        title="Delete program?"
+        desc="Are you sure you want to delete this program?"
       />
     ),
   };
@@ -135,7 +153,19 @@ export const useColumns = () => {
     membershipsActions,
   ];
 
-  return { membersColumns, membershipsColumns };
+  const programsColumns = [
+    {
+      header: "ID",
+      accessorKey: "id",
+    },
+    {
+      header: "Name",
+      accessorKey: "name",
+    },
+    programsActions,
+  ];
+
+  return { membersColumns, membershipsColumns, programsColumns };
 };
 
 const ActionsCell = ({ mutation, data, deleteFn, title, desc }: any) => {
