@@ -21,6 +21,7 @@ import {
 } from "@fluentui/react-components";
 
 import useMembers from "../hooks/useMembers";
+import useMemberships from "../hooks/useMemberships";
 import { useState } from "react";
 import { atom, useAtom } from "jotai";
 
@@ -29,6 +30,7 @@ export const mEditData = atom(null);
 
 export const useColumns = () => {
   const { memberDeleteMutation } = useMembers();
+  const { membershipDeleteMutation } = useMemberships();
 
   const deleteRow = (mutation: any, data: any) => {
     const id = data.id;
@@ -44,10 +46,31 @@ export const useColumns = () => {
     footer: "Actions",
     enableSorting: false,
     cell: (value: any) => (
-      <ActionsCell mutation={memberDeleteMutation} data={value.row?.original} deleteFn={deleteRow} />
+      <ActionsCell
+        mutation={memberDeleteMutation}
+        data={value.row?.original}
+        deleteFn={deleteRow}
+        title="Delete member?"
+        desc="Are you sure you want to delete this member?"
+      />
     ),
   };
 
+  const membershipsActions = {
+    header: "Actions",
+    accessorKey: "actions",
+    footer: "Actions",
+    enableSorting: false,
+    cell: (value: any) => (
+      <ActionsCell
+        mutation={membershipDeleteMutation}
+        data={value.row?.original}
+        deleteFn={deleteRow}
+        title="Delete membership?"
+        desc="Are you sure you want to delete this membership?"
+      />
+    ),
+  };
   const membersColumns = [
     {
       header: "ID",
@@ -109,13 +132,13 @@ export const useColumns = () => {
       header: "Session-membership quantity",
       accessorKey: "sessionQuantity",
     },
-    //Add actions
+    membershipsActions,
   ];
 
   return { membersColumns, membershipsColumns };
 };
 
-const ActionsCell = ({mutation, data, deleteFn }: any) => {
+const ActionsCell = ({ mutation, data, deleteFn, title, desc }: any) => {
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [editData, setEditData] = useAtom(mEditData);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useAtom(ismEditDrawerOpen);
@@ -154,17 +177,27 @@ const ActionsCell = ({mutation, data, deleteFn }: any) => {
         </MenuPopover>
       </Menu>
       <DeleteAlert
-      mutation={mutation}
+        mutation={mutation}
         open={isDeleteAlertOpen}
         setOpen={setIsDeleteAlertOpen}
         deleteFn={deleteFn}
         data={data}
+        title={title}
+        desc={desc}
       />
     </div>
   );
 };
 
-const DeleteAlert = ({mutation, open, setOpen, deleteFn, data }: any) => {
+const DeleteAlert = ({
+  mutation,
+  open,
+  setOpen,
+  deleteFn,
+  data,
+  title,
+  desc,
+}: any) => {
   //FIX BUG: Dialog is closing before the mutation(deleteFn) is finished
 
   //Dialog is closing immediately after clicking create button i want it to close after mutation is settled
@@ -173,12 +206,12 @@ const DeleteAlert = ({mutation, open, setOpen, deleteFn, data }: any) => {
     <Dialog open={open} modalType="alert">
       <DialogSurface>
         <DialogBody>
-          <DialogTitle>Delete the member?</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
           <DialogContent>
-            {false ? (
-              <Spinner label="Loading..." />
+            {mutation.isPending ? (
+              <Spinner label="Deleting..." />
             ) : (
-              <span>You are going to delete this member, are you sure?</span>
+              <span>{desc}</span>
             )}
           </DialogContent>
           <DialogActions>
@@ -187,7 +220,11 @@ const DeleteAlert = ({mutation, open, setOpen, deleteFn, data }: any) => {
                 Close
               </Button>
             </DialogTrigger>
-            <Button appearance="primary" onClick={() => deleteFn(mutation, data)}>
+            <Button
+              appearance="primary"
+              onClick={() => deleteFn(mutation, data)}
+              disabled={mutation.isPending}
+            >
               Delete
             </Button>
           </DialogActions>

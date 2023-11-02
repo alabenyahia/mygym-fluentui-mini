@@ -36,7 +36,7 @@ export default function useMemberships() {
     mutationFn: addMembership,
     onSuccess: () => {
       toast.success("Membership created successfully!");
-      queryClient.invalidateQueries({ queryKey: ["membersships"] });
+      queryClient.invalidateQueries({ queryKey: ["memberships"] });
     },
     onError: ({ data }: any) => {
       toast.error("Error occured while creating membership!");

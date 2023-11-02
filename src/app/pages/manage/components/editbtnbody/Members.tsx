@@ -29,7 +29,6 @@ export default function Members() {
 
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useAtom(ismEditDrawerOpen);
 
-  function editMember() {}
 
   return (
     <Formik

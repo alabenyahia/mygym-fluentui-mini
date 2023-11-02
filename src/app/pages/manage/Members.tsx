@@ -31,9 +31,6 @@ export default function Members() {
     tableLoadingText: "Loading members...",
     breadcrumbItems: ["Manage", "Members"],
     addBtnLabel: "New member",
-    addBtnOnClick: () => {
-      console.log("add member clicked");
-    },
     filterBtnOnClick: () => {
       console.log("filter members clicked");
     },
