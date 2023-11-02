@@ -30,9 +30,9 @@ export const mEditData = atom(null);
 export const useColumns = () => {
   const { memberDeleteMutation } = useMembers();
 
-  const deleteMember = (data: any) => {
+  const deleteRow = (mutation: any, data: any) => {
     const id = data.id;
-    memberDeleteMutation.mutate({
+    mutation.mutate({
       id,
       data: { deletedAt: new Date() },
     });
@@ -44,7 +44,7 @@ export const useColumns = () => {
     footer: "Actions",
     enableSorting: false,
     cell: (value: any) => (
-      <ActionsCell data={value.row?.original} deleteFn={deleteMember} />
+      <ActionsCell mutation={memberDeleteMutation} data={value.row?.original} deleteFn={deleteRow} />
     ),
   };
 
@@ -115,7 +115,7 @@ export const useColumns = () => {
   return { membersColumns, membershipsColumns };
 };
 
-const ActionsCell = ({ data, deleteFn }: any) => {
+const ActionsCell = ({mutation, data, deleteFn }: any) => {
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [editData, setEditData] = useAtom(mEditData);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useAtom(ismEditDrawerOpen);
@@ -154,6 +154,7 @@ const ActionsCell = ({ data, deleteFn }: any) => {
         </MenuPopover>
       </Menu>
       <DeleteAlert
+      mutation={mutation}
         open={isDeleteAlertOpen}
         setOpen={setIsDeleteAlertOpen}
         deleteFn={deleteFn}
@@ -163,7 +164,7 @@ const ActionsCell = ({ data, deleteFn }: any) => {
   );
 };
 
-const DeleteAlert = ({ open, setOpen, deleteFn, data }: any) => {
+const DeleteAlert = ({mutation, open, setOpen, deleteFn, data }: any) => {
   //FIX BUG: Dialog is closing before the mutation(deleteFn) is finished
 
   //Dialog is closing immediately after clicking create button i want it to close after mutation is settled
@@ -186,7 +187,7 @@ const DeleteAlert = ({ open, setOpen, deleteFn, data }: any) => {
                 Close
               </Button>
             </DialogTrigger>
-            <Button appearance="primary" onClick={() => deleteFn(data)}>
+            <Button appearance="primary" onClick={() => deleteFn(mutation, data)}>
               Delete
             </Button>
           </DialogActions>

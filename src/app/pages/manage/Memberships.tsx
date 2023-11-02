@@ -4,7 +4,7 @@ import { Toaster } from "@fluentui/react-components";
 import useMemberships from "./hooks/useMemberships";
 
 export default function Memberships() {
-  const { membershipMutation, membershipsQuery } =
+  const { membershipAddMutation, membershipsQuery } =
     useMemberships();
   const { membershipsColumns } = useColumns();
 
