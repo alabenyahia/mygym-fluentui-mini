@@ -9,12 +9,12 @@ import {
   import { Dismiss24Regular } from "@fluentui/react-icons";
   import { useMediaQuery } from "react-responsive";
   import { useIsMutating } from "@tanstack/react-query";
-  import EditBtnBody from "../components/editbtnbody/Members";
   import { ismEditDrawerOpen, mEditData } from "../table-columns/main";
   import { useAtom } from 'jotai';
 
   export const EditBtnClickedLayout = ({
     title,
+    body
   }: any) => {
     const isMobile = useMediaQuery({ query: "(max-width: 920px)" });
     const isMutatingMembers = useIsMutating({
@@ -45,7 +45,7 @@ import {
           </DrawerHeaderTitle>
         </DrawerHeader>
   
-        <DrawerBody><EditBtnBody/></DrawerBody>
+        <DrawerBody>{body}</DrawerBody>
         <DrawerFooter style={{ alignSelf: "flex-end" }}>
           <Button
             size="large"

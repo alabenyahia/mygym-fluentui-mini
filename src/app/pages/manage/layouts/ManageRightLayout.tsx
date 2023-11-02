@@ -16,6 +16,7 @@ export default function ManageRightLayout({
   breadcrumbItems,
   addBtnLabel,
   filterBtnOnClick,
+  editBtnBody
 }: any) {
   const [searching, setSearching] = useState("");
   const [addBtnDrawerOpen, setAddBtnDrawerOpen] = useState(false);
@@ -79,7 +80,7 @@ export default function ManageRightLayout({
       >
         {children}
       </AddBtnClickedLayout>
-      <EditBtnClickedLayout/>
+      <EditBtnClickedLayout body={editBtnBody}/>
       
     </Card>
   );

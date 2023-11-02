@@ -1,162 +1,179 @@
 import {
-    Label,
-    Dropdown,
-    Field,
-    Option,
-    Spinner,
-  } from "@fluentui/react-components";
-  import useMemberships from "../../hooks/useMemberships";
-  import { DatePicker } from "@fluentui/react-date-time";
-  import { Formik, Form } from "formik";
-  import * as Yup from "yup";
-  import moment from "moment";
-  import useMemberships from "../../hooks/useMemberships";
-  import { FormikInput } from "../FormikInput";
-  import { useState } from "react";
-  import { useAtom } from "jotai";
-  import { mEditData, ismEditDrawerOpen } from "../../table-columns/main";
-  
-  export default function Memberships() {
-    const [editData, setEditData]: any = useAtom(mEditData);
-    const { membershipUpdateMutation } = useMemberships();
-    const [registeredDate, setRegisteredDate] = useState<Date>(
-      editData?.registeredDate ? new Date(editData?.registeredDate) : new Date()
-    );
-  
-    const [isEditDrawerOpen, setIsEditDrawerOpen] = useAtom(ismEditDrawerOpen);
+  Label,
+  Dropdown,
+  Field,
+  Option,
+  Spinner,
+} from "@fluentui/react-components";
+import useMemberships from "../../hooks/useMemberships";
+import { DatePicker } from "@fluentui/react-date-time";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+import moment from "moment";
+import { FormikInput } from "../FormikInput";
+import { useState } from "react";
+import { useAtom } from "jotai";
+import { mEditData, ismEditDrawerOpen } from "../../table-columns/main";
 
-  
-    return (
-      <Formik
-        initialValues={{
-          name: editData?.name || "",
-          price: editData?.price || "",
-          phone: editData?.phone || "",
-        }}
-        validationSchema={Yup.object({
-          name: Yup.string().required("Member name is required"),
-        })}
-        onSubmit={(values: any, { resetForm }) => {
-          const mMembership = membershipsQuery.data?.find(
-            (element) => element.id === membership
-          );
-  
-          let membershipExpirationDate: any = "";
-          if (mMembership) {
-            if (mMembership?.membershipType === "time") {
-              membershipExpirationDate = moment(registeredDate).add(
-                mMembership?.timeQuantity,
-                mMembership?.timeType === "month" ? "months" : "days"
-              );
-            }
-          }
-  
-          console.log("valls", {
+export default function Memberships() {
+  const [editData, setEditData]: any = useAtom(mEditData);
+  const { membershipUpdateMutation } = useMemberships();
+  const [timeType, setTimeType] = useState(
+    editData?.timeType ? editData?.timeType : ""
+  );
+  const [membershipType, setMembershipType] = useState(
+    editData?.membershipType ? editData?.membershipType : ""
+  );
+
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = useAtom(ismEditDrawerOpen);
+
+  return (
+    <Formik
+      initialValues={{
+        name: editData?.name || "",
+        price: editData?.price || "",
+        timeQuantity: editData?.timeQuantity || "",
+        sessionQuantity: editData?.sessionQuantity || "",
+      }}
+      validationSchema={Yup.object({
+        name: Yup.string().required("Membership name is required"),
+        price: Yup.number().required("Membership price is required"),
+        timeQuantity: Yup.number(),
+        sessionQuantity: Yup.number(),
+      })}
+      onSubmit={(values: any, { resetForm }) => {
+        console.log("valls", {
+          ...values,
+          timeType,
+          membershipType,
+        });
+
+        membershipUpdateMutation.mutate(
+          {
             id: editData?.id,
-              data: {
-                ...values,
-                registeredDate,
-                membership,
-                membershipExpirationDate,
-              }
-          });
-  
-          console.log("valls2", editData)
-  
-          memberUpdateMutation.mutate(
-            {
-              id: editData?.id,
-              data: {
-                ...values,
-                registeredDate,
-                membership,
-                membershipExpirationDate,
-              }
-              
+            data: {
+              ...values,
             },
-            {
-              onSuccess: () => {
-                setIsEditDrawerOpen(false);
-                //CLOSE MODAL
-              },
-            }
-          );
-        }}
+          },
+          {
+            onSuccess: () => {
+              setIsEditDrawerOpen(false);
+            },
+          }
+        );
+      }}
+    >
+      <Form
+        id="add-form"
+        style={{ display: "flex", flexDirection: "column", gap: "8px" }}
       >
-        <Form
-          id="add-form"
-          style={{ display: "flex", flexDirection: "column", gap: "8px" }}
-        >
-          {memberUpdateMutation.isPending ? (
+        {membershipUpdateMutation.isPending ? (
+          <div>
+            <Spinner label="editing membership..." />
+          </div>
+        ) : (
+          <>
             <div>
-              <Spinner label="Adding member..." />
+              <Label htmlFor="name" required>
+                Membership name
+              </Label>
+              <FormikInput
+                placeholder="Exp: Gold, Pro, Diamond..."
+                name="name"
+                id="name"
+              />
             </div>
-          ) : (
-            <>
-              <div>
-                <Label htmlFor="name" required>
-                  Member name
+
+            <div>
+              <Label htmlFor="price" required>
+                Membership price
+              </Label>
+              <FormikInput
+                placeholder="Membership price in TND"
+                name="price"
+                id="price"
+                type="number"
+              />
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <Label htmlFor="membershipType" required>
+                Membership type
+              </Label>
+              <Dropdown
+                disabled
+                name="membershipType"
+                id="membershipType"
+                defaultValue={membershipType}
+                defaultSelectedOptions={[membershipType]}
+                onOptionSelect={(_, data) =>
+                  setMembershipType(data.optionValue as string)
+                }
+              >
+                <Option text="Time-based" value="time" key="time">
+                  Time-based
+                </Option>
+
+                <Option text="Session-based" value="session" key="session">
+                  Session-based
+                </Option>
+              </Dropdown>
+            </div>
+
+            {membershipType === "time" && (
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <Label htmlFor="timeType" required>
+                  Time-based membership type
                 </Label>
-                <FormikInput placeholder="John Doe" name="name" id="name" />
+                <Dropdown
+                  disabled
+                  name="timeType"
+                  id="timeType"
+                  defaultValue={timeType}
+                  defaultSelectedOptions={[timeType]}
+                  onOptionSelect={(_, data) =>
+                    setTimeType(data.optionValue as string)
+                  }
+                >
+                  <Option text="Month-based" value="month" key="month">
+                    Month-based
+                  </Option>
+
+                  <Option text="Day-based" value="day" key="day">
+                    Day-based
+                  </Option>
+                </Dropdown>
               </div>
-  
+            )}
+
+            {membershipType === "time" && (
               <div>
-                <Label htmlFor="email">Member email</Label>
+                <Label htmlFor="timeQuantity" required>
+                  Time quantity
+                </Label>
                 <FormikInput
-                  placeholder="example@email.com"
-                  name="email"
-                  id="email"
+                  placeholder="How many months/days before it expires"
+                  name="timeQuantity"
+                  id="timeQuantity"
                 />
               </div>
-  
+            )}
+
+            {membershipType === "session" && (
               <div>
-                <Label htmlFor="phone">Member phone</Label>
-                <FormikInput placeholder="23 111 222" name="phone" id="phone" />
+                <Label htmlFor="sessionQuantity" required>
+                  Session quantity
+                </Label>
+                <FormikInput
+                  placeholder="Number of sessions of the membership"
+                  name="sessionQuantity"
+                  id="sessionQuantity"
+                />
               </div>
-  
-              <div>
-                <Field label="Member registration date">
-                  <DatePicker
-                    placeholder="Select a date..."
-                    id="registeredDate"
-                    value={registeredDate}
-                    onSelectDate={(date) => setRegisteredDate(date!)}
-                    showGoToToday={true}
-                  />
-                </Field>
-              </div>
-  
-              {membershipsQuery.data && membershipsQuery.data?.length > 0 ? (
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <label htmlFor="membership">Member membership</label>
-                  <Dropdown
-                    name="membership"
-                    id="membership"
-                    defaultValue={membership}
-                    defaultSelectedOptions={[membership]}
-                    onOptionSelect={(_, data) =>
-                      setMembership(data.optionValue as string)
-                    }
-                  >
-                    {membershipsQuery.data?.map((membership: any) => {
-                      const currency = "TND";
-                      return (
-                        <Option
-                          text={`${membership.name} ${membership.price}${currency}`}
-                          value={membership.id}
-                          key={membership.id}
-                        >{`${membership.name} ${membership.price}${currency}`}</Option>
-                      );
-                    })}
-                  </Dropdown>
-                </div>
-              ) : (
-                <Spinner label="Loading memberships..." />
-              )}
-            </>
-          )}
-        </Form>
-      </Formik>
-    );
-  }
-  
+            )}
+          </>
+        )}
+      </Form>
+    </Formik>
+  );
+}

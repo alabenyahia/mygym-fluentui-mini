@@ -93,7 +93,7 @@ export default function Members() {
       >
         {memberUpdateMutation.isPending ? (
           <div>
-            <Spinner label="Adding member..." />
+            <Spinner label="editing member..." />
           </div>
         ) : (
           <>

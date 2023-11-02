@@ -3,6 +3,7 @@ import { useColumns } from "./table-columns/main";
 import useMembers from "./hooks/useMembers";
 import AddBtnBody from "./components/addbtnbody/Members";
 import moment from "moment";
+import EditBtnBody from "./components/editbtnbody/Members";
 
 export default function Members() {
   const { membersQuery } = useMembers();
@@ -25,6 +26,7 @@ export default function Members() {
       })
     : [];
   const membersProps = {
+    editBtnBody: <EditBtnBody />,
     tableColumns: membersColumns,
     tableData,
     tableLoading: membersQuery.isFetching || membersQuery.isLoading,

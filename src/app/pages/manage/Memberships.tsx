@@ -2,6 +2,7 @@ import { useColumns } from "./table-columns/main";
 import ManageRightLayout from "./layouts/ManageRightLayout";
 import useMemberships from "./hooks/useMemberships";
 import AddBtnBody from "./components/addbtnbody/Memberships";
+import EditBtnBody from "./components/editbtnbody/Memberships";
 
 export default function Memberships() {
   const { membershipsQuery } =
@@ -9,6 +10,7 @@ export default function Memberships() {
   const { membershipsColumns } = useColumns();
 
   const membershipsProps = {
+    editBtnBody: <EditBtnBody />,
     tableColumns: membershipsColumns,
     tableData: membershipsQuery.data || [],
     tableLoading: membershipsQuery.isFetching || membershipsQuery.isLoading,
