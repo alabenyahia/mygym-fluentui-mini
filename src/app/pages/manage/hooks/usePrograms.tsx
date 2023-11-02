@@ -45,7 +45,7 @@ export default function useMemberships() {
   });
 
   const programUpdateMutation = useMutation({
-    mutationKey: ["membershipProgram"],
+    mutationKey: ["programUpdate"],
     mutationFn: ({ id, data }: any) => updateProgram(id, data),
     onSuccess: () => {
       toast.success("Program updated successfully!");

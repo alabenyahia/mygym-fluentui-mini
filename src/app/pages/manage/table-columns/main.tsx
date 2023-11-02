@@ -23,6 +23,7 @@ import {
 import useMembers from "../hooks/useMembers";
 import useMemberships from "../hooks/useMemberships";
 import usePrograms from "../hooks/usePrograms";
+import useClasses from "../hooks/useClasses";
 import { useState } from "react";
 import { atom, useAtom } from "jotai";
 
@@ -33,6 +34,7 @@ export const useColumns = () => {
   const { memberDeleteMutation } = useMembers();
   const { membershipDeleteMutation } = useMemberships();
   const { programDeleteMutation } = usePrograms();
+  const { classDeleteMutation } = useClasses();
 
   const deleteRow = (mutation: any, data: any) => {
     const id = data.id;
@@ -89,6 +91,23 @@ export const useColumns = () => {
       />
     ),
   };
+
+  const classesActions = {
+    header: "Actions",
+    accessorKey: "actions",
+    footer: "Actions",
+    enableSorting: false,
+    cell: (value: any) => (
+      <ActionsCell
+        mutation={classDeleteMutation}
+        data={value.row?.original}
+        deleteFn={deleteRow}
+        title="Delete class?"
+        desc="Are you sure you want to delete this class?"
+      />
+    ),
+  };
+
   const membersColumns = [
     {
       header: "ID",
@@ -165,7 +184,47 @@ export const useColumns = () => {
     programsActions,
   ];
 
-  return { membersColumns, membershipsColumns, programsColumns };
+  const classesColumns = [
+    {
+      header: "ID",
+      accessorKey: "id",
+    },
+    {
+      header: "Program",
+      accessorKey: "program",
+    },
+    {
+      header: "Class type",
+      accessorKey: "classType",
+    },
+    {
+      header: "Start date",
+      accessorKey: "startDate",
+    },
+    {
+      header: "End date",
+      accessorKey: "endDate",
+    },
+    {
+      header: "StartTime",
+      accessorKey: "startTime",
+    },
+    {
+      header: "endTime",
+      accessorKey: "endTime",
+    },
+    {
+      header: "Recurrent days",
+      accessorKey: "recurrentDays",
+    },
+    {
+      header: "Class limit",
+      accessorKey: "classLimit",
+    },
+    classesActions,
+  ];
+
+  return { membersColumns, membershipsColumns, programsColumns, classesColumns };
 };
 
 const ActionsCell = ({ mutation, data, deleteFn, title, desc }: any) => {

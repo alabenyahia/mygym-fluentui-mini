@@ -27,8 +27,8 @@ export type AddMemberDataType = {
 export type AddMembershipDataType = {
   name: string;
   price: number;
-  membershipType: 'time' | 'session';
-  timeType: 'day' | 'month';
+  membershipType: "time" | "session";
+  timeType: "day" | "month";
   timeQuantity: number;
   sessionQuantity: number;
   assignedTo: string;
@@ -37,4 +37,27 @@ export type AddMembershipDataType = {
 
 export type AddProgramDataType = {
   name: string;
+};
+
+export enum recurrentDaysEnum {
+  monday= 'monday',
+  tuesday='tuesday',
+  wednesday='wednesday',
+  thursday='thursday',
+  friday='friday',
+  saturday='saturday',
+  sunday='sunday',
+}
+
+export type AddClassDataType = {
+  program: string;
+  classType: "recurrent" | "one-time";
+  startDate: Date | Moment | "";
+  endDate: Date | Moment | "";
+  startTime: Date | Moment | "";
+  endTime: Date | Moment | "";
+  recurrentDays: recurrentDaysEnum[];
+  classLimit: number;
+  assignedTo: string;
+  deletedAt: Date | Moment | "";
 };
