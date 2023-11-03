@@ -29,8 +29,10 @@ export default function Memberships() {
   const [startTimeError, setStartTimeError] = useState("");
   const [endTimeError, setEndTimeError] = useState("");
   const [recurrentDays, setRecurrentDays]: any = useState([]);
+  const [recurrentDaysError, setRecurrentDaysError]: any = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [endDateError, setEndDateError] = useState("");
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
   const [startTimeValue, setStartTimeValue] = useState(
@@ -56,6 +58,8 @@ export default function Memberships() {
         setStartDateError("");
         setStartTimeError("");
         setEndTimeError("");
+        setEndDateError("");
+        setRecurrentDaysError("");
 
         if (!program) {
           setProgramError("Class program is required");
@@ -71,6 +75,17 @@ export default function Memberships() {
           setStartDateError("Class start date is required");
           return;
         }
+
+        if (classType === "recurrent" && !endDate) {
+          setEndDateError("Class end date is required");
+          return;
+        }
+
+        if (classType === "recurrent" && recurrentDays.length === 0) {
+          setRecurrentDaysError("Class recurrent days are required");
+          return
+        }
+
         if (!startTime) {
           setStartTimeError("Class start time is required");
           return;
@@ -220,6 +235,7 @@ export default function Memberships() {
                   />
                 </Field>
               ) : null}
+              {endDateError && <p style={{ color: "red" }}>{endDateError}</p>}
 
               <Field label="Select class end time">
                 <TimePicker
@@ -244,12 +260,7 @@ export default function Memberships() {
                   id="recurrentDays"
                   multiselect={true}
                   onOptionSelect={(_, data) =>
-                    setRecurrentDays([
-                        ...recurrentDays,
-                        data.optionValue as string
-                    ]
-                      
-                    )
+                    setRecurrentDays([...data.selectedOptions])
                   }
                 >
                   {(
@@ -265,6 +276,9 @@ export default function Memberships() {
                     );
                   })}
                 </Dropdown>
+                {recurrentDaysError && (
+                  <p style={{ color: "red" }}>{recurrentDaysError}</p>
+                )}
               </div>
             ) : null}
 
