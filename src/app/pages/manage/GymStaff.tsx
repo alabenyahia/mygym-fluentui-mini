@@ -2,7 +2,7 @@ import { useColumns } from "./table-columns/main";
 import ManageRightLayout from "./layouts/ManageRightLayout";
 import useGymStaff from "./hooks/useGymStaff";
 import AddBtnBody from "./components/addbtnbody/GymStaff";
-import EditBtnBody from "./components/editbtnbody/Classes";
+import EditBtnBody from "./components/editbtnbody/GymStaff";
 
 export default function GymStaff() {
   const { gymStaffQuery } = useGymStaff();
