@@ -61,3 +61,12 @@ export type AddClassDataType = {
   assignedTo: string;
   deletedAt: Date | Moment | "";
 };
+
+export type AddGymStaffDataType = {
+  name: string;
+  email: string;
+  phone: string;
+  role: "manager" | "receptionist";
+  assignedTo: string;
+  deletedAt: Date | Moment | "";
+};
