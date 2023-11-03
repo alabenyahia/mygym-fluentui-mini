@@ -29,6 +29,7 @@ import { atom, useAtom } from "jotai";
 
 export const ismEditDrawerOpen = atom(false);
 export const mEditData = atom(null);
+import moment from "moment";
 
 export const useColumns = () => {
   const { memberDeleteMutation } = useMembers();
@@ -200,22 +201,63 @@ export const useColumns = () => {
     {
       header: "Start date",
       accessorKey: "startDate",
+      cell: (value: any) => moment(value.row?.original?.startDate).format("LL"),
     },
     {
       header: "End date",
       accessorKey: "endDate",
+      cell: (value: any) =>
+        value.row?.original?.endDate === "" || !value.row?.original?.endDate
+          ? ""
+          : moment(value.row?.original?.endDate).format("LL"),
     },
     {
       header: "StartTime",
       accessorKey: "startTime",
+      cell: (value: any) =>
+        moment(value.row?.original?.startTime).format("HH:mm"),
     },
     {
       header: "endTime",
       accessorKey: "endTime",
+      cell: (value: any) =>
+        moment(value.row?.original?.endTime).format("HH:mm"),
     },
     {
       header: "Recurrent days",
       accessorKey: "recurrentDays",
+      cell: (value: any) => {
+        const recDays =
+          value.row?.original?.recurrentDays.length > 0 &&
+          value.row?.original?.recurrentDays
+            ? value.row?.original?.recurrentDays
+            : [];
+        if (recDays.length === 0) return "";
+        return (
+          <div style={{ display: "flex", gap: "4px" }}>
+            {recDays.map((day: any) => {
+              let dayName = day.substring(0, 4);
+              dayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
+              return (
+                <p
+                  style={{
+                    width: "44px",
+                    height: "44px",
+                    borderRadius: 999,
+                    backgroundColor: "#546485",
+                    color: "white",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {dayName}
+                </p>
+              );
+            })}
+          </div>
+        );
+      },
     },
     {
       header: "Class limit",
@@ -224,7 +266,12 @@ export const useColumns = () => {
     classesActions,
   ];
 
-  return { membersColumns, membershipsColumns, programsColumns, classesColumns };
+  return {
+    membersColumns,
+    membershipsColumns,
+    programsColumns,
+    classesColumns,
+  };
 };
 
 const ActionsCell = ({ mutation, data, deleteFn, title, desc }: any) => {
