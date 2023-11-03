@@ -215,8 +215,9 @@ export default function Memberships() {
                   name="recurrentDays"
                   id="recurrentDays"
                   multiselect={true}
+                  defaultValue={recurrentDays.join(",")}
                   defaultSelectedOptions={recurrentDays}
-                  onOptionSelect={(_, data) =>
+                  onOptionSelect={(_: any, data: any) =>
                     setRecurrentDays([...data.selectedOptions])
                   }
                 >
