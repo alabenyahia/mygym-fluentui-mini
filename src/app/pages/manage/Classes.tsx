@@ -2,7 +2,7 @@ import { useColumns } from "./table-columns/main";
 import ManageRightLayout from "./layouts/ManageRightLayout";
 import useClasses from "./hooks/useClasses";
 import AddBtnBody from "./components/addbtnbody/Classes";
-import EditBtnBody from "./components/editbtnbody/Programs";
+import EditBtnBody from "./components/editbtnbody/Classes";
 
 export default function Programs() {
   const { classesQuery } = useClasses();

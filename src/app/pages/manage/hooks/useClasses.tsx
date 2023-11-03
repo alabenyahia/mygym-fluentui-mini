@@ -9,6 +9,7 @@ export default function useClasses() {
   async function getClasses() {
     const classes = await pb.collection("classes").getFullList({
       sort: "-created",
+      expand: "program",
     });
     return classes;
   }
@@ -20,7 +21,7 @@ export default function useClasses() {
 
   async function updateClasses(id: string, data: any) {
     delete data.id;
-    const mClass = await pb.collection("classes").update(id, data);
+    const mClass = await pb.collection("classes").update(id, data, { expand: "program" });
     return mClass;
   }
 

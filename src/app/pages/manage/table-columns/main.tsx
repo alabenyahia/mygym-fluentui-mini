@@ -193,6 +193,8 @@ export const useColumns = () => {
     {
       header: "Program",
       accessorKey: "program",
+      cell: (value: any) => value.row?.original?.expand?.program?.name,
+
     },
     {
       header: "Class type",
