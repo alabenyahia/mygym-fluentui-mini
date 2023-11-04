@@ -40,13 +40,13 @@ export type AddProgramDataType = {
 };
 
 export enum recurrentDaysEnum {
-  monday= 'monday',
-  tuesday='tuesday',
-  wednesday='wednesday',
-  thursday='thursday',
-  friday='friday',
-  saturday='saturday',
-  sunday='sunday',
+  monday = "monday",
+  tuesday = "tuesday",
+  wednesday = "wednesday",
+  thursday = "thursday",
+  friday = "friday",
+  saturday = "saturday",
+  sunday = "sunday",
 }
 
 export type AddClassDataType = {
@@ -85,6 +85,17 @@ export type AddDiscountCodeDataType = {
   expires: boolean;
   validFrom: Date | Moment | "";
   validUntil: Date | Moment | "";
+  assignedTo: string;
+  deletedAt: Date | Moment | "";
+};
+
+export type AddTransactionDataType = {
+  member: string;
+  membership: string;
+  price: number;
+  isPaid: boolean;
+  from: Date | Moment | "";
+  to: Date | Moment | "";
   assignedTo: string;
   deletedAt: Date | Moment | "";
 };

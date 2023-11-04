@@ -27,6 +27,7 @@ import useClasses from "../hooks/useClasses";
 import useGymStaff from "../hooks/useGymStaff";
 import useCoaches from "../hooks/useCoaches";
 import useDiscountCodes from "../hooks/useDiscountCodes";
+import useTransactions from "../hooks/useTransactions";
 
 import { useState } from "react";
 import { atom, useAtom } from "jotai";
@@ -43,6 +44,7 @@ export const useColumns = () => {
   const { gymStaffDeleteMutation } = useGymStaff();
   const { coachDeleteMutation } = useCoaches();
   const { discountCodeDeleteMutation } = useDiscountCodes();
+  const { transactionDeleteMutation } = useTransactions();
 
   const deleteRow = (mutation: any, data: any) => {
     const id = data.id;
@@ -160,6 +162,22 @@ export const useColumns = () => {
         deleteFn={deleteRow}
         title="Delete Discount code?"
         desc="Are you sure you want to delete this discount code?"
+      />
+    ),
+  };
+
+  const transactionsActions = {
+    header: "Actions",
+    accessorKey: "actions",
+    footer: "Actions",
+    enableSorting: false,
+    cell: (value: any) => (
+      <ActionsCell
+        mutation={transactionDeleteMutation}
+        data={value.row?.original}
+        deleteFn={deleteRow}
+        title="Delete Transaction?"
+        desc="Are you sure you want to delete this transaction?"
       />
     ),
   };
@@ -404,6 +422,47 @@ export const useColumns = () => {
     discountCodesActions,
   ];
 
+  const transactionsColumns = [
+    {
+      header: "ID",
+      accessorKey: "id",
+    },
+    {
+      header: "Member",
+      accessorKey: "member",
+      cell: (value: any) => `${value.row?.original?.expand?.member?.name}-${value.row?.original?.expand?.member?.id}`,
+    },
+    {
+      header: "Membership",
+      accessorKey: "membership",
+      cell: (value: any) => `${value.row?.original?.expand?.membership?.name}`,
+    },
+    {
+      header: "From",
+      accessorKey: "from",
+      cell: (value: any) =>
+        value.row?.original?.from === "" || !value.row?.original?.from
+          ? ""
+          : moment(value.row?.original?.from).format("LL"),
+    },
+
+    {
+      header: "To",
+      accessorKey: "to",
+      cell: (value: any) =>
+        value.row?.original?.to === "" || !value.row?.original?.to
+          ? ""
+          : moment(value.row?.original?.to).format("LL"),
+    },
+    {
+      header: "Status",
+      accessorKey: "isPaid",
+      cell: (value: any) => value.row?.original?.isPaid ? "Paid" : "Not paid",
+    },
+    
+    transactionsActions,
+  ];
+
   return {
     membersColumns,
     membershipsColumns,
@@ -412,6 +471,7 @@ export const useColumns = () => {
     gymStaffColumns,
     coachesColumns,
     discountCodesColumns,
+    transactionsColumns
   };
 };
 

@@ -4,6 +4,7 @@ import {
   Field,
   Option,
   Spinner,
+  Switch,
 } from "@fluentui/react-components";
 import useMemberships from "../../hooks/useMemberships";
 import { DatePicker } from "@fluentui/react-date-time";
@@ -11,15 +12,18 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import moment from "moment";
 import useMembers from "../../hooks/useMembers";
+import useTransactions from "../../hooks/useTransactions";
 import pb from "src/utils/db/pocketbase";
 import { FormikInput } from "../FormikInput";
 import { useState } from "react";
 
 export default function Members() {
   const { membershipsQuery } = useMemberships();
+  const { transactionAddMutation } = useTransactions();
   const { memberMutation } = useMembers();
   const [registeredDate, setRegisteredDate] = useState<Date>(new Date());
   const [membership, setMembership] = useState("");
+  const [isPaid, setIsPaid] = useState(false);
 
   return (
     <Formik
@@ -55,7 +59,7 @@ export default function Members() {
           deletedAt: "",
         });
 
-        memberMutation.mutate(
+        const addMemberData = memberMutation.mutate(
           {
             ...values,
             registeredDate,
@@ -65,7 +69,7 @@ export default function Members() {
             deletedAt: "",
           },
           {
-            onSuccess: () => {
+            onSuccess: (mMember) => {
               resetForm({
                 values: {
                   name: "",
@@ -75,6 +79,35 @@ export default function Members() {
               });
               setMembership("");
               setRegisteredDate(new Date());
+
+              if (membership && mMembership) {
+                transactionAddMutation.mutate(
+                  {
+                    from:
+                      mMembership?.membershipType === "time" ? moment() : "",
+                    to:
+                      mMembership?.membershipType === "time"
+                        ? moment().add(
+                            mMembership?.timeQuantity,
+                            mMembership?.timeType === "month"
+                              ? "months"
+                              : "days"
+                          )
+                        : "",
+                    price: mMembership?.price,
+                    membership,
+                    member: mMember.id,
+                    isPaid,
+                    assignedTo: pb.authStore.model?.id,
+                    deletedAt: "",
+                  },
+                  {
+                    onSuccess: () => {
+                      setIsPaid(false);
+                    },
+                  }
+                );
+              }
             },
           }
         );
@@ -87,6 +120,10 @@ export default function Members() {
         {memberMutation.isPending ? (
           <div>
             <Spinner label="Adding member..." />
+          </div>
+        ) : transactionAddMutation.isPending ? (
+          <div>
+            <Spinner label="Adding transaction..." />
           </div>
         ) : (
           <>
@@ -144,8 +181,15 @@ export default function Members() {
                     );
                   })}
                 </Dropdown>
+                <Switch
+                  checked={isPaid}
+                  onChange={() => setIsPaid(!isPaid)}
+                  label="Does the member paid for the membership or he will pay later?"
+                />
               </div>
-            ) : <Spinner label="Loading memberships..." />}
+            ) : (
+              <Spinner label="Loading memberships..." />
+            )}
           </>
         )}
       </Form>
