@@ -26,6 +26,7 @@ import usePrograms from "../hooks/usePrograms";
 import useClasses from "../hooks/useClasses";
 import useGymStaff from "../hooks/useGymStaff";
 import useCoaches from "../hooks/useCoaches";
+import useDiscountCodes from "../hooks/useDiscountCodes";
 
 import { useState } from "react";
 import { atom, useAtom } from "jotai";
@@ -41,6 +42,7 @@ export const useColumns = () => {
   const { classDeleteMutation } = useClasses();
   const { gymStaffDeleteMutation } = useGymStaff();
   const { coachDeleteMutation } = useCoaches();
+  const { discountCodeDeleteMutation } = useDiscountCodes();
 
   const deleteRow = (mutation: any, data: any) => {
     const id = data.id;
@@ -146,6 +148,22 @@ export const useColumns = () => {
     ),
   };
 
+  const discountCodesActions = {
+    header: "Actions",
+    accessorKey: "actions",
+    footer: "Actions",
+    enableSorting: false,
+    cell: (value: any) => (
+      <ActionsCell
+        mutation={discountCodeDeleteMutation}
+        data={value.row?.original}
+        deleteFn={deleteRow}
+        title="Delete Discount code?"
+        desc="Are you sure you want to delete this discount code?"
+      />
+    ),
+  };
+
   const membersColumns = [
     {
       header: "ID",
@@ -231,7 +249,6 @@ export const useColumns = () => {
       header: "Program",
       accessorKey: "program",
       cell: (value: any) => value.row?.original?.expand?.program?.name,
-
     },
     {
       header: "Class type",
@@ -354,13 +371,47 @@ export const useColumns = () => {
     coachesActions,
   ];
 
+  const discountCodesColumns = [
+    {
+      header: "ID",
+      accessorKey: "id",
+    },
+    {
+      header: "Code",
+      accessorKey: "code",
+    },
+    {
+      header: "Does expire?",
+      accessorKey: "expires",
+    },
+    {
+      header: "Valid from",
+      accessorKey: "validFrom",
+      cell: (value: any) =>
+        value.row?.original?.validFrom === "" || !value.row?.original?.validFrom
+          ? ""
+          : moment(value.row?.original?.validFrom).format("LL"),
+    },
+    {
+      header: "Valid until",
+      accessorKey: "validUntil",
+      cell: (value: any) =>
+        value.row?.original?.validUntil === "" ||
+        !value.row?.original?.validUntil
+          ? ""
+          : moment(value.row?.original?.validUntil).format("LL"),
+    },
+    discountCodesActions,
+  ];
+
   return {
     membersColumns,
     membershipsColumns,
     programsColumns,
     classesColumns,
     gymStaffColumns,
-    coachesColumns
+    coachesColumns,
+    discountCodesColumns,
   };
 };
 

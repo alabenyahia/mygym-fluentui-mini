@@ -7,7 +7,6 @@ import {
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import useGymStaff from "../../hooks/useGymStaff";
-import pb from "src/utils/db/pocketbase";
 import { FormikInput } from "../FormikInput";
 import { useState } from "react";
 import { useAtom } from "jotai";

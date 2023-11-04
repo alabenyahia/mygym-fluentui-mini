@@ -79,3 +79,12 @@ export type AddCoachDataType = {
   assignedTo: string;
   deletedAt: Date | Moment | "";
 };
+
+export type AddDiscountCodeDataType = {
+  code: string;
+  expires: boolean;
+  validFrom: Date | Moment | "";
+  validUntil: Date | Moment | "";
+  assignedTo: string;
+  deletedAt: Date | Moment | "";
+};
