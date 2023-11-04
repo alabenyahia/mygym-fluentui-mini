@@ -36,6 +36,8 @@ export const ismEditDrawerOpen = atom(false);
 export const mEditData = atom(null);
 import moment from "moment";
 
+import { CheckmarkCircle24Filled, Circle24Filled } from "@fluentui/react-icons";
+
 export const useColumns = () => {
   const { memberDeleteMutation } = useMembers();
   const { membershipDeleteMutation } = useMemberships();
@@ -202,6 +204,13 @@ export const useColumns = () => {
     {
       header: "Registered date",
       accessorKey: "registeredDate",
+      sortingFn: (rowA: any, rowB: any, columnId: any) => {
+        if (rowA === "" || !rowA || rowB === "" || !rowB) return;
+        const dateA = moment(rowA.getValue(columnId));
+        const dateB = moment(rowB.getValue(columnId));
+
+        return dateA.isBefore(dateB) ? 1 : dateA.isAfter(dateB) ? -1 : 0;
+      },
     },
     {
       header: "Membership",
@@ -210,6 +219,13 @@ export const useColumns = () => {
     {
       header: "Memberhsip Exp/date",
       accessorKey: "membershipExpirationDate",
+      sortingFn: (rowA: any, rowB: any, columnId: any) => {
+        if (rowA === "" || !rowA || rowB === "" || !rowB) return;
+        const dateA = moment(rowA.getValue(columnId));
+        const dateB = moment(rowB.getValue(columnId));
+
+        return dateA.isBefore(dateB) ? 1 : dateA.isAfter(dateB) ? -1 : 0;
+      },
     },
     membersActions,
   ];
@@ -276,6 +292,13 @@ export const useColumns = () => {
       header: "Start date",
       accessorKey: "startDate",
       cell: (value: any) => moment(value.row?.original?.startDate).format("LL"),
+      sortingFn: (rowA: any, rowB: any, columnId: any) => {
+        if (rowA === "" || !rowA || rowB === "" || !rowB) return;
+        const dateA = moment(rowA.getValue(columnId));
+        const dateB = moment(rowB.getValue(columnId));
+
+        return dateA.isBefore(dateB) ? 1 : dateA.isAfter(dateB) ? -1 : 0;
+      },
     },
     {
       header: "End date",
@@ -284,18 +307,51 @@ export const useColumns = () => {
         value.row?.original?.endDate === "" || !value.row?.original?.endDate
           ? ""
           : moment(value.row?.original?.endDate).format("LL"),
+      sortingFn: (rowA: any, rowB: any, columnId: any) => {
+        if (rowA === "" || !rowA || rowB === "" || !rowB) return;
+        const dateA = moment(rowA.getValue(columnId));
+        const dateB = moment(rowB.getValue(columnId));
+
+        return dateA.isBefore(dateB) ? 1 : dateA.isAfter(dateB) ? -1 : 0;
+      },
     },
     {
       header: "StartTime",
       accessorKey: "startTime",
       cell: (value: any) =>
         moment(value.row?.original?.startTime).format("HH:mm"),
+      sortingFn: (rowA: any, rowB: any, columnId: any) => {
+        if (rowA === "" || !rowA || rowB === "" || !rowB) return;
+        const dateA = moment(rowA.getValue(columnId));
+        const dateB = moment(rowB.getValue(columnId));
+        const mDateA = moment()
+          .set("hour", dateA.get("hour"))
+          .set("minute", dateA.get("minute"));
+        const mDateB = moment()
+          .set("hour", dateB.get("hour"))
+          .set("minute", dateB.get("minute"));
+
+        return mDateA.isBefore(mDateB) ? 1 : mDateA.isAfter(mDateB) ? -1 : 0;
+      },
     },
     {
       header: "endTime",
       accessorKey: "endTime",
       cell: (value: any) =>
         moment(value.row?.original?.endTime).format("HH:mm"),
+      sortingFn: (rowA: any, rowB: any, columnId: any) => {
+        if (rowA === "" || !rowA || rowB === "" || !rowB) return;
+        const dateA = moment(rowA.getValue(columnId));
+        const dateB = moment(rowB.getValue(columnId));
+        const mDateA = moment()
+          .set("hour", dateA.get("hour"))
+          .set("minute", dateA.get("minute"));
+        const mDateB = moment()
+          .set("hour", dateB.get("hour"))
+          .set("minute", dateB.get("minute"));
+
+        return mDateA.isBefore(mDateB) ? 1 : mDateA.isAfter(mDateB) ? -1 : 0;
+      },
     },
     {
       header: "Recurrent days",
@@ -401,6 +457,7 @@ export const useColumns = () => {
     {
       header: "Does expire?",
       accessorKey: "expires",
+      cell: (value: any) => (value.row?.original?.expires ? "Yes" : "No"),
     },
     {
       header: "Valid from",
@@ -409,6 +466,13 @@ export const useColumns = () => {
         value.row?.original?.validFrom === "" || !value.row?.original?.validFrom
           ? ""
           : moment(value.row?.original?.validFrom).format("LL"),
+      sortingFn: (rowA: any, rowB: any, columnId: any) => {
+        if (rowA === "" || !rowA || rowB === "" || !rowB) return;
+        const dateA = moment(rowA.getValue(columnId));
+        const dateB = moment(rowB.getValue(columnId));
+
+        return dateA.isBefore(dateB) ? 1 : dateA.isAfter(dateB) ? -1 : 0;
+      },
     },
     {
       header: "Valid until",
@@ -418,6 +482,13 @@ export const useColumns = () => {
         !value.row?.original?.validUntil
           ? ""
           : moment(value.row?.original?.validUntil).format("LL"),
+      sortingFn: (rowA: any, rowB: any, columnId: any) => {
+        if (rowA === "" || !rowA || rowB === "" || !rowB) return;
+        const dateA = moment(rowA.getValue(columnId));
+        const dateB = moment(rowB.getValue(columnId));
+
+        return dateA.isBefore(dateB) ? 1 : dateA.isAfter(dateB) ? -1 : 0;
+      },
     },
     discountCodesActions,
   ];
@@ -430,7 +501,8 @@ export const useColumns = () => {
     {
       header: "Member",
       accessorKey: "member",
-      cell: (value: any) => `${value.row?.original?.expand?.member?.name}-${value.row?.original?.expand?.member?.id}`,
+      cell: (value: any) =>
+        `${value.row?.original?.expand?.member?.name}-${value.row?.original?.expand?.member?.id}`,
     },
     {
       header: "Membership",
@@ -444,6 +516,13 @@ export const useColumns = () => {
         value.row?.original?.from === "" || !value.row?.original?.from
           ? ""
           : moment(value.row?.original?.from).format("LL"),
+      sortingFn: (rowA: any, rowB: any, columnId: any) => {
+        if (rowA === "" || !rowA || rowB === "" || !rowB) return;
+        const dateA = moment(rowA.getValue(columnId));
+        const dateB = moment(rowB.getValue(columnId));
+
+        return dateA.isBefore(dateB) ? 1 : dateA.isAfter(dateB) ? -1 : 0;
+      },
     },
 
     {
@@ -453,13 +532,29 @@ export const useColumns = () => {
         value.row?.original?.to === "" || !value.row?.original?.to
           ? ""
           : moment(value.row?.original?.to).format("LL"),
+      sortingFn: (rowA: any, rowB: any, columnId: any) => {
+        if (rowA === "" || !rowA || rowB === "" || !rowB) return;
+        const dateA = moment(rowA.getValue(columnId));
+        const dateB = moment(rowB.getValue(columnId));
+
+        return dateA.isBefore(dateB) ? 1 : dateA.isAfter(dateB) ? -1 : 0;
+      },
     },
     {
       header: "Status",
       accessorKey: "isPaid",
-      cell: (value: any) => value.row?.original?.isPaid ? "Paid" : "Not paid",
+      cell: (value: any) =>
+        value.row?.original?.isPaid ? (
+          <span style={{ display: "flex", alignItems: "center", gap: "2px" }}>
+            <CheckmarkCircle24Filled primaryFill="green" /> Paid
+          </span>
+        ) : (
+          <span style={{ display: "flex", alignItems: "center", gap: "2px" }}>
+            <Circle24Filled primaryFill="red" /> Not Paid
+          </span>
+        ),
     },
-    
+
     transactionsActions,
   ];
 
@@ -471,7 +566,7 @@ export const useColumns = () => {
     gymStaffColumns,
     coachesColumns,
     discountCodesColumns,
-    transactionsColumns
+    transactionsColumns,
   };
 };
 
