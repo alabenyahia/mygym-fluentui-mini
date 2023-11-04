@@ -13,13 +13,14 @@ import { useState } from "react";
 import { useAtom } from "jotai";
 import { mEditData, ismEditDrawerOpen } from "../../table-columns/main";
 
-export default function Members() {
+export default function GymStaff() {
   const [editData, setEditData]: any = useAtom(mEditData);
   const { gymStaffUpdateMutation } = useGymStaff();
   const [role, setRole] = useState(editData?.role || "");
   const [roleError, setRoleError] = useState("");
   
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useAtom(ismEditDrawerOpen);
+  
 
   return (
     <Formik

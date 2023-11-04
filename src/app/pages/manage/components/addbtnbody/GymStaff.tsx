@@ -8,13 +8,12 @@ import {
 import { DatePicker } from "@fluentui/react-date-time";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import moment from "moment";
 import useGymStaff from "../../hooks/useGymStaff";
 import pb from "src/utils/db/pocketbase";
 import { FormikInput } from "../FormikInput";
 import { useState } from "react";
 
-export default function Members() {
+export default function GymStaf() {
   const { gymStaffAddMutation } = useGymStaff();
   const [role, setRole] = useState("");
   const [roleError, setRoleError] = useState("");

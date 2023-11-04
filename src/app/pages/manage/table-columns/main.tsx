@@ -25,6 +25,8 @@ import useMemberships from "../hooks/useMemberships";
 import usePrograms from "../hooks/usePrograms";
 import useClasses from "../hooks/useClasses";
 import useGymStaff from "../hooks/useGymStaff";
+import useCoaches from "../hooks/useCoaches";
+
 import { useState } from "react";
 import { atom, useAtom } from "jotai";
 
@@ -38,6 +40,7 @@ export const useColumns = () => {
   const { programDeleteMutation } = usePrograms();
   const { classDeleteMutation } = useClasses();
   const { gymStaffDeleteMutation } = useGymStaff();
+  const { coachDeleteMutation } = useCoaches();
 
   const deleteRow = (mutation: any, data: any) => {
     const id = data.id;
@@ -123,6 +126,22 @@ export const useColumns = () => {
         deleteFn={deleteRow}
         title="Delete Gym staff?"
         desc="Are you sure you want to delete this gym staff?"
+      />
+    ),
+  };
+
+  const coachesActions = {
+    header: "Actions",
+    accessorKey: "actions",
+    footer: "Actions",
+    enableSorting: false,
+    cell: (value: any) => (
+      <ActionsCell
+        mutation={coachDeleteMutation}
+        data={value.row?.original}
+        deleteFn={deleteRow}
+        title="Delete Coach?"
+        desc="Are you sure you want to delete this coach?"
       />
     ),
   };
@@ -310,12 +329,38 @@ export const useColumns = () => {
     gymStaffActions,
   ];
 
+  const coachesColumns = [
+    {
+      header: "ID",
+      accessorKey: "id",
+    },
+    {
+      header: "Name",
+      accessorKey: "name",
+    },
+    {
+      header: "Email",
+      accessorKey: "email",
+    },
+    {
+      header: "Phone",
+      accessorKey: "phone",
+    },
+    {
+      header: "Program",
+      accessorKey: "program",
+      cell: (value: any) => value.row?.original?.expand?.program?.name,
+    },
+    coachesActions,
+  ];
+
   return {
     membersColumns,
     membershipsColumns,
     programsColumns,
     classesColumns,
-    gymStaffColumns
+    gymStaffColumns,
+    coachesColumns
   };
 };
 

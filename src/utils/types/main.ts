@@ -70,3 +70,12 @@ export type AddGymStaffDataType = {
   assignedTo: string;
   deletedAt: Date | Moment | "";
 };
+
+export type AddCoachDataType = {
+  name: string;
+  email: string;
+  phone: string;
+  program: string;
+  assignedTo: string;
+  deletedAt: Date | Moment | "";
+};

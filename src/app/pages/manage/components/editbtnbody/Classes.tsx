@@ -47,8 +47,6 @@ export default function Memberships() {
   );
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useAtom(ismEditDrawerOpen);
 
-  const { programsQuery } = usePrograms();
-
   return (
     <Formik
       initialValues={{
