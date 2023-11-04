@@ -85,10 +85,10 @@ export default function DesktopLayout({ children }: any) {
         </div>
       </aside>
 
-      {location.pathname.includes("/manage") && <ManageSidebar />} 
+      {location.pathname.includes("/manage") && <ManageSidebar />}
 
       <Card style={{ flex: 1, height: "100%" }}>
-        <div style={{height: "100%"}}>{children}</div>
+        <div style={{ height: "100%" }}>{children}</div>
       </Card>
     </div>
   );
@@ -237,8 +237,14 @@ const useSidebarBtnStyles = makeStyles({
 function SideBarBtn({ children, path }: any) {
   const location = useLocation();
   let isActive = false;
+  
   if (path === "/") {
     isActive = location.pathname === path;
+  } else if (
+    location.pathname.includes("/manage") &&
+    path.includes("/manage")
+  ) {
+    isActive = true;
   } else {
     isActive = location.pathname.includes(path);
   }
