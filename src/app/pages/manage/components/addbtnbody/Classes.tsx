@@ -18,6 +18,8 @@ import {
   formatDateToTimeString,
 } from "@fluentui/react-timepicker-compat-preview";
 import { recurrentDaysEnum } from "src/utils/types/main";
+import useLogin from "src/app/pages/auth/hooks/useLogin";
+
 
 export default function Memberships() {
   const { classAddMutation } = useClasses();
@@ -43,6 +45,8 @@ export default function Memberships() {
   );
 
   const { programsQuery } = usePrograms();
+  const { getUserQuery, updateTaskMutation } = useLogin();
+
 
   return (
     <Formik
@@ -122,6 +126,11 @@ export default function Memberships() {
           },
           {
             onSuccess: () => {
+              if (getUserQuery.data?.getStarted[4].isDone === false) {
+                const temp = [...getUserQuery.data?.getStarted];
+                temp[4].isDone = true;
+                updateTaskMutation.mutate({ getStarted: temp });
+              }
               resetForm({
                 values: {
                   classLimit: "",

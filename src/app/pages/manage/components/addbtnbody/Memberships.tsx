@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import pb from "src/utils/db/pocketbase";
 import { FormikInput } from "../FormikInput";
 import { useState } from "react";
+import useLogin from "src/app/pages/auth/hooks/useLogin";
 
 export default function Memberships() {
   const { membershipAddMutation } = useMemberships();
@@ -12,6 +13,7 @@ export default function Memberships() {
   const [membershipType, setMembershipType] = useState("");
   const [membershipTypeError, setMembershipTypeError] = useState("");
   const [timeTypeError, setTimeTypeError] = useState("");
+  const { getUserQuery, updateTaskMutation } = useLogin();
 
   return (
     <Formik
@@ -41,7 +43,6 @@ export default function Memberships() {
           return;
         }
 
-
         console.log("valls", {
           ...values,
           timeType,
@@ -60,6 +61,11 @@ export default function Memberships() {
           },
           {
             onSuccess: () => {
+              if (getUserQuery.data?.getStarted[1].isDone === false) {
+                const temp = [...getUserQuery.data?.getStarted];
+                temp[1].isDone = true;
+                updateTaskMutation.mutate({ getStarted: temp });
+              }
               resetForm({
                 values: {
                   name: "",
@@ -132,49 +138,57 @@ export default function Memberships() {
               )}
             </div>
 
-            {membershipType === "time" && <div style={{ display: "flex", flexDirection: "column" }}>
-              <Label htmlFor="timeType" required>
-                Time-based membership type
-              </Label>
-              <Dropdown
-                name="timeType"
-                id="timeType"
-                onOptionSelect={(_, data) =>
-                  setTimeType(data.optionValue as string)
-                }
-              >
-                <Option text="Month-based" value="month" key="month">
-                  Month-based
-                </Option>
+            {membershipType === "time" && (
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <Label htmlFor="timeType" required>
+                  Time-based membership type
+                </Label>
+                <Dropdown
+                  name="timeType"
+                  id="timeType"
+                  onOptionSelect={(_, data) =>
+                    setTimeType(data.optionValue as string)
+                  }
+                >
+                  <Option text="Month-based" value="month" key="month">
+                    Month-based
+                  </Option>
 
-                <Option text="Day-based" value="day" key="day">
-                  Day-based
-                </Option>
-              </Dropdown>
-              {timeTypeError && <p style={{ color: "red" }}>{timeTypeError}</p>}
-            </div>}
+                  <Option text="Day-based" value="day" key="day">
+                    Day-based
+                  </Option>
+                </Dropdown>
+                {timeTypeError && (
+                  <p style={{ color: "red" }}>{timeTypeError}</p>
+                )}
+              </div>
+            )}
 
-            {membershipType === "time" && <div>
-              <Label htmlFor="timeQuantity" required>
-                Time quantity
-              </Label>
-              <FormikInput
-                placeholder="How many months/days before it expires"
-                name="timeQuantity"
-                id="timeQuantity"
-              />
-            </div>}
+            {membershipType === "time" && (
+              <div>
+                <Label htmlFor="timeQuantity" required>
+                  Time quantity
+                </Label>
+                <FormikInput
+                  placeholder="How many months/days before it expires"
+                  name="timeQuantity"
+                  id="timeQuantity"
+                />
+              </div>
+            )}
 
-            {membershipType === "session" && <div>
-              <Label htmlFor="sessionQuantity" required>
-                Session quantity
-              </Label>
-              <FormikInput
-                placeholder="Number of sessions of the membership"
-                name="sessionQuantity"
-                id="sessionQuantity"
-              />
-            </div>}
+            {membershipType === "session" && (
+              <div>
+                <Label htmlFor="sessionQuantity" required>
+                  Session quantity
+                </Label>
+                <FormikInput
+                  placeholder="Number of sessions of the membership"
+                  name="sessionQuantity"
+                  id="sessionQuantity"
+                />
+              </div>
+            )}
           </>
         )}
       </Form>

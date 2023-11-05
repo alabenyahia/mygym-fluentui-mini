@@ -16,6 +16,8 @@ import useTransactions from "../../hooks/useTransactions";
 import pb from "src/utils/db/pocketbase";
 import { FormikInput } from "../FormikInput";
 import { useState } from "react";
+import useLogin from "src/app/pages/auth/hooks/useLogin";
+
 
 export default function Members() {
   const { membershipsQuery } = useMemberships();
@@ -24,6 +26,8 @@ export default function Members() {
   const [registeredDate, setRegisteredDate] = useState<Date>(new Date());
   const [membership, setMembership] = useState("");
   const [isPaid, setIsPaid] = useState(false);
+  const { getUserQuery, updateTaskMutation } = useLogin();
+
 
   return (
     <Formik
@@ -59,7 +63,7 @@ export default function Members() {
           deletedAt: "",
         });
 
-        const addMemberData = memberMutation.mutate(
+        memberMutation.mutate(
           {
             ...values,
             registeredDate,
@@ -70,6 +74,12 @@ export default function Members() {
           },
           {
             onSuccess: (mMember) => {
+              if (getUserQuery.data?.getStarted[2].isDone === false) {
+                const temp = [...getUserQuery.data?.getStarted];
+                temp[2].isDone = true;
+                updateTaskMutation.mutate({ getStarted: temp });
+              }
+              
               resetForm({
                 values: {
                   name: "",

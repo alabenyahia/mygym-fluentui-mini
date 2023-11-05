@@ -4,9 +4,12 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import pb from "src/utils/db/pocketbase";
 import { FormikInput } from "../FormikInput";
+import useLogin from "src/app/pages/auth/hooks/useLogin";
+
 
 export default function Programs() {
   const { programAddMutation } = usePrograms();
+  const { getUserQuery, updateTaskMutation } = useLogin();
 
   return (
     <Formik
@@ -31,6 +34,11 @@ export default function Programs() {
           },
           {
             onSuccess: () => {
+              if (getUserQuery.data?.getStarted[3].isDone === false) {
+                const temp = [...getUserQuery.data?.getStarted];
+                temp[3].isDone = true;
+                updateTaskMutation.mutate({ getStarted: temp });
+              }
               resetForm({
                 values: {
                   name: "",
