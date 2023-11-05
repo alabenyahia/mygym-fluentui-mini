@@ -218,10 +218,10 @@ function SidebarBtns() {
         <Caption2Strong>Reports</Caption2Strong>
       </SideBarBtn>
 
-      <SideBarBtn path="/calendar">
+      {/* <SideBarBtn path="/calendar">
         <Calendar24Regular />
         <Caption2Strong>Calendar</Caption2Strong>
-      </SideBarBtn>
+      </SideBarBtn> */}
 
       <SideBarBtn path="/communication">
         <Send24Regular />

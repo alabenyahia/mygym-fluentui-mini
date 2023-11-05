@@ -1,11 +1,18 @@
 import { Moment } from "moment";
 
+type GetStarted = {
+  num: number,
+  desc: string,
+  isDone: boolean
+}
+
 export type RegisterDataType = {
   name: string;
   gymName: string;
   email: string;
   password: string;
   passwordConfirm: string;
+  getStarted: GetStarted[]
 };
 
 export type LoginDataType = {

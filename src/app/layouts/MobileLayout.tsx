@@ -211,14 +211,14 @@ function DrawerContent() {
         Reports
       </Button>
 
-      <Button
+      {/* <Button
         appearance={isAction("/calendar") ? "primary" : "subtle"}
         icon={<Calendar24Regular />}
         className={styles.btns}
         onClick={() => navigate("/calendar")}
       >
         Calendar
-      </Button>
+      </Button> */}
 
       <Button
         appearance={isAction("/communication") ? "primary" : "subtle"}

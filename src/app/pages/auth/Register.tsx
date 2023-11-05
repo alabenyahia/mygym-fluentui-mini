@@ -82,6 +82,14 @@ function RegisterForm() {
   const { registerMutation } = useRegister();
   const navigate = useNavigate();
 
+  const getStarted = [
+    { num: 0, desc: "Create your MyGym account", isDone: true },
+    { num: 1, desc: "Create first membership", isDone: false },
+    { num: 2, desc: "Add your first member", isDone: false },
+    { num: 3, desc: "Create your first class program", isDone: false },
+    { num: 4, desc: "Create your first class", isDone: false },
+  ];
+
   return (
     <div>
       <div
@@ -116,11 +124,12 @@ function RegisterForm() {
             .required("Your password is required")
             .min(8, "Password must be at least 8 characters"),
         })}
-        onSubmit={(values: RegisterDataType, { resetForm }) => {
+        onSubmit={(values: any, { resetForm }) => {
           registerMutation.mutate(
             {
               ...values,
               passwordConfirm: values.password,
+              getStarted,
             },
             {
               onSuccess: () => {
@@ -174,4 +183,3 @@ function RegisterForm() {
     </div>
   );
 }
-

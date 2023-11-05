@@ -69,10 +69,10 @@ export default function AppRoutes() {
           element={<LayoutDefaultRoute element={Reports} />}
         />
 
-        <Route
+        {/* <Route
           path="/calendar"
           element={<LayoutDefaultRoute element={Calendar} />}
-        />
+        /> */}
 
         <Route
           path="/communication"
