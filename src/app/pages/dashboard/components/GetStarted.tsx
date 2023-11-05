@@ -70,7 +70,7 @@ export default function GetStarted() {
             {getUserQuery.data?.getStarted.map((item: any) => {
               return (
                 <div>
-                  <Checkbox checked={item.isDone} label={item.desc} />
+                  <Checkbox checked={item.isDone} label={item.desc} style={{textDecoration: item.isDone ? "line-through" : "none"}}/>
                   {!item.isDone ? (
                     <Button size="small" onClick={() => navigate(item.url)}>
                       {item.buttonText}
