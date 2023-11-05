@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Login from "src/app/pages/auth/Login";
 import Register from "src/app/pages/auth/Register";
 import NotFound from "src/app/pages/not-found/NotFound";
@@ -16,6 +16,7 @@ import {
   Transactions,
 } from "src/app/pages/manage";
 import Reports from "src/app/pages/reports/Reports";
+import Calendar from "src/app/pages/calendar/Calendar";
 import Communication from "src/app/pages/communication/Communication";
 import LayoutDefaultRoute from "./LayoutDefaultRoute";
 
@@ -67,6 +68,12 @@ export default function AppRoutes() {
           path="/reports"
           element={<LayoutDefaultRoute element={Reports} />}
         />
+
+        <Route
+          path="/calendar"
+          element={<LayoutDefaultRoute element={Calendar} />}
+        />
+
         <Route
           path="/communication"
           element={<LayoutDefaultRoute element={Communication} />}

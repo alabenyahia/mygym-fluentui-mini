@@ -30,6 +30,7 @@ import {
   DriveTrain24Filled,
   ReceiptMoney24Regular,
   BarcodeScanner24Regular,
+  Calendar24Regular
 } from "@fluentui/react-icons";
 
 export default function DesktopLayout({ children }: any) {
@@ -217,10 +218,17 @@ function SidebarBtns() {
         <Caption2Strong>Reports</Caption2Strong>
       </SideBarBtn>
 
+      <SideBarBtn path="/calendar">
+        <Calendar24Regular />
+        <Caption2Strong>Calendar</Caption2Strong>
+      </SideBarBtn>
+
       <SideBarBtn path="/communication">
         <Send24Regular />
         <Caption2Strong>Communication</Caption2Strong>
       </SideBarBtn>
+
+      
     </div>
   );
 }

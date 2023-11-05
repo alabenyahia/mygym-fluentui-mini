@@ -27,6 +27,7 @@ import {
   DriveTrain24Filled,
   ReceiptMoney24Regular,
   BarcodeScanner24Regular,
+  Calendar24Regular
 } from "@fluentui/react-icons";
 import { useState } from "react";
 import pb from "src/utils/db/pocketbase";
@@ -209,6 +210,16 @@ function DrawerContent() {
       >
         Reports
       </Button>
+
+      <Button
+        appearance={isAction("/calendar") ? "primary" : "subtle"}
+        icon={<Calendar24Regular />}
+        className={styles.btns}
+        onClick={() => navigate("/calendar")}
+      >
+        Calendar
+      </Button>
+
       <Button
         appearance={isAction("/communication") ? "primary" : "subtle"}
         icon={<Send24Regular />}
