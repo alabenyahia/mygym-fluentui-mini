@@ -10,6 +10,7 @@ import useLogin from "src/app/pages/auth/hooks/useLogin";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
 import { isDarkTheme } from "src/utils/atoms/main";
+import { useMediaQuery } from "react-responsive";
 
 function calculatePercentage(arr: any) {
   function calculateDone(array: any[]) {
@@ -30,15 +31,24 @@ export default function GetStarted() {
   const navigate = useNavigate();
 
   const [isDark, setIsDark] = useAtom(isDarkTheme);
+  const isMobile = useMediaQuery({ query: "(max-width: 1200px)" });
 
   console.log("user data getstarted", getUserQuery.data?.getStarted);
   return (
-    <Card>
+    <Card style={{ flex: 1, maxHeight: "300px" }}>
       {getUserQuery.isPending ? (
         <Spinner label="Loading tasks..." />
       ) : (
         <>
-          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: isMobile ? "4px" : "16px",
+              flexDirection: isMobile ? "column" : "row",
+            }}
+          >
             <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
               <Image
                 width={48}
@@ -70,7 +80,13 @@ export default function GetStarted() {
             {getUserQuery.data?.getStarted.map((item: any) => {
               return (
                 <div>
-                  <Checkbox checked={item.isDone} label={item.desc} style={{textDecoration: item.isDone ? "line-through" : "none"}}/>
+                  <Checkbox
+                    checked={item.isDone}
+                    label={item.desc}
+                    style={{
+                      textDecoration: item.isDone ? "line-through" : "none",
+                    }}
+                  />
                   {!item.isDone ? (
                     <Button size="small" onClick={() => navigate(item.url)}>
                       {item.buttonText}
