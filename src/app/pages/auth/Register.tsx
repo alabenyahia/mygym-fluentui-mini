@@ -84,10 +84,10 @@ function RegisterForm() {
 
   const getStarted = [
     { num: 0, desc: "Create your MyGym account", isDone: true },
-    { num: 1, desc: "Create first membership", isDone: false },
-    { num: 2, desc: "Add your first member", isDone: false },
-    { num: 3, desc: "Create your first class program", isDone: false },
-    { num: 4, desc: "Create your first class", isDone: false },
+    { num: 1, desc: "Create first membership", isDone: false, url: "/manage/memberships", buttonText: "Create membership" },
+    { num: 2, desc: "Add your first member", isDone: false, url: "/manage/members", buttonText: "Create member" },
+    { num: 3, desc: "Create your first class program", isDone: false, url: "/manage/programs", buttonText: "Create program" },
+    { num: 4, desc: "Create your first class", isDone: false, url: "/manage/classes", buttonText: "Create class" },
   ];
 
   return (

@@ -19,7 +19,6 @@ import {
 } from "@fluentui/react-icons";
 import { useAtom } from "jotai";
 import { isDarkTheme } from "src/utils/atoms/main";
-import { AnyCnameRecord } from "dns";
 
 const useAvatarMenuStyles = makeStyles({
   menuPopover: {

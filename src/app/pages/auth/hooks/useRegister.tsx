@@ -9,6 +9,8 @@ export default function useRegister() {
     return user;
   }
 
+  
+
   // Mutations
   const registerMutation = useMutation({
     mutationFn: register,
