@@ -1,4 +1,10 @@
+import Members from "./components/Members";
 
 export default function Reports() {
-  return <div>Reports</div>;
+
+  return (
+    <div>
+      <Members/>
+    </div>
+  );
 }
