@@ -8,6 +8,8 @@ import {
 } from "@fluentui/react-components";
 import useLogin from "src/app/pages/auth/hooks/useLogin";
 import { useNavigate } from "react-router-dom";
+import { useAtom } from "jotai";
+import { isDarkTheme } from "src/utils/atoms/main";
 
 function calculatePercentage(arr: any) {
   function calculateDone(array: any[]) {
@@ -26,6 +28,8 @@ function calculatePercentage(arr: any) {
 export default function GetStarted() {
   const { getUserQuery } = useLogin();
   const navigate = useNavigate();
+
+  const [isDark, setIsDark] = useAtom(isDarkTheme);
 
   console.log("user data getstarted", getUserQuery.data?.getStarted);
   return (
@@ -49,9 +53,9 @@ export default function GetStarted() {
                 display: "flex",
                 alignItems: "center",
                 gap: "3px",
-                outline: "1px solid black",
+                outline: isDark ? "1px solid #f0f0f0" : "1px solid #373737",
                 padding: "8px",
-                backgroundColor: "white",
+                backgroundColor: isDark ? "#373737" : "#f0f0f0",
                 borderRadius: "4px",
               }}
             >
