@@ -1,7 +1,7 @@
 import { Card, CardHeader, Spinner, Title3 } from "@fluentui/react-components";
 import useMembers from "src/app/pages/manage/hooks/useMembers";
 
-export default function Members() {
+export default function Members({children}: any) {
   const { membersQuery } = useMembers();
   return (
     <Card>
@@ -39,7 +39,12 @@ export default function Members() {
               }
             </span>
           </div>
+
+          <div style={{marginTop: "20px"}}>
+            {children}
+          </div>
         </div>
+
       )}
     </Card>
   );
