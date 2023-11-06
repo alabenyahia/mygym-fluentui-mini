@@ -32,8 +32,8 @@ export default function Memberships() {
 
 
   return (
-    <Card>
-      <CardHeader header={<Title3>Members stats</Title3>} />
+    <Card style={{maxHeight: "300px"}}>
+      <CardHeader header={<Title3>Memberships stats</Title3>} />
       {membershipsQuery.isPending || membersQuery.isPending ? (
         <Spinner label="Loading memberships stats..." />
       ) : (
@@ -42,7 +42,7 @@ export default function Memberships() {
             <thead>
               <tr>
                 <th>Membership</th>
-                <th>Total members</th>
+                <th>Active members</th>
                 <th>Total price</th>
               </tr>
             </thead>

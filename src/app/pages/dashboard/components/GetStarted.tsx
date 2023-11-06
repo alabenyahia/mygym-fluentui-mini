@@ -35,7 +35,7 @@ export default function GetStarted() {
 
   console.log("user data getstarted", getUserQuery.data?.getStarted);
   return (
-    <Card style={{ flex: 1, maxHeight: "300px" }}>
+    <Card style={{ maxHeight: "300px" }}>
       {getUserQuery.isPending ? (
         <Spinner label="Loading tasks..." />
       ) : (

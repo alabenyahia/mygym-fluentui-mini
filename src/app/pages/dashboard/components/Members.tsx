@@ -69,7 +69,7 @@ export default function Members() {
   const { membersQuery } = useMembers();
 
   return (
-    <Card style={{ flex: 1, maxHeight: "300px"}}>
+    <Card style={{ flex: 1, maxHeight: "100%"}}>
       <div
         style={{
           display: "flex",

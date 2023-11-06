@@ -30,7 +30,6 @@ import {
   DriveTrain24Filled,
   ReceiptMoney24Regular,
   BarcodeScanner24Regular,
-  Calendar24Regular
 } from "@fluentui/react-icons";
 
 export default function DesktopLayout({ children }: any) {
@@ -227,8 +226,6 @@ function SidebarBtns() {
         <Send24Regular />
         <Caption2Strong>Communication</Caption2Strong>
       </SideBarBtn>
-
-      
     </div>
   );
 }
@@ -245,7 +242,7 @@ const useSidebarBtnStyles = makeStyles({
 function SideBarBtn({ children, path }: any) {
   const location = useLocation();
   let isActive = false;
-  
+
   if (path === "/") {
     isActive = location.pathname === path;
   } else if (

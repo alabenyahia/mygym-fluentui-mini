@@ -29,22 +29,22 @@ import {
   BarcodeScanner24Regular,
   Calendar24Regular
 } from "@fluentui/react-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import pb from "src/utils/db/pocketbase";
 import AvatarMenu from "src/app/layouts/components/AvatarMenu";
 import ToggleDarkMode from "./components/ToggleDarkMode";
 import { useAtom } from "jotai";
 import { isDarkTheme } from "src/utils/atoms/main.ts";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function MobileLayout({ children }: any) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isDark, setIsDark] = useAtom(isDarkTheme);
 
+
   return (
     <div
       style={{
-        height: "100vh",
         display: "flex",
         flexDirection: "column",
         width: "100%",
