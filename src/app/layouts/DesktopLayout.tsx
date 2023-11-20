@@ -21,7 +21,6 @@ import {
   Home24Regular,
   CalendarSettings24Regular,
   ChartMultiple24Regular,
-  Send24Regular,
   PeopleTeam24Regular,
   Class24Regular,
   SportBasketball24Regular,
@@ -33,7 +32,7 @@ import {
 } from "@fluentui/react-icons";
 
 export default function DesktopLayout({ children }: any) {
-  const [isDark, setIsDark] = useAtom(isDarkTheme);
+  const [isDark, _] = useAtom(isDarkTheme);
 
   return (
     <div

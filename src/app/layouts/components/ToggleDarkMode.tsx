@@ -5,7 +5,6 @@ import {
     LightbulbPerson24Regular,
   } from "@fluentui/react-icons";
   import {
-    makeStyles,
     Tooltip,
     ToggleButton,
   } from "@fluentui/react-components";

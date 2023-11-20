@@ -1,4 +1,3 @@
-import pb from "src/utils/db/pocketbase";
 import {
   Menu,
   MenuTrigger,
@@ -14,13 +13,12 @@ import {
 import { Link } from "react-router-dom";
 import useLogout from "src/app/pages/auth/hooks/useLogout";
 import {
-  Settings24Regular,
   PersonCircle24Regular,
 } from "@fluentui/react-icons";
 import { useAtom } from "jotai";
 import { isDarkTheme } from "src/utils/atoms/main";
 import useLogin from "src/app/pages/auth/hooks/useLogin";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 const useAvatarMenuStyles = makeStyles({
   menuPopover: {
@@ -35,17 +33,7 @@ const useAvatarMenuStyles = makeStyles({
 export default function avatarMenu({ isDekstop }: any) {
   const styles = useAvatarMenuStyles();
   const { getUserQuery } = useLogin();
-  const [avatarPreview, setAvatarPreview] = useState(null);
 
-  function setAvatarImg(file: any) {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setAvatarPreview(reader.result as any);
-    };
-    if (file) {
-      reader.readAsDataURL(file);
-    }
-  }
 
   useEffect(() => {
     console.log("avatar", getUserQuery.data?.avatar);
@@ -91,7 +79,7 @@ const useCardItemStyles = makeStyles({
 function CardItem() {
   const styles = useCardItemStyles();
   const { logout } = useLogout();
-  const [isDark, setIsDark] = useAtom(isDarkTheme);
+  const [isDark, _] = useAtom(isDarkTheme);
   const { getUserQuery } = useLogin();
   return (
     <Card className={styles.card} size="small" role="listitem">

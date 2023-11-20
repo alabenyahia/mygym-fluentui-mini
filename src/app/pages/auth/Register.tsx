@@ -1,18 +1,15 @@
 import {
   Card,
   Title1,
-  Input,
   Button,
   makeStyles,
   Image,
   Body1,
 } from "@fluentui/react-components";
 import { useMediaQuery } from "react-responsive";
-import { Formik, Form, useField } from "formik";
+import { Formik, Form,  } from "formik";
 import * as Yup from "yup";
 import useRegister from "src/app/pages/auth/hooks/useRegister";
-import { RegisterDataType } from "src/utils/types/main";
-import { Toaster } from "@fluentui/react-components";
 import { useNavigate } from "react-router-dom";
 import TopBar from "src/app/pages/auth/components/TopBar";
 import { useAtom } from "jotai";
@@ -30,7 +27,7 @@ const useRegisterStyles = makeStyles({
 export default function Register() {
   const isMobile = useMediaQuery({ query: "(max-width: 920px)" });
   const styles = useRegisterStyles();
-  const [isDark, setIsDark] = useAtom(isDarkTheme);
+  const [isDark, _] = useAtom(isDarkTheme);
 
   return isMobile ? (
     <div

@@ -11,7 +11,7 @@ import { Card, Spinner, Button, Body2 } from "@fluentui/react-components";
 import {
   ArrowSortDown20Regular,
   ArrowSortUp20Regular,
-  Add24Regular
+  Add24Regular,
 } from "@fluentui/react-icons";
 
 export default function ManageTable({
@@ -22,7 +22,7 @@ export default function ManageTable({
   isLoading,
   loadingText,
   addBtnLabel,
-  addBtnOnClick
+  addBtnOnClick,
 }: any) {
   const [sorting, setSorting] = useState([]);
 
@@ -69,7 +69,10 @@ export default function ManageTable({
                               {
                                 asc: <ArrowSortUp20Regular />,
                                 desc: <ArrowSortDown20Regular />,
-                              }[header.column.getIsSorted() ?? null]
+                              }[
+                                //@ts-ignore
+                                header.column.getIsSorted() ?? null
+                              ]
                             }
                           </div>
                         </div>
@@ -107,7 +110,15 @@ export default function ManageTable({
             ) : (
               <tr style={{ textAlign: "center" }} className={styles.tr}>
                 <td colSpan={100} className={styles.td}>
-                  <div style={{display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", margin: "6px 0"}}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: "12px",
+                      margin: "6px 0",
+                    }}
+                  >
                     <Body2>No data found.</Body2>
                     <Button
                       icon={<Add24Regular />}

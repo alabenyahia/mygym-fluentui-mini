@@ -608,6 +608,7 @@ const ActionsCell = ({
             {!isTransaction && (
               <MenuItem
                 onClick={() => {
+                  //@ts-ignore
                   setEditData(data);
                   setIsEditDrawerOpen(true);
                 }}

@@ -149,7 +149,10 @@ function AppTable({
                               {
                                 asc: <ArrowSortUp20Regular />,
                                 desc: <ArrowSortDown20Regular />,
-                              }[header.column.getIsSorted() ?? null]
+                              }[
+                                //@ts-ignore
+                                header.column.getIsSorted() ?? null
+                              ]
                             }
                           </div>
                         </div>

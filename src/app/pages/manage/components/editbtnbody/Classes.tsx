@@ -182,7 +182,7 @@ export default function Memberships() {
                 <Field label="Select end date">
                   <DatePicker
                     placeholder="Select class end date..."
-                    value={endDate}
+                    value={endDate as any}
                     onSelectDate={(date) => setEndDate(date!)}
                     showGoToToday={true}
                   />

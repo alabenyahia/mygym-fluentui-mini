@@ -18,7 +18,6 @@ import {
   Navigation24Regular,
   Home24Regular,
   ChartMultiple24Regular,
-  Send24Regular,
   PeopleTeam24Regular,
   Class24Regular,
   SportBasketball24Regular,
@@ -27,9 +26,8 @@ import {
   DriveTrain24Filled,
   ReceiptMoney24Regular,
   BarcodeScanner24Regular,
-  Calendar24Regular
 } from "@fluentui/react-icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AvatarMenu from "src/app/layouts/components/AvatarMenu";
 import ToggleDarkMode from "./components/ToggleDarkMode";
 import { useAtom } from "jotai";
@@ -38,7 +36,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import useLogin from "src/app/pages/auth/hooks/useLogin";
 export default function MobileLayout({ children }: any) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isDark, setIsDark] = useAtom(isDarkTheme);
+  const [isDark, _] = useAtom(isDarkTheme);
 
 
 
@@ -103,7 +101,7 @@ function MobileDrawer({
   isDrawerOpen: boolean;
   setIsDrawerOpen: any;
 }) {
-  const [type, setType] = useState<DrawerType>("overlay");
+  const [type, _] = useState<DrawerType>("overlay");
   const { getUserQuery } = useLogin();
   return (
     <Drawer

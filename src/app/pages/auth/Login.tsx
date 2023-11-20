@@ -1,18 +1,16 @@
 import {
   Card,
   Title1,
-  Input,
   Button,
   makeStyles,
   Image,
   Body1,
 } from "@fluentui/react-components";
 import { useMediaQuery } from "react-responsive";
-import { Formik, Form, useField } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import useLogin from "src/app/pages/auth/hooks/useLogin";
 import { LoginDataType } from "src/utils/types/main";
-import { Toaster } from "@fluentui/react-components";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
 import { isDarkTheme } from "src/utils/atoms/main";
@@ -30,7 +28,7 @@ const useLoginStyles = makeStyles({
 export default function Login() {
   const isMobile = useMediaQuery({ query: "(max-width: 920px)" });
   const styles = useLoginStyles();
-  const [isDark, setIsDark] = useAtom(isDarkTheme);
+  const [isDark, _] = useAtom(isDarkTheme);
 
   return isMobile ? (
     <div

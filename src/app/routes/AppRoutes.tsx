@@ -16,8 +16,7 @@ import {
   Transactions,
 } from "src/app/pages/manage";
 import Reports from "src/app/pages/reports/Reports";
-import Calendar from "src/app/pages/calendar/Calendar";
-import Communication from "src/app/pages/communication/Communication";
+
 import LayoutDefaultRoute from "./LayoutDefaultRoute";
 import Profile from "../pages/Profile";
 

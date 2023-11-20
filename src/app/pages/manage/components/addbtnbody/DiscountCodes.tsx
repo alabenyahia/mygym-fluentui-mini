@@ -77,7 +77,7 @@ export default function DiscountCodes() {
 
             <Switch
               checked={expires}
-              onChange={(_, data) => setExpires(!expires)}
+              onChange={() => setExpires(!expires)}
               label="Does the discount code expires after certain date?"
             />
 

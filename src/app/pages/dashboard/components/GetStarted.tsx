@@ -30,7 +30,7 @@ export default function GetStarted() {
   const { getUserQuery } = useLogin();
   const navigate = useNavigate();
 
-  const [isDark, setIsDark] = useAtom(isDarkTheme);
+  const [isDark, _] = useAtom(isDarkTheme);
   const isMobile = useMediaQuery({ query: "(max-width: 1200px)" });
 
   console.log("user data getstarted", getUserQuery.data?.getStarted);
