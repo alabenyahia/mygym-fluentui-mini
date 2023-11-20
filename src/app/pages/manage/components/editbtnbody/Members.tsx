@@ -4,6 +4,9 @@ import {
   Field,
   Option,
   Spinner,
+  Body1,
+  Button,
+  Switch,
 } from "@fluentui/react-components";
 import useMemberships from "../../hooks/useMemberships";
 import { DatePicker } from "@fluentui/react-datepicker-compat";
@@ -15,6 +18,9 @@ import { FormikInput } from "../FormikInput";
 import { useState } from "react";
 import { useAtom } from "jotai";
 import { mEditData, ismEditDrawerOpen } from "../../table-columns/main";
+import useTransactions from "../../hooks/useTransactions";
+import pb from "src/utils/db/pocketbase";
+import { useNavigate } from "react-router-dom";
 
 export default function Members() {
   const [editData, setEditData]: any = useAtom(mEditData);
@@ -26,9 +32,11 @@ export default function Members() {
   const [membership, setMembership] = useState(
     editData?.expand?.membership?.id || ""
   );
+  const [isPaid, setIsPaid] = useState(false);
 
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useAtom(ismEditDrawerOpen);
-
+  const { transactionAddMutation } = useTransactions();
+  const navigate = useNavigate()
   return (
     <Formik
       initialValues={{
@@ -77,7 +85,25 @@ export default function Members() {
             },
           },
           {
-            onSuccess: () => {
+            onSuccess: (mMember) => {
+              if (membership && mMembership) {
+                transactionAddMutation.mutate({
+                  from: mMembership?.membershipType === "time" ? moment() : "",
+                  to:
+                    mMembership?.membershipType === "time"
+                      ? moment().add(
+                          mMembership?.timeQuantity,
+                          mMembership?.timeType === "month" ? "months" : "days"
+                        )
+                      : "",
+                  price: mMembership?.price,
+                  membership,
+                  member: mMember.id,
+                  isPaid,
+                  assignedTo: pb.authStore.model?.id,
+                  deletedAt: "",
+                });
+              }
               setIsEditDrawerOpen(false);
               //CLOSE MODAL
             },
@@ -151,9 +177,34 @@ export default function Members() {
                     );
                   })}
                 </Dropdown>
+                <Switch
+                  checked={isPaid}
+                  onChange={() => setIsPaid(!isPaid)}
+                  label="Does the member paid for the membership or he will pay later?"
+                />
+              </div>
+            ) : membershipsQuery.data?.length === 0 ? (
+              <div
+                style={{
+                  display: "flex",
+                  gap: "8px",
+                  alignItems: "center",
+                  marginTop: "16px",
+                }}
+              >
+                <Body1>No memberships yet</Body1>
+                <Button
+                  appearance="outline"
+                  onClick={() => navigate("/manage/memberships")}
+                >
+                  Add Membership
+                </Button>
               </div>
             ) : (
-              <Spinner label="Loading memberships..." />
+              <Spinner
+                label="Loading memberships..."
+                style={{ marginTop: "12px" }}
+              />
             )}
           </>
         )}

@@ -5,6 +5,8 @@ import {
   Option,
   Spinner,
   Switch,
+  Button,
+  Body1,
 } from "@fluentui/react-components";
 import useMemberships from "../../hooks/useMemberships";
 import { DatePicker } from "@fluentui/react-datepicker-compat";
@@ -17,6 +19,7 @@ import pb from "src/utils/db/pocketbase";
 import { FormikInput } from "../FormikInput";
 import { useState } from "react";
 import useLogin from "src/app/pages/auth/hooks/useLogin";
+import { useNavigate } from "react-router-dom";
 
 export default function Members() {
   const { membershipsQuery } = useMemberships();
@@ -26,6 +29,7 @@ export default function Members() {
   const [membership, setMembership] = useState("");
   const [isPaid, setIsPaid] = useState(false);
   const { getUserQuery, updateTaskMutation } = useLogin();
+  const navigate = useNavigate();
 
   return (
     <Formik
@@ -195,8 +199,28 @@ export default function Members() {
                   label="Does the member paid for the membership or he will pay later?"
                 />
               </div>
+            ) : membershipsQuery.data?.length === 0 ? (
+              <div
+                style={{
+                  display: "flex",
+                  gap: "8px",
+                  alignItems: "center",
+                  marginTop: "16px",
+                }}
+              >
+                <Body1>No memberships yet</Body1>
+                <Button
+                  appearance="outline"
+                  onClick={() => navigate("/manage/memberships")}
+                >
+                  Add Membership
+                </Button>
+              </div>
             ) : (
-              <Spinner label="Loading memberships..." />
+              <Spinner
+                label="Loading memberships..."
+                style={{ marginTop: "12px" }}
+              />
             )}
           </>
         )}
