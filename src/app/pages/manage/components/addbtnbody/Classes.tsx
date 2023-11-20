@@ -12,7 +12,7 @@ import pb from "src/utils/db/pocketbase";
 import { FormikInput } from "../FormikInput";
 import { useState } from "react";
 import usePrograms from "../../hooks/usePrograms";
-import { DatePicker } from "@fluentui/react-date-time";
+import { DatePicker } from "@fluentui/react-datepicker-compat";
 import {
   TimePicker,
   formatDateToTimeString,

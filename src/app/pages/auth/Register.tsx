@@ -5,6 +5,7 @@ import {
   Button,
   makeStyles,
   Image,
+  Body1,
 } from "@fluentui/react-components";
 import { useMediaQuery } from "react-responsive";
 import { Formik, Form, useField } from "formik";
@@ -42,6 +43,24 @@ export default function Register() {
     >
       <TopBar />
       <RegisterForm />
+      <footer
+        style={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          textAlign: "center",
+          padding: "16px",
+          backgroundColor: isDark ? "#292929" : "#ffffff",
+          color: isDark ? "#ffffff" : "#242424",
+          boxShadow: "0px -3px 12px -3px rgba(0,0,0,0.1)",
+        }}
+      >
+        <Body1>
+          Designed and developer by:{" "}
+          <span style={{ fontWeight: "bold" }}>Ala Ben Yahia</span>
+        </Body1>
+      </footer>
     </div>
   ) : (
     <div
@@ -59,6 +78,24 @@ export default function Register() {
         <Card className={styles.card}>
           <RegisterForm />
         </Card>
+        <footer
+          style={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            textAlign: "center",
+            padding: "16px",
+            backgroundColor: isDark ? "#292929" : "#ffffff",
+            color: isDark ? "#ffffff" : "#242424",
+            boxShadow: "0px -3px 12px -3px rgba(0,0,0,0.1)",
+          }}
+        >
+          <Body1>
+            Designed and developer by:{" "}
+            <span style={{ fontWeight: "bold" }}>Ala Ben Yahia</span>
+          </Body1>
+        </footer>
       </div>
     </div>
   );
@@ -84,10 +121,34 @@ function RegisterForm() {
 
   const getStarted = [
     { num: 0, desc: "Create your MyGym account", isDone: true },
-    { num: 1, desc: "Create first membership", isDone: false, url: "/manage/memberships", buttonText: "Create membership" },
-    { num: 2, desc: "Add your first member", isDone: false, url: "/manage/members", buttonText: "Create member" },
-    { num: 3, desc: "Create your first class program", isDone: false, url: "/manage/programs", buttonText: "Create program" },
-    { num: 4, desc: "Create your first class", isDone: false, url: "/manage/classes", buttonText: "Create class" },
+    {
+      num: 1,
+      desc: "Create first membership",
+      isDone: false,
+      url: "/manage/memberships",
+      buttonText: "Create membership",
+    },
+    {
+      num: 2,
+      desc: "Add your first member",
+      isDone: false,
+      url: "/manage/members",
+      buttonText: "Create member",
+    },
+    {
+      num: 3,
+      desc: "Create your first class program",
+      isDone: false,
+      url: "/manage/programs",
+      buttonText: "Create program",
+    },
+    {
+      num: 4,
+      desc: "Create your first class",
+      isDone: false,
+      url: "/manage/classes",
+      buttonText: "Create class",
+    },
   ];
 
   return (

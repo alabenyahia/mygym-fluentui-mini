@@ -39,6 +39,8 @@ const membersColumns = [
   {
     header: "Registered date",
     accessorKey: "registeredDate",
+    cell: (value: any) =>
+      moment(value.row?.original?.registeredDate).format("LL"),
     sortingFn: (rowA: any, rowB: any, columnId: any) => {
       if (rowA === "" || !rowA || rowB === "" || !rowB) return;
       const dateA = moment(rowA.getValue(columnId));
@@ -48,12 +50,14 @@ const membersColumns = [
     },
   },
   {
-    header: "Membership",
+    header: "Membership ID",
     accessorKey: "membership",
   },
   {
     header: "Memberhsip Exp/date",
     accessorKey: "membershipExpirationDate",
+    cell: (value: any) =>
+      moment(value.row?.original?.membershipExpirationDate).format("LL"),
     sortingFn: (rowA: any, rowB: any, columnId: any) => {
       if (rowA === "" || !rowA || rowB === "" || !rowB) return;
       const dateA = moment(rowA.getValue(columnId));
@@ -69,7 +73,7 @@ export default function Members() {
   const { membersQuery } = useMembers();
 
   return (
-    <Card style={{ flex: 1, maxHeight: "100%"}}>
+    <Card style={{ flex: 1, maxHeight: "100%" }}>
       <div
         style={{
           display: "flex",

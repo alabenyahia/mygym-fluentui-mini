@@ -5,7 +5,7 @@ import {
   Option,
   Spinner,
 } from "@fluentui/react-components";
-import { DatePicker } from "@fluentui/react-date-time";
+import { DatePicker } from "@fluentui/react-datepicker-compat";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import useGymStaff from "../../hooks/useGymStaff";

@@ -9,15 +9,11 @@ export default function useRegister() {
     return user;
   }
 
-  
-
   // Mutations
   const registerMutation = useMutation({
     mutationFn: register,
     onSuccess: () => {
-      toast.success(
-        "Register successfull, please confirm your email before login!"
-      );
+      toast.success("Register successfull, your can login now!");
     },
     onError: ({ data }: any) => {
       //const { data: errorData }: any = data;

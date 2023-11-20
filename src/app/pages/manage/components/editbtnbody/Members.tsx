@@ -6,7 +6,7 @@ import {
   Spinner,
 } from "@fluentui/react-components";
 import useMemberships from "../../hooks/useMemberships";
-import { DatePicker } from "@fluentui/react-date-time";
+import { DatePicker } from "@fluentui/react-datepicker-compat";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import moment from "moment";
@@ -28,7 +28,6 @@ export default function Members() {
   );
 
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useAtom(ismEditDrawerOpen);
-
 
   return (
     <Formik
@@ -57,15 +56,15 @@ export default function Members() {
 
         console.log("valls", {
           id: editData?.id,
-            data: {
-              ...values,
-              registeredDate,
-              membership,
-              membershipExpirationDate,
-            }
+          data: {
+            ...values,
+            registeredDate,
+            membership,
+            membershipExpirationDate,
+          },
         });
 
-        console.log("valls2", editData)
+        console.log("valls2", editData);
 
         memberUpdateMutation.mutate(
           {
@@ -75,8 +74,7 @@ export default function Members() {
               registeredDate,
               membership,
               membershipExpirationDate,
-            }
-            
+            },
           },
           {
             onSuccess: () => {

@@ -175,6 +175,7 @@ export const useColumns = () => {
     enableSorting: false,
     cell: (value: any) => (
       <ActionsCell
+        isTransaction={true}
         mutation={transactionDeleteMutation}
         data={value.row?.original}
         deleteFn={deleteRow}
@@ -242,6 +243,7 @@ export const useColumns = () => {
     {
       header: "Price",
       accessorKey: "price",
+      cell: (value: any) => value.row?.original?.price + " TND",
     },
     {
       header: "Membership type",
@@ -570,7 +572,14 @@ export const useColumns = () => {
   };
 };
 
-const ActionsCell = ({ mutation, data, deleteFn, title, desc }: any) => {
+const ActionsCell = ({
+  mutation,
+  data,
+  deleteFn,
+  title,
+  desc,
+  isTransaction,
+}: any) => {
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [editData, setEditData] = useAtom(mEditData);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useAtom(ismEditDrawerOpen);
@@ -596,15 +605,17 @@ const ActionsCell = ({ mutation, data, deleteFn, title, desc }: any) => {
               Delete
             </MenuItem>
 
-            <MenuItem
-              onClick={() => {
-                setEditData(data);
-                setIsEditDrawerOpen(true);
-              }}
-              icon={<Edit24Regular />}
-            >
-              Edit
-            </MenuItem>
+            {!isTransaction && (
+              <MenuItem
+                onClick={() => {
+                  setEditData(data);
+                  setIsEditDrawerOpen(true);
+                }}
+                icon={<Edit24Regular />}
+              >
+                Edit
+              </MenuItem>
+            )}
           </MenuList>
         </MenuPopover>
       </Menu>

@@ -10,7 +10,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { FormikInput } from "../FormikInput";
 import { useState } from "react";
-import { DatePicker } from "@fluentui/react-date-time";
+import { DatePicker } from "@fluentui/react-datepicker-compat";
 import {
   TimePicker,
   formatDateToTimeString,

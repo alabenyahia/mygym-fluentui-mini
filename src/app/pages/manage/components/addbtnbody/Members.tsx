@@ -7,7 +7,7 @@ import {
   Switch,
 } from "@fluentui/react-components";
 import useMemberships from "../../hooks/useMemberships";
-import { DatePicker } from "@fluentui/react-date-time";
+import { DatePicker } from "@fluentui/react-datepicker-compat";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import moment from "moment";
@@ -18,7 +18,6 @@ import { FormikInput } from "../FormikInput";
 import { useState } from "react";
 import useLogin from "src/app/pages/auth/hooks/useLogin";
 
-
 export default function Members() {
   const { membershipsQuery } = useMemberships();
   const { transactionAddMutation } = useTransactions();
@@ -27,7 +26,6 @@ export default function Members() {
   const [membership, setMembership] = useState("");
   const [isPaid, setIsPaid] = useState(false);
   const { getUserQuery, updateTaskMutation } = useLogin();
-
 
   return (
     <Formik
@@ -79,7 +77,7 @@ export default function Members() {
                 temp[2].isDone = true;
                 updateTaskMutation.mutate({ getStarted: temp });
               }
-              
+
               resetForm({
                 values: {
                   name: "",
