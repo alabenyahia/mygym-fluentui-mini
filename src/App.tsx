@@ -18,7 +18,10 @@ function App() {
   }, []);
 
   return (
-    <FluentProvider theme={isDark ? darkTheme : lightTheme}>
+    <FluentProvider
+      style={{ height: "100%" }}
+      theme={isDark ? darkTheme : lightTheme}
+    >
       <QueryClientProvider client={queryClient}>
         <AppRoutes />
         <Toaster
