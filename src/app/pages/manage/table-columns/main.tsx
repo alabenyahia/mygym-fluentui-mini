@@ -316,7 +316,7 @@ export const useColumns = () => {
       },
     },
     {
-      header: "StartTime",
+      header: "Start time",
       accessorKey: "startTime",
       cell: (value: any) =>
         moment(value.row?.original?.startTime).format("HH:mm"),
@@ -335,7 +335,7 @@ export const useColumns = () => {
       },
     },
     {
-      header: "endTime",
+      header: "End time",
       accessorKey: "endTime",
       cell: (value: any) =>
         moment(value.row?.original?.endTime).format("HH:mm"),

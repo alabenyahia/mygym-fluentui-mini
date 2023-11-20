@@ -12,14 +12,24 @@ export default function useLogin() {
   }
 
   async function getLoggedInUser() {
-    const user = await pb
-      .collection("users")
-      .getOne(pb.authStore?.model?.id);
-      console.log("user logged", user)
+    const user = await pb.collection("users").getOne(pb.authStore?.model?.id);
+
+    if (user.avatar) {
+      const url = pb.files.getUrl(user, user.avatar, { thumb: "100x100" });
+      user.avatar = url;
+    }
+    console.log("user logged", user);
     return user;
   }
 
   async function updateTask(data: any) {
+    const user = await pb
+      .collection("users")
+      .update(pb.authStore?.model?.id, data);
+    return user;
+  }
+
+  async function updateProfile(data: any) {
     const user = await pb
       .collection("users")
       .update(pb.authStore?.model?.id, data);
@@ -58,5 +68,24 @@ export default function useLogin() {
     },
   });
 
-  return { loginMutation, updateTaskMutation, getUserQuery };
+  const updateProfileMutation = useMutation({
+    mutationKey: ["updateProfile"],
+    mutationFn: updateProfile,
+    onSuccess: () => {
+      toast.success("Profile updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["getUser"] });
+    },
+    onError: (err: any) => {
+      //const { data: errorData }: any = data;
+      toast.error("Error occured while updating profile!");
+      console.log("error updating profile", err);
+    },
+  });
+
+  return {
+    loginMutation,
+    updateTaskMutation,
+    updateProfileMutation,
+    getUserQuery,
+  };
 }

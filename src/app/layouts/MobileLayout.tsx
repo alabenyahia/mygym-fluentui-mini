@@ -30,16 +30,17 @@ import {
   Calendar24Regular
 } from "@fluentui/react-icons";
 import { useEffect, useState } from "react";
-import pb from "src/utils/db/pocketbase";
 import AvatarMenu from "src/app/layouts/components/AvatarMenu";
 import ToggleDarkMode from "./components/ToggleDarkMode";
 import { useAtom } from "jotai";
 import { isDarkTheme } from "src/utils/atoms/main.ts";
 import { useNavigate, useLocation } from "react-router-dom";
-
+import useLogin from "src/app/pages/auth/hooks/useLogin";
 export default function MobileLayout({ children }: any) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isDark, setIsDark] = useAtom(isDarkTheme);
+
+
 
 
   return (
@@ -103,7 +104,7 @@ function MobileDrawer({
   setIsDrawerOpen: any;
 }) {
   const [type, setType] = useState<DrawerType>("overlay");
-
+  const { getUserQuery } = useLogin();
   return (
     <Drawer
       type={type}
@@ -126,9 +127,7 @@ function MobileDrawer({
             <div style={{ width: 32, height: 32 }}>
               <Image src="/icons/mygym-logo.png" fit="cover" />
             </div>
-            {pb.authStore.model && (
-              <Title3>{pb.authStore.model.gymName}</Title3>
-            )}
+            {getUserQuery.data && <Title3>{getUserQuery.data.gymName}</Title3>}
           </div>
         </DrawerHeaderTitle>
       </DrawerHeader>
@@ -220,14 +219,14 @@ function DrawerContent() {
         Calendar
       </Button> */}
 
-      <Button
+      {/* <Button
         appearance={isAction("/communication") ? "primary" : "subtle"}
         icon={<Send24Regular />}
         className={styles.btns}
         onClick={() => navigate("/communication")}
       >
         Communication
-      </Button>
+      </Button> */}
       <Divider />
 
       <DrawerHeaderTitle>Manage</DrawerHeaderTitle>

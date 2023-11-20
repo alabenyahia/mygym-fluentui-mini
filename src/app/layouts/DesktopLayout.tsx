@@ -222,10 +222,10 @@ function SidebarBtns() {
         <Caption2Strong>Calendar</Caption2Strong>
       </SideBarBtn> */}
 
-      <SideBarBtn path="/communication">
+      {/* <SideBarBtn path="/communication">
         <Send24Regular />
         <Caption2Strong>Communication</Caption2Strong>
-      </SideBarBtn>
+      </SideBarBtn> */}
     </div>
   );
 }

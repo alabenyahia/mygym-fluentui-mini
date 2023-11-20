@@ -19,6 +19,8 @@ import {
 } from "@fluentui/react-icons";
 import { useAtom } from "jotai";
 import { isDarkTheme } from "src/utils/atoms/main";
+import useLogin from "src/app/pages/auth/hooks/useLogin";
+import { useState, useEffect } from "react";
 
 const useAvatarMenuStyles = makeStyles({
   menuPopover: {
@@ -30,8 +32,24 @@ const useAvatarMenuStyles = makeStyles({
   },
 });
 
-export default function avatarMenu({isDekstop}: any) {
+export default function avatarMenu({ isDekstop }: any) {
   const styles = useAvatarMenuStyles();
+  const { getUserQuery } = useLogin();
+  const [avatarPreview, setAvatarPreview] = useState(null);
+
+  function setAvatarImg(file: any) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setAvatarPreview(reader.result as any);
+    };
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  }
+
+  useEffect(() => {
+    console.log("avatar", getUserQuery.data?.avatar);
+  }, [getUserQuery.data?.avatar]);
 
   return (
     <Menu>
@@ -42,8 +60,8 @@ export default function avatarMenu({isDekstop}: any) {
           size={isDekstop ? "large" : "medium"}
           icon={
             <Avatar
-              name={pb.authStore.model?.name}
-              image={pb.authStore.model?.avatar}
+              name={getUserQuery.data?.name}
+              image={{ src: getUserQuery.data?.avatar }}
               size={isDekstop ? 56 : 32}
             />
           }
@@ -74,6 +92,7 @@ function CardItem() {
   const styles = useCardItemStyles();
   const { logout } = useLogout();
   const [isDark, setIsDark] = useAtom(isDarkTheme);
+  const { getUserQuery } = useLogin();
   return (
     <Card className={styles.card} size="small" role="listitem">
       <div>
@@ -91,7 +110,7 @@ function CardItem() {
               padding: "8px",
             }}
           >
-            <Title3>@{pb.authStore.model?.gymName}</Title3>
+            <Title3>@{getUserQuery.data?.gymName}</Title3>
             <Button onClick={() => logout()}>Sign out</Button>
           </div>
         </div>
@@ -107,8 +126,8 @@ function CardItem() {
         >
           <div>
             <Avatar
-              name={pb.authStore.model?.name}
-              image={pb.authStore.model?.avatar}
+              name={getUserQuery.data?.name}
+              image={{ src: getUserQuery.data?.avatar }}
               size={72}
             />
           </div>
@@ -120,8 +139,8 @@ function CardItem() {
                 flexDirection: "column",
               }}
             >
-              <Title3>{pb.authStore.model?.name}</Title3>
-              <Body2>{pb.authStore.model?.email}</Body2>
+              <Title3>{getUserQuery.data?.name}</Title3>
+              <Body2>{getUserQuery.data?.email}</Body2>
             </div>
 
             <Divider />
@@ -142,7 +161,7 @@ function CardItem() {
                   Profile
                 </Button>
               </Link>
-              <Link to="/settings">
+              {/* <Link to="/settings">
                 <Button
                   className={styles.btn}
                   appearance="transparent"
@@ -150,7 +169,7 @@ function CardItem() {
                 >
                   Settings
                 </Button>
-              </Link>
+              </Link> */}
             </div>
           </div>
         </div>

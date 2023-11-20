@@ -19,6 +19,7 @@ import Reports from "src/app/pages/reports/Reports";
 import Calendar from "src/app/pages/calendar/Calendar";
 import Communication from "src/app/pages/communication/Communication";
 import LayoutDefaultRoute from "./LayoutDefaultRoute";
+import Profile from "../pages/Profile";
 
 export default function AppRoutes() {
   return (
@@ -69,15 +70,20 @@ export default function AppRoutes() {
           element={<LayoutDefaultRoute element={Reports} />}
         />
 
+        <Route
+          path="/profile"
+          element={<LayoutDefaultRoute element={Profile} />}
+        />
+
         {/* <Route
           path="/calendar"
           element={<LayoutDefaultRoute element={Calendar} />}
         /> */}
 
-        <Route
+        {/* <Route
           path="/communication"
           element={<LayoutDefaultRoute element={Communication} />}
-        />
+        /> */}
       </Route>
 
       <Route path="*" element={<LayoutDefaultRoute element={NotFound} />} />
