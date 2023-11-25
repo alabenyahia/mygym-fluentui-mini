@@ -37,6 +37,7 @@ export default function Members() {
         name: "",
         email: "",
         phone: "",
+        discountcode: "",
       }}
       validationSchema={Yup.object({
         name: Yup.string().required("Member name is required"),
@@ -87,6 +88,7 @@ export default function Members() {
                   name: "",
                   email: "",
                   phone: "",
+                  discountcode: "",
                 },
               });
               setMembership("");
@@ -173,7 +175,9 @@ export default function Members() {
             </div>
 
             {membershipsQuery.data && membershipsQuery.data?.length > 0 ? (
-              <div style={{ display: "flex", flexDirection: "column" }}>
+              <div
+                style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+              >
                 <label htmlFor="membership">Member membership</label>
                 <Dropdown
                   name="membership"
@@ -193,6 +197,14 @@ export default function Members() {
                     );
                   })}
                 </Dropdown>
+                <Label htmlFor="discountcode" required>
+                  Discount code
+                </Label>
+                <FormikInput
+                  placeholder="Membership discount code"
+                  name="discountcode"
+                  id="discountcode"
+                />
                 <Switch
                   checked={isPaid}
                   onChange={() => setIsPaid(!isPaid)}

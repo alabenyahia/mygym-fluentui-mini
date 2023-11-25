@@ -1,4 +1,11 @@
-import { Label, Field, Switch, Spinner } from "@fluentui/react-components";
+import {
+  Label,
+  Field,
+  Switch,
+  Spinner,
+  Dropdown,
+  Option,
+} from "@fluentui/react-components";
 import useDiscountCodes from "../../hooks/useDiscountCodes";
 import { DatePicker } from "@fluentui/react-datepicker-compat";
 import { Formik, Form } from "formik";
@@ -12,19 +19,25 @@ export default function DiscountCodes() {
   const [expires, setExpires] = useState(false);
   const [validFrom, setValidFrom] = useState<Date>(new Date());
   const [validUntil, setValidUntil] = useState<Date>(new Date());
+  const [discountType, setDiscountType] = useState("percentage");
 
   return (
     <Formik
       initialValues={{
         code: "",
+        discountQuantity: "",
       }}
       validationSchema={Yup.object({
         code: Yup.string().required("Code is required"),
+        discountQuantity: Yup.number().required(
+          "Discount quantity is required"
+        ),
       })}
       onSubmit={(values: any, { resetForm }) => {
         console.log("valls", {
           ...values,
           expires,
+          discountType,
           validFrom: expires ? validFrom : "",
           validUntil: expires ? validUntil : "",
           assignedTo: pb.authStore.model?.id,
@@ -35,6 +48,7 @@ export default function DiscountCodes() {
           {
             ...values,
             expires,
+            discountType,
             validFrom: expires ? validFrom : "",
             validUntil: expires ? validUntil : "",
             assignedTo: pb.authStore.model?.id,
@@ -45,6 +59,7 @@ export default function DiscountCodes() {
               resetForm({
                 values: {
                   code: "",
+                  discountQuantity: "",
                 },
               });
               setValidFrom(new Date());
@@ -74,6 +89,35 @@ export default function DiscountCodes() {
                 id="code"
               />
             </div>
+
+            <Label htmlFor="role" required>
+              Discount type
+            </Label>
+            <Dropdown
+              defaultValue={discountType}
+              name="discounttype"
+              id="discounttype"
+              onOptionSelect={(_, data) =>
+                setDiscountType(data.optionValue as string)
+              }
+            >
+              <Option text="Percentage" value="percentage" key="percentage">
+                Percentage
+              </Option>
+
+              <Option text="Fixed price" value="fixedprice" key="fixedprice">
+                Fixed price
+              </Option>
+            </Dropdown>
+
+            <Label htmlFor="discountQuantity" required>
+              Discount quantity
+            </Label>
+            <FormikInput
+              placeholder="20(%), 10(TND), etc..."
+              name="discountQuantity"
+              id="discountQuantity"
+            />
 
             <Switch
               checked={expires}
