@@ -7,6 +7,7 @@ import {
   Body1,
   Button,
   Switch,
+  Badge,
 } from "@fluentui/react-components";
 import useMemberships from "../../hooks/useMemberships";
 import { DatePicker } from "@fluentui/react-datepicker-compat";
@@ -21,11 +22,13 @@ import { mEditData, ismEditDrawerOpen } from "../../table-columns/main";
 import useTransactions from "../../hooks/useTransactions";
 import pb from "src/utils/db/pocketbase";
 import { useNavigate } from "react-router-dom";
+import useDiscountCodes from "../../hooks/useDiscountCodes";
 
 export default function Members() {
   const [editData, setEditData]: any = useAtom(mEditData);
   const { membershipsQuery } = useMemberships();
   const { memberUpdateMutation } = useMembers();
+  const { validDiscountCodesQuery } = useDiscountCodes();
   const [registeredDate, setRegisteredDate] = useState<Date>(
     editData?.registeredDate ? new Date(editData?.registeredDate) : new Date()
   );
@@ -33,6 +36,7 @@ export default function Members() {
     editData?.expand?.membership?.id || ""
   );
   const [isPaid, setIsPaid] = useState(false);
+  const [discountCode, setDiscountCode]: any = useState("");
 
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useAtom(ismEditDrawerOpen);
   const { transactionAddMutation } = useTransactions();
@@ -177,6 +181,8 @@ export default function Members() {
                     );
                   })}
                 </Dropdown>
+
+                
                 <Switch
                   checked={isPaid}
                   onChange={() => setIsPaid(!isPaid)}

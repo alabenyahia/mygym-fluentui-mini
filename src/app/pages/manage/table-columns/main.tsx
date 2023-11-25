@@ -550,6 +550,12 @@ export const useColumns = () => {
         return dateA.isBefore(dateB) ? 1 : dateA.isAfter(dateB) ? -1 : 0;
       },
     },
+
+    {
+      header: "Price",
+      accessorKey: "price",
+      cell: (value: any) => `${value.row?.original?.price} TND`,
+    },
     {
       header: "Status",
       accessorKey: "isPaid",

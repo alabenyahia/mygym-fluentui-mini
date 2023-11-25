@@ -7,6 +7,7 @@ import {
   Switch,
   Button,
   Body1,
+  Badge,
 } from "@fluentui/react-components";
 import useMemberships from "../../hooks/useMemberships";
 import { DatePicker } from "@fluentui/react-datepicker-compat";
@@ -20,16 +21,31 @@ import { FormikInput } from "../FormikInput";
 import { useState } from "react";
 import useLogin from "src/app/pages/auth/hooks/useLogin";
 import { useNavigate } from "react-router-dom";
+import useDiscountCodes from "../../hooks/useDiscountCodes";
 
 export default function Members() {
   const { membershipsQuery } = useMemberships();
   const { transactionAddMutation } = useTransactions();
   const { memberMutation } = useMembers();
   const [registeredDate, setRegisteredDate] = useState<Date>(new Date());
-  const [membership, setMembership] = useState("");
+  const [membership, setMembership]: any = useState("");
+  const [discountCode, setDiscountCode]: any = useState("");
   const [isPaid, setIsPaid] = useState(false);
   const { getUserQuery, updateTaskMutation } = useLogin();
+  const { validDiscountCodesQuery } = useDiscountCodes();
   const navigate = useNavigate();
+
+  const calculateNewPrice = (
+    price: number,
+    discountQuantity: number,
+    isPercentage: boolean
+  ) => {
+    if (isPercentage) {
+      return price - (price * discountQuantity) / 100;
+    } else {
+      return price - discountQuantity;
+    }
+  };
 
   return (
     <Formik
@@ -44,7 +60,7 @@ export default function Members() {
       })}
       onSubmit={(values: any, { resetForm }) => {
         const mMembership = membershipsQuery.data?.find(
-          (element) => element.id === membership
+          (element) => element.id === membership.id
         );
 
         let membershipExpirationDate: any = "";
@@ -70,7 +86,7 @@ export default function Members() {
           {
             ...values,
             registeredDate,
-            membership,
+            membership: membership.id,
             membershipExpirationDate,
             assignedTo: pb.authStore.model?.id,
             deletedAt: "",
@@ -108,8 +124,14 @@ export default function Members() {
                               : "days"
                           )
                         : "",
-                    price: mMembership?.price,
-                    membership,
+                    price: discountCode
+                      ? calculateNewPrice(
+                          membership.price,
+                          discountCode.discountQuantity,
+                          discountCode.discountType === "percentage"
+                        )
+                      : mMembership?.price,
+                    membership: membership.id,
                     member: mMember.id,
                     isPaid,
                     assignedTo: pb.authStore.model?.id,
@@ -191,20 +213,57 @@ export default function Members() {
                     return (
                       <Option
                         text={`${membership.name} ${membership.price}${currency}`}
-                        value={membership.id}
+                        value={membership}
                         key={membership.id}
                       >{`${membership.name} ${membership.price}${currency}`}</Option>
                     );
                   })}
                 </Dropdown>
-                <Label htmlFor="discountcode" required>
-                  Discount code
-                </Label>
-                <FormikInput
-                  placeholder="Membership discount code"
-                  name="discountcode"
-                  id="discountcode"
-                />
+                {validDiscountCodesQuery.data.length > 0 && membership && (
+                  <>
+                    <label htmlFor="discountcode">Discount code</label>
+                    <Dropdown
+                      name="discountcode"
+                      id="discountcode"
+                      defaultValue={""}
+                      onOptionSelect={(_, data) =>
+                        setDiscountCode(data.optionValue as string)
+                      }
+                    >
+                      {validDiscountCodesQuery.data?.map((dc: any) => {
+                        return (
+                          <Option text={dc.code} value={{ ...dc }} key={dc.id}>
+                            {dc.code}
+                          </Option>
+                        );
+                      })}
+                    </Dropdown>
+
+                    {discountCode && (
+                      <div style={{ display: "flex", gap: "8px" }}>
+                        <Badge
+                          appearance="filled"
+                          color="success"
+                          style={{ padding: " 14px 10px" }}
+                        >
+                          {discountCode?.code} applied
+                        </Badge>
+                        <Badge
+                          appearance="outline"
+                          style={{ padding: " 14px 10px" }}
+                        >
+                          New price{" "}
+                          {calculateNewPrice(
+                            membership.price,
+                            discountCode.discountQuantity,
+                            discountCode.discountType === "percentage"
+                          )}{" "}
+                          TND
+                        </Badge>
+                      </div>
+                    )}
+                  </>
+                )}
                 <Switch
                   checked={isPaid}
                   onChange={() => setIsPaid(!isPaid)}

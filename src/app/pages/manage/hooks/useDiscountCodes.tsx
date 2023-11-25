@@ -13,6 +13,13 @@ export default function useDiscountCodes() {
     return discountCodes;
   }
 
+  async function getValidDiscountCodes() {
+    const discountCodes = await pb.collection("discountcodes").getFullList({
+      filter: `((validFrom <= "${new Date().toString()}" || validFrom = "") && (validUntil >= "${new Date().toString()}" || validUntil = "")) `,
+    });
+    return discountCodes;
+  }
+
   async function addDiscountCode(data: AddDiscountCodeDataType) {
     const discountCode = await pb.collection("discountcodes").create(data);
     return discountCode;
@@ -29,6 +36,11 @@ export default function useDiscountCodes() {
   const discountCodesQuery = useQuery({
     queryKey: ["discountcodes"],
     queryFn: getDiscountCodes,
+  });
+
+  const validDiscountCodesQuery = useQuery({
+    queryKey: ["validdiscountcodes"],
+    queryFn: getValidDiscountCodes,
   });
 
   // Mutations
@@ -79,5 +91,6 @@ export default function useDiscountCodes() {
     discountCodesQuery,
     discountCodeUpdateMutation,
     discountCodeDeleteMutation,
+    validDiscountCodesQuery,
   };
 }
