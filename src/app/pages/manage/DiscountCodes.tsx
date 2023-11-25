@@ -8,6 +8,8 @@ export default function DiscountCodes() {
   const { discountCodesQuery } = useDiscountCodes();
   const { discountCodesColumns } = useColumns();
 
+  console.log("discount codes", discountCodesQuery.data);
+
   const discountCodesProps = {
     editBtnBody: <EditBtnBody />,
     tableColumns: discountCodesColumns,

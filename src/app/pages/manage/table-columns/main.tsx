@@ -457,6 +457,14 @@ export const useColumns = () => {
       accessorKey: "code",
     },
     {
+      header: "Discount value ",
+      accessorKey: "discountQuantity",
+      cell: (value: any) =>
+        `${value.row?.original?.discountQuantity}${
+          value.row?.original?.discountType === "percentage" ? "%" : " TND"
+        }`,
+    },
+    {
       header: "Does expire?",
       accessorKey: "expires",
       cell: (value: any) => (value.row?.original?.expires ? "Yes" : "No"),
