@@ -2,6 +2,7 @@ import {
   MoreVertical24Regular,
   Delete24Regular,
   Edit24Regular,
+  Payment24Filled,
 } from "@fluentui/react-icons";
 import {
   Button,
@@ -46,13 +47,23 @@ export const useColumns = () => {
   const { gymStaffDeleteMutation } = useGymStaff();
   const { coachDeleteMutation } = useCoaches();
   const { discountCodeDeleteMutation } = useDiscountCodes();
-  const { transactionDeleteMutation } = useTransactions();
+  const { transactionDeleteMutation, transactionUpdateMutation } =
+    useTransactions();
 
   const deleteRow = (mutation: any, data: any) => {
     const id = data.id;
     mutation.mutate({
       id,
       data: { deletedAt: new Date() },
+    });
+  };
+
+  const markPayedTransaction = (mutation: any, data: any, isPaid: boolean) => {
+    console.log("im innn!", isPaid);
+    const id = data.id;
+    mutation.mutate({
+      id,
+      data: { isPaid },
     });
   };
 
@@ -177,10 +188,19 @@ export const useColumns = () => {
       <ActionsCell
         isTransaction={true}
         mutation={transactionDeleteMutation}
+        markPayedMutation={transactionUpdateMutation}
         data={value.row?.original}
-        deleteFn={deleteRow}
-        title="Delete Transaction?"
-        desc="Are you sure you want to delete this transaction?"
+        markPayedFn={markPayedTransaction}
+        title={
+          value.row?.original?.isPaid
+            ? "Mark transaction as unpaid?"
+            : "Mark transaction as paid?"
+        }
+        desc={
+          value.row?.original?.isPaid
+            ? "Are you sure you want to mark this transaction as unpaid?"
+            : "Are you sure you want to mark this transaction as paid?"
+        }
       />
     ),
   };
@@ -593,8 +613,11 @@ const ActionsCell = ({
   title,
   desc,
   isTransaction,
+  markPayedMutation,
+  markPayedFn,
 }: any) => {
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+  const [isMarkPayedDrawerOpen, setIsMarkPayedDrawerOpen] = useState(false);
   const [editData, setEditData] = useAtom(mEditData);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useAtom(ismEditDrawerOpen);
   return (
@@ -631,6 +654,17 @@ const ActionsCell = ({
                 Edit
               </MenuItem>
             )}
+
+            {isTransaction && (
+              <MenuItem
+                onClick={() => {
+                  setIsMarkPayedDrawerOpen(true);
+                }}
+                icon={<Payment24Filled />}
+              >
+                {data?.isPaid ? "Mark as unpaid" : "Mark as paid"}
+              </MenuItem>
+            )}
           </MenuList>
         </MenuPopover>
       </Menu>
@@ -643,6 +677,18 @@ const ActionsCell = ({
         title={title}
         desc={desc}
       />
+
+      {isTransaction && (
+        <MarkPayedAlert
+          mutation={markPayedMutation}
+          open={isMarkPayedDrawerOpen}
+          setOpen={setIsMarkPayedDrawerOpen}
+          markPayedFn={markPayedFn}
+          data={data}
+          title={title}
+          desc={desc}
+        />
+      )}
     </div>
   );
 };
@@ -684,6 +730,52 @@ const DeleteAlert = ({
               disabled={mutation.isPending}
             >
               Delete
+            </Button>
+          </DialogActions>
+        </DialogBody>
+      </DialogSurface>
+    </Dialog>
+  );
+};
+
+const MarkPayedAlert = ({
+  mutation,
+  open,
+  setOpen,
+  markPayedFn,
+  data,
+  isPaid,
+  title,
+  desc,
+}: any) => {
+  //FIX BUG: Dialog is closing before the mutation(deleteFn) is finished
+
+  //Dialog is closing immediately after clicking create button i want it to close after mutation is settled
+  //I think the problem is because useMutation is rerending the component and the open state
+  return (
+    <Dialog open={open} modalType="alert">
+      <DialogSurface>
+        <DialogBody>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogContent>
+            {mutation.isPending ? (
+              <Spinner label="Loading..." />
+            ) : (
+              <span>{desc}</span>
+            )}
+          </DialogContent>
+          <DialogActions>
+            <DialogTrigger disableButtonEnhancement>
+              <Button appearance="secondary" onClick={() => setOpen(false)}>
+                Close
+              </Button>
+            </DialogTrigger>
+            <Button
+              appearance="primary"
+              onClick={() => markPayedFn(mutation, data, !data.isPaid)}
+              disabled={mutation.isPending}
+            >
+              Yes
             </Button>
           </DialogActions>
         </DialogBody>
