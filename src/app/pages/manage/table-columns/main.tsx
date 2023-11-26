@@ -38,7 +38,7 @@ export const ismEditDrawerOpen = atom(false);
 export const mEditData = atom(null);
 import moment from "moment";
 
-import { CheckmarkCircle24Filled, Circle24Filled } from "@fluentui/react-icons";
+import { CheckmarkCircle24Filled } from "@fluentui/react-icons";
 
 export const useColumns = () => {
   const { memberDeleteMutation, memberUpdateMutation } = useMembers();
@@ -269,7 +269,7 @@ export const useColumns = () => {
           </span>
         ) : (
           <span style={{ display: "flex", alignItems: "center", gap: "2px" }}>
-            <Circle24Filled primaryFill="green" /> Active
+            <CheckmarkCircle24Filled primaryFill="green" /> Active
           </span>
         ),
     },
@@ -611,7 +611,7 @@ export const useColumns = () => {
           </span>
         ) : (
           <span style={{ display: "flex", alignItems: "center", gap: "2px" }}>
-            <Circle24Filled primaryFill="red" /> Not Paid
+            <CheckmarkCircle24Filled primaryFill="red" /> Not Paid
           </span>
         ),
     },
