@@ -2,6 +2,7 @@ import {
   MoreVertical24Regular,
   Delete24Regular,
   Edit24Regular,
+  CalendarCancel24Filled,
   Payment24Filled,
 } from "@fluentui/react-icons";
 import {
@@ -40,7 +41,7 @@ import moment from "moment";
 import { CheckmarkCircle24Filled, Circle24Filled } from "@fluentui/react-icons";
 
 export const useColumns = () => {
-  const { memberDeleteMutation } = useMembers();
+  const { memberDeleteMutation, memberUpdateMutation } = useMembers();
   const { membershipDeleteMutation } = useMemberships();
   const { programDeleteMutation } = usePrograms();
   const { classDeleteMutation } = useClasses();
@@ -59,11 +60,18 @@ export const useColumns = () => {
   };
 
   const markPayedTransaction = (mutation: any, data: any, isPaid: boolean) => {
-    console.log("im innn!", isPaid);
     const id = data.id;
     mutation.mutate({
       id,
       data: { isPaid },
+    });
+  };
+
+  const cancelMembership = (mutation: any, data: any) => {
+    const id = data.id;
+    mutation.mutate({
+      id,
+      data: { isMembershipCanceled: true },
     });
   };
 
@@ -74,9 +82,12 @@ export const useColumns = () => {
     enableSorting: false,
     cell: (value: any) => (
       <ActionsCell
+        isMember={true}
         mutation={memberDeleteMutation}
         data={value.row?.original}
         deleteFn={deleteRow}
+        cancelMembershipMutation={memberUpdateMutation}
+        cancelMembershipFn={cancelMembership}
         title="Delete member?"
         desc="Are you sure you want to delete this member?"
       />
@@ -247,6 +258,20 @@ export const useColumns = () => {
 
         return dateA.isBefore(dateB) ? 1 : dateA.isAfter(dateB) ? -1 : 0;
       },
+    },
+    {
+      header: "Membership status",
+      accessorKey: "isMembershipCanceled",
+      cell: (value: any) =>
+        value.row?.original?.isMembershipCanceled ? (
+          <span style={{ display: "flex", alignItems: "center", gap: "2px" }}>
+            <CheckmarkCircle24Filled primaryFill="red" /> Canceled
+          </span>
+        ) : (
+          <span style={{ display: "flex", alignItems: "center", gap: "2px" }}>
+            <Circle24Filled primaryFill="green" /> Active
+          </span>
+        ),
     },
     membersActions,
   ];
@@ -613,11 +638,16 @@ const ActionsCell = ({
   title,
   desc,
   isTransaction,
+  isMember,
   markPayedMutation,
+  cancelMembershipMutation,
+  cancelMembershipFn,
   markPayedFn,
 }: any) => {
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [isMarkPayedDrawerOpen, setIsMarkPayedDrawerOpen] = useState(false);
+  const [isCancelMembershipDrawerOpen, setIsCancelMembershipDrawerOpen] =
+    useState(false);
   const [editData, setEditData] = useAtom(mEditData);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useAtom(ismEditDrawerOpen);
   return (
@@ -665,6 +695,17 @@ const ActionsCell = ({
                 {data?.isPaid ? "Mark as unpaid" : "Mark as paid"}
               </MenuItem>
             )}
+
+            {isMember && !data.isMembershipCanceled && (
+              <MenuItem
+                onClick={() => {
+                  setIsCancelMembershipDrawerOpen(true);
+                }}
+                icon={<CalendarCancel24Filled />}
+              >
+                Cancel membership
+              </MenuItem>
+            )}
           </MenuList>
         </MenuPopover>
       </Menu>
@@ -684,6 +725,18 @@ const ActionsCell = ({
           open={isMarkPayedDrawerOpen}
           setOpen={setIsMarkPayedDrawerOpen}
           markPayedFn={markPayedFn}
+          data={data}
+          title={title}
+          desc={desc}
+        />
+      )}
+
+      {isMember && (
+        <CancelMembershipAlert
+          mutation={cancelMembershipMutation}
+          open={isCancelMembershipDrawerOpen}
+          setOpen={setIsCancelMembershipDrawerOpen}
+          fn={cancelMembershipFn}
           data={data}
           title={title}
           desc={desc}
@@ -773,6 +826,53 @@ const MarkPayedAlert = ({
             <Button
               appearance="primary"
               onClick={() => markPayedFn(mutation, data, !data.isPaid)}
+              disabled={mutation.isPending}
+            >
+              Yes
+            </Button>
+          </DialogActions>
+        </DialogBody>
+      </DialogSurface>
+    </Dialog>
+  );
+};
+
+const CancelMembershipAlert = ({
+  mutation,
+  open,
+  setOpen,
+  fn,
+  data,
+  title,
+  desc,
+}: any) => {
+  //FIX BUG: Dialog is closing before the mutation(deleteFn) is finished
+
+  //Dialog is closing immediately after clicking create button i want it to close after mutation is settled
+  //I think the problem is because useMutation is rerending the component and the open state
+  return (
+    <Dialog open={open} modalType="alert">
+      <DialogSurface>
+        <DialogBody>
+          <DialogTitle>Cancel {data.name}'s membership</DialogTitle>
+          <DialogContent>
+            {mutation.isPending ? (
+              <Spinner label="Loading..." />
+            ) : (
+              <span>
+                You are going to cancel {data.name}'s membership are you sure?{" "}
+              </span>
+            )}
+          </DialogContent>
+          <DialogActions>
+            <DialogTrigger disableButtonEnhancement>
+              <Button appearance="secondary" onClick={() => setOpen(false)}>
+                Close
+              </Button>
+            </DialogTrigger>
+            <Button
+              appearance="primary"
+              onClick={() => fn(mutation, data)}
               disabled={mutation.isPending}
             >
               Yes
