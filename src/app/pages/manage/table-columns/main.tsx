@@ -71,7 +71,7 @@ export const useColumns = () => {
     const id = data.id;
     mutation.mutate({
       id,
-      data: { isMembershipCanceled: true },
+      data: { isMembershipCanceled: !data.isMembershipCanceled },
     });
   };
 
@@ -696,14 +696,16 @@ const ActionsCell = ({
               </MenuItem>
             )}
 
-            {isMember && !data.isMembershipCanceled && (
+            {isMember && (
               <MenuItem
                 onClick={() => {
                   setIsCancelMembershipDrawerOpen(true);
                 }}
                 icon={<CalendarCancel24Filled />}
               >
-                Cancel membership
+                {data.isMembershipCanceled
+                  ? "Activate membership"
+                  : "Cancel membership"}
               </MenuItem>
             )}
           </MenuList>
@@ -854,13 +856,18 @@ const CancelMembershipAlert = ({
     <Dialog open={open} modalType="alert">
       <DialogSurface>
         <DialogBody>
-          <DialogTitle>Cancel {data.name}'s membership</DialogTitle>
+          <DialogTitle>
+            {data.isMembershipCanceled ? "Activate" : "Cancel"} {data.name}'s
+            membership
+          </DialogTitle>
           <DialogContent>
             {mutation.isPending ? (
               <Spinner label="Loading..." />
             ) : (
               <span>
-                You are going to cancel {data.name}'s membership are you sure?{" "}
+                You are going to{" "}
+                {data.isMembershipCanceled ? "activate" : "cancel"} {data.name}
+                's membership are you sure?{" "}
               </span>
             )}
           </DialogContent>
