@@ -699,6 +699,7 @@ const ActionsCell = ({
 
             {isMember && (
               <MenuItem
+                disabled={!data?.membership}
                 onClick={() => {
                   setIsCancelMembershipDrawerOpen(true);
                 }}
