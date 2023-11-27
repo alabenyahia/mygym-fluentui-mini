@@ -57,7 +57,9 @@ const membersColumns = [
     header: "Memberhsip Exp/date",
     accessorKey: "membershipExpirationDate",
     cell: (value: any) =>
-      moment(value.row?.original?.membershipExpirationDate).format("LL"),
+      value.row?.original?.membershipExpirationDate
+        ? moment(value.row?.original?.membershipExpirationDate).format("LL")
+        : "",
     sortingFn: (rowA: any, rowB: any, columnId: any) => {
       if (rowA === "" || !rowA || rowB === "" || !rowB) return;
       const dateA = moment(rowA.getValue(columnId));
