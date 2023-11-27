@@ -263,7 +263,8 @@ export const useColumns = () => {
       header: "Membership status",
       accessorKey: "isMembershipCanceled",
       cell: (value: any) =>
-        value.row?.original?.isMembershipCanceled ? (
+        !value.row?.original?.membership ? null : value.row?.original
+            ?.isMembershipCanceled ? (
           <span style={{ display: "flex", alignItems: "center", gap: "2px" }}>
             <CheckmarkCircle24Filled primaryFill="red" /> Canceled
           </span>

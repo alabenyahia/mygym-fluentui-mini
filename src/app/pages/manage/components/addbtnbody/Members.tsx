@@ -86,6 +86,7 @@ export default function Members() {
           {
             ...values,
             registeredDate,
+            isMembershipCanceled: membership ? false : null,
             membership: membership.id,
             membershipExpirationDate,
             assignedTo: pb.authStore.model?.id,
