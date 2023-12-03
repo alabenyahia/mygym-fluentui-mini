@@ -21,6 +21,7 @@ import {
   DialogBody,
   DialogActions,
   Spinner,
+  Avatar,
 } from "@fluentui/react-components";
 
 import useMembers from "../hooks/useMembers";
@@ -765,6 +766,7 @@ const ActionsCell = ({
         <ManageMemberDialog
           open={isManageMemberDialogOpen}
           setOpen={setIsManageMemberDialogOpen}
+          data={data}
         />
       )}
     </div>
@@ -914,7 +916,7 @@ const CancelMembershipAlert = ({
   );
 };
 
-const ManageMemberDialog = ({ open, setOpen }) => {
+const ManageMemberDialog = ({ open, setOpen, data }) => {
   return (
     <Dialog
       // this controls the dialog open state
@@ -926,12 +928,23 @@ const ManageMemberDialog = ({ open, setOpen }) => {
     >
       <DialogSurface>
         <DialogBody>
-          <DialogTitle>Dialog title</DialogTitle>
           <DialogContent>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-            exercitationem cumque repellendus eaque est dolor eius expedita
-            nulla ullam? Tenetur reprehenderit aut voluptatum impedit voluptates
-            in natus iure cumque eaque?
+            <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+              <Avatar
+                name={data.name}
+                image={{
+                  src: data.avatar,
+                }}
+                badge={{ icon: <Edit24Regular /> }}
+                size={64}
+                style={{ cursor: "pointer" }}
+              />
+              <div>
+                <p style={{ fontWeight: 600 }}>{data.name}</p>
+                <p>{data.email}</p>
+                <p>{data.phone}</p>
+              </div>
+            </div>
           </DialogContent>
 
           <DialogActions>

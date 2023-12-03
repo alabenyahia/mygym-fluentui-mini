@@ -11,6 +11,15 @@ export default function useMembers() {
       sort: "-created",
       expand: "membership",
     });
+    members.forEach((member: any) => {
+      if (member.avatar) {
+        const url = pb.files.getUrl(members, member.avatar, {
+          thumb: "100x100",
+        });
+        member.avatar = url;
+      }
+    });
+
     return members;
   }
 
@@ -20,7 +29,7 @@ export default function useMembers() {
   }
 
   async function updateMember(id: string, data: any) {
-    console.log("data from updatefn", data)
+    console.log("data from updatefn", data);
     delete data.id;
     const member = await pb
       .collection("members")
