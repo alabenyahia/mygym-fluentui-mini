@@ -4,6 +4,7 @@ import {
   Edit24Regular,
   CalendarCancel24Filled,
   Payment24Filled,
+  CalendarSettings24Regular,
 } from "@fluentui/react-icons";
 import {
   Button,
@@ -647,6 +648,8 @@ const ActionsCell = ({
 }: any) => {
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [isMarkPayedDrawerOpen, setIsMarkPayedDrawerOpen] = useState(false);
+  const [isManageMemberDialogOpen, setIsManageMemberDialogOpen] =
+    useState(false);
   const [isCancelMembershipDrawerOpen, setIsCancelMembershipDrawerOpen] =
     useState(false);
   const [editData, setEditData] = useAtom(mEditData);
@@ -710,6 +713,17 @@ const ActionsCell = ({
                   : "Cancel membership"}
               </MenuItem>
             )}
+
+            {isMember && (
+              <MenuItem
+                onClick={() => {
+                  setIsManageMemberDialogOpen(true);
+                }}
+                icon={<CalendarSettings24Regular />}
+              >
+                Manage member
+              </MenuItem>
+            )}
           </MenuList>
         </MenuPopover>
       </Menu>
@@ -744,6 +758,13 @@ const ActionsCell = ({
           data={data}
           title={title}
           desc={desc}
+        />
+      )}
+
+      {isMember && (
+        <ManageMemberDialog
+          open={isManageMemberDialogOpen}
+          setOpen={setIsManageMemberDialogOpen}
         />
       )}
     </div>
@@ -886,6 +907,39 @@ const CancelMembershipAlert = ({
             >
               Yes
             </Button>
+          </DialogActions>
+        </DialogBody>
+      </DialogSurface>
+    </Dialog>
+  );
+};
+
+const ManageMemberDialog = ({ open, setOpen }) => {
+  return (
+    <Dialog
+      // this controls the dialog open state
+      open={open}
+      onOpenChange={(event, data) => {
+        // it is the users responsibility to react accordingly to the open state change
+        setOpen(data.open);
+      }}
+    >
+      <DialogSurface>
+        <DialogBody>
+          <DialogTitle>Dialog title</DialogTitle>
+          <DialogContent>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
+            exercitationem cumque repellendus eaque est dolor eius expedita
+            nulla ullam? Tenetur reprehenderit aut voluptatum impedit voluptates
+            in natus iure cumque eaque?
+          </DialogContent>
+
+          <DialogActions>
+            {/* DialogTrigger inside of a Dialog still works properly */}
+            <DialogTrigger disableButtonEnhancement>
+              <Button appearance="secondary">Close</Button>
+            </DialogTrigger>
+            <Button appearance="primary">Do Something</Button>
           </DialogActions>
         </DialogBody>
       </DialogSurface>
