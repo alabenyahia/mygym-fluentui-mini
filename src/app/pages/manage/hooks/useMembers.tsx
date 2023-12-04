@@ -13,17 +13,19 @@ export default function useMembers() {
     });
     members.forEach((member: any) => {
       if (member.avatar) {
-        const url = pb.files.getUrl(members, member.avatar, {
+        const url = pb.files.getUrl(member, member.avatar, {
           thumb: "100x100",
         });
         member.avatar = url;
+        console.log("member avatar", url);
       }
     });
 
     return members;
   }
 
-  async function addMember(data: AddMemberDataType) {
+  async function addMember(data: any) {
+    console.log("add member daata", data);
     const member = await pb.collection("members").create(data);
     return member;
   }

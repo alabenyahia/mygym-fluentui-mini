@@ -30,6 +30,7 @@ export default function useLogin() {
   }
 
   async function updateProfile(data: any) {
+    console.log("data from updatefn", data);
     const user = await pb
       .collection("users")
       .update(pb.authStore?.model?.id, data);

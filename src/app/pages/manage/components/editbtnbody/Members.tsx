@@ -7,7 +7,7 @@ import {
   Body1,
   Button,
   Switch,
-  Badge,
+  Avatar,
 } from "@fluentui/react-components";
 import useMemberships from "../../hooks/useMemberships";
 import { DatePicker } from "@fluentui/react-datepicker-compat";
@@ -23,6 +23,7 @@ import useTransactions from "../../hooks/useTransactions";
 import pb from "src/utils/db/pocketbase";
 import { useNavigate } from "react-router-dom";
 import useDiscountCodes from "../../hooks/useDiscountCodes";
+import { createRef } from "react";
 
 export default function Members() {
   const [editData, setEditData]: any = useAtom(mEditData);
@@ -37,10 +38,33 @@ export default function Members() {
   );
   const [isPaid, setIsPaid] = useState(false);
   const [discountCode, setDiscountCode]: any = useState("");
+  const [selectedAvatar, setSelectedAvatar] = useState(editData?.avatar || "");
+  const [avatarPreview, setAvatarPreview] = useState(editData?.avatar || "");
 
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useAtom(ismEditDrawerOpen);
   const { transactionAddMutation } = useTransactions();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  const fileInputRef: any = createRef();
+
+  const handleFileChange = (event: any) => {
+    console.log("HELLLOO");
+    const file = event.target.files[0];
+    setSelectedAvatar(file);
+    previewImage(file);
+    console.log("avatar", file);
+  };
+
+  const previewImage = (file: any) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setAvatarPreview(reader.result as any);
+    };
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <Formik
       initialValues={{
@@ -77,16 +101,21 @@ export default function Members() {
         });
 
         console.log("valls2", editData);
+        const data = {
+          ...values,
+          registeredDate,
+          membership,
+          membershipExpirationDate,
+        };
+
+        if (selectedAvatar) {
+          data.avatar = selectedAvatar;
+        }
 
         memberUpdateMutation.mutate(
           {
             id: editData?.id,
-            data: {
-              ...values,
-              registeredDate,
-              membership,
-              membershipExpirationDate,
-            },
+            data,
           },
           {
             onSuccess: (mMember) => {
@@ -125,6 +154,27 @@ export default function Members() {
           </div>
         ) : (
           <>
+            <div>
+              <Avatar
+                size={56}
+                image={{
+                  src: avatarPreview as any,
+                }}
+              />
+              <Button
+                style={{ marginLeft: "12px" }}
+                onClick={() => fileInputRef.current.click()}
+              >
+                Select member picture
+              </Button>
+              <input
+                type="file"
+                onChange={handleFileChange}
+                hidden
+                ref={fileInputRef}
+                accept="image/*"
+              />
+            </div>
             <div>
               <Label htmlFor="name" required>
                 Member name
@@ -182,7 +232,6 @@ export default function Members() {
                   })}
                 </Dropdown>
 
-                
                 <Switch
                   checked={isPaid}
                   onChange={() => setIsPaid(!isPaid)}

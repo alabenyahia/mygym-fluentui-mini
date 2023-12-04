@@ -8,6 +8,7 @@ import {
   Button,
   Body1,
   Badge,
+  Avatar,
 } from "@fluentui/react-components";
 import useMemberships from "../../hooks/useMemberships";
 import { DatePicker } from "@fluentui/react-datepicker-compat";
@@ -22,6 +23,7 @@ import { useState } from "react";
 import useLogin from "src/app/pages/auth/hooks/useLogin";
 import { useNavigate } from "react-router-dom";
 import useDiscountCodes from "../../hooks/useDiscountCodes";
+import { createRef } from "react";
 
 export default function Members() {
   const { membershipsQuery } = useMemberships();
@@ -29,11 +31,34 @@ export default function Members() {
   const { memberMutation } = useMembers();
   const [registeredDate, setRegisteredDate] = useState<Date>(new Date());
   const [membership, setMembership]: any = useState("");
+  const [selectedAvatar, setSelectedAvatar] = useState("");
+  const [avatarPreview, setAvatarPreview] = useState("");
+
   const [discountCode, setDiscountCode]: any = useState("");
   const [isPaid, setIsPaid] = useState(false);
   const { getUserQuery, updateTaskMutation } = useLogin();
   const { validDiscountCodesQuery } = useDiscountCodes();
   const navigate = useNavigate();
+
+  const fileInputRef: any = createRef();
+
+  const handleFileChange = (event: any) => {
+    console.log("HELLLOO");
+    const file = event.target.files[0];
+    setSelectedAvatar(file);
+    previewImage(file);
+    console.log("avatar", file);
+  };
+
+  const previewImage = (file: any) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setAvatarPreview(reader.result as any);
+    };
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
 
   const calculateNewPrice = (
     price: number,
@@ -75,7 +100,8 @@ export default function Members() {
 
         console.log("valls", {
           ...values,
-          registeredDate,
+          avatar: selectedAvatar,
+          registeredDate: registeredDate.toString(),
           membership,
           membershipExpirationDate,
           assignedTo: pb.authStore.model?.id,
@@ -87,10 +113,11 @@ export default function Members() {
             ...values,
             registeredDate,
             isMembershipCanceled: membership ? false : null,
-            membership: membership.id,
+            membership: membership ? membership.id : "",
             membershipExpirationDate,
             assignedTo: pb.authStore.model?.id,
             deletedAt: "",
+            avatar: selectedAvatar,
           },
           {
             onSuccess: (mMember) => {
@@ -110,6 +137,8 @@ export default function Members() {
               });
               setMembership("");
               setRegisteredDate(new Date());
+              setSelectedAvatar("");
+              setAvatarPreview("");
 
               if (membership && mMembership) {
                 transactionAddMutation.mutate(
@@ -164,6 +193,27 @@ export default function Members() {
           </div>
         ) : (
           <>
+            <div>
+              <Avatar
+                size={56}
+                image={{
+                  src: avatarPreview as any,
+                }}
+              />
+              <Button
+                style={{ marginLeft: "12px" }}
+                onClick={() => fileInputRef.current.click()}
+              >
+                Select member picture
+              </Button>
+              <input
+                type="file"
+                onChange={handleFileChange}
+                hidden
+                ref={fileInputRef}
+                accept="image/*"
+              />
+            </div>
             <div>
               <Label htmlFor="name" required>
                 Member name
