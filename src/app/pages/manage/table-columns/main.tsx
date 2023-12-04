@@ -5,6 +5,7 @@ import {
   CalendarCancel24Filled,
   Payment24Filled,
   CalendarSettings24Regular,
+  CalendarCancel24Regular,
 } from "@fluentui/react-icons";
 import {
   Button,
@@ -22,6 +23,7 @@ import {
   DialogActions,
   Spinner,
   Avatar,
+  Tooltip,
 } from "@fluentui/react-components";
 
 import useMembers from "../hooks/useMembers";
@@ -941,18 +943,49 @@ const ManageMemberDialog = ({ open, setOpen, data }) => {
               />
               <div>
                 <p style={{ fontWeight: 600 }}>{data.name}</p>
-                <p>{data.email}</p>
-                <p>{data.phone}</p>
+                <p>
+                  {data.email} {data.email && data.phone && " | "} {data.phone}
+                </p>
+
+                {data.membership && (
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "8px",
+                      alignItems: "center",
+                    }}
+                  >
+                    <p style={{ fontWeight: 900 }}>{data.membership}</p>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "8px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Tooltip relationship="label" content="Change membership">
+                        <Button icon={<Edit24Regular />}></Button>
+                      </Tooltip>
+
+                      <Tooltip relationship="label" content="Cancel membership">
+                        <Button
+                          icon={<CalendarCancel24Regular color="#ff0033" />}
+                          style={{ borderColor: "#ff0033" }}
+                        ></Button>
+                      </Tooltip>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </DialogContent>
 
-          <DialogActions>
+          <DialogActions style={{ marginTop: "24px" }}>
             {/* DialogTrigger inside of a Dialog still works properly */}
             <DialogTrigger disableButtonEnhancement>
               <Button appearance="secondary">Close</Button>
             </DialogTrigger>
-            <Button appearance="primary">Do Something</Button>
+            <Button appearance="primary">Extend membership</Button>
           </DialogActions>
         </DialogBody>
       </DialogSurface>
