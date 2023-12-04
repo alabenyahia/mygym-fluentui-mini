@@ -6,6 +6,7 @@ import {
   Payment24Filled,
   CalendarSettings24Regular,
   CalendarCancel24Regular,
+  CalendarCheckmark24Regular,
 } from "@fluentui/react-icons";
 import {
   Button,
@@ -88,9 +89,9 @@ export const useColumns = () => {
       <ActionsCell
         isMember={true}
         mutation={memberDeleteMutation}
+        memberUpdateMutation={memberUpdateMutation}
         data={value.row?.original}
         deleteFn={deleteRow}
-        cancelMembershipMutation={memberUpdateMutation}
         cancelMembershipFn={cancelMembership}
         title="Delete member?"
         desc="Are you sure you want to delete this member?"
@@ -645,7 +646,7 @@ const ActionsCell = ({
   isTransaction,
   isMember,
   markPayedMutation,
-  cancelMembershipMutation,
+  memberUpdateMutation,
   cancelMembershipFn,
   markPayedFn,
 }: any) => {
@@ -754,7 +755,7 @@ const ActionsCell = ({
 
       {isMember && (
         <CancelMembershipAlert
-          mutation={cancelMembershipMutation}
+          mutation={memberUpdateMutation}
           open={isCancelMembershipDrawerOpen}
           setOpen={setIsCancelMembershipDrawerOpen}
           fn={cancelMembershipFn}
@@ -769,6 +770,7 @@ const ActionsCell = ({
           open={isManageMemberDialogOpen}
           setOpen={setIsManageMemberDialogOpen}
           data={data}
+          memberUpdateMutation={memberUpdateMutation}
         />
       )}
     </div>
@@ -866,15 +868,7 @@ const MarkPayedAlert = ({
   );
 };
 
-const CancelMembershipAlert = ({
-  mutation,
-  open,
-  setOpen,
-  fn,
-  data,
-  title,
-  desc,
-}: any) => {
+const CancelMembershipAlert = ({ mutation, open, setOpen, fn, data }: any) => {
   //FIX BUG: Dialog is closing before the mutation(deleteFn) is finished
 
   //Dialog is closing immediately after clicking create button i want it to close after mutation is settled
@@ -906,7 +900,7 @@ const CancelMembershipAlert = ({
             </DialogTrigger>
             <Button
               appearance="primary"
-              onClick={() => fn(mutation, data)}
+              onClick={() => fn()}
               disabled={mutation.isPending}
             >
               Yes
@@ -918,44 +912,48 @@ const CancelMembershipAlert = ({
   );
 };
 
-const ManageMemberDialog = ({ open, setOpen, data }) => {
+const ManageMemberDialog = ({ open, setOpen, data, memberUpdateMutation }) => {
+  const [isCancelMembershipDrawerOpen, setIsCancelMembershipDrawerOpen] =
+    useState(false);
+  function cancelMembership() {
+    memberUpdateMutation.mutate({
+      id: data.id,
+      data: { isMembershipCanceled: !data.isMembershipCanceled },
+    });
+  }
   return (
-    <Dialog
-      // this controls the dialog open state
-      open={open}
-      onOpenChange={(event, data) => {
-        // it is the users responsibility to react accordingly to the open state change
-        setOpen(data.open);
-      }}
-    >
-      <DialogSurface>
-        <DialogBody>
-          <DialogContent>
-            <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-              <Avatar
-                name={data.name}
-                image={{
-                  src: data.avatar,
-                }}
-                badge={{ icon: <Edit24Regular /> }}
-                size={64}
-                style={{ cursor: "pointer" }}
-              />
-              <div>
-                <p style={{ fontWeight: 600 }}>{data.name}</p>
-                <p>
-                  {data.email} {data.email && data.phone && " | "} {data.phone}
-                </p>
+    <>
+      <Dialog
+        // this controls the dialog open state
+        open={open}
+        onOpenChange={(event, data) => {
+          // it is the users responsibility to react accordingly to the open state change
+          setOpen(data.open);
+        }}
+      >
+        <DialogSurface>
+          <DialogBody>
+            <DialogContent>
+              <div
+                style={{ display: "flex", gap: "8px", alignItems: "center" }}
+              >
+                <Avatar
+                  name={data.name}
+                  image={{
+                    src: data.avatar,
+                  }}
+                  badge={{ icon: <Edit24Regular /> }}
+                  size={64}
+                  style={{ cursor: "pointer" }}
+                />
+                <div>
+                  <p style={{ fontWeight: 600 }}>{data.name}</p>
+                  <p>
+                    {data.email} {data.email && data.phone && " | "}{" "}
+                    {data.phone}
+                  </p>
 
-                {data.membership && (
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: "8px",
-                      alignItems: "center",
-                    }}
-                  >
-                    <p style={{ fontWeight: 900 }}>{data.membership}</p>
+                  {data.membership && (
                     <div
                       style={{
                         display: "flex",
@@ -963,32 +961,77 @@ const ManageMemberDialog = ({ open, setOpen, data }) => {
                         alignItems: "center",
                       }}
                     >
-                      <Tooltip relationship="label" content="Change membership">
-                        <Button icon={<Edit24Regular />}></Button>
-                      </Tooltip>
+                      <CheckmarkCircle24Filled
+                        color={data.isMembershipCanceled ? "#ff0033" : "green"}
+                      />
+                      <p style={{ fontWeight: 900 }}>{data.membership}</p>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "8px",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Tooltip
+                          relationship="label"
+                          content="Change membership"
+                        >
+                          <Button icon={<Edit24Regular />}></Button>
+                        </Tooltip>
 
-                      <Tooltip relationship="label" content="Cancel membership">
-                        <Button
-                          icon={<CalendarCancel24Regular color="#ff0033" />}
-                          style={{ borderColor: "#ff0033" }}
-                        ></Button>
-                      </Tooltip>
+                        <Tooltip
+                          relationship="label"
+                          content={
+                            data.isMembershipCanceled
+                              ? "Activate membership"
+                              : "Cancel membership"
+                          }
+                        >
+                          <Button
+                            onClick={() =>
+                              setIsCancelMembershipDrawerOpen(true)
+                            }
+                            icon={
+                              data.isMembershipCanceled ? (
+                                <CalendarCheckmark24Regular color="green" />
+                              ) : (
+                                <CalendarCancel24Regular color="#ff0033" />
+                              )
+                            }
+                            style={{
+                              borderColor: data.isMembershipCanceled
+                                ? "green"
+                                : "#ff0033",
+                            }}
+                          ></Button>
+                        </Tooltip>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
-          </DialogContent>
+            </DialogContent>
 
-          <DialogActions style={{ marginTop: "24px" }}>
-            {/* DialogTrigger inside of a Dialog still works properly */}
-            <DialogTrigger disableButtonEnhancement>
-              <Button appearance="secondary">Close</Button>
-            </DialogTrigger>
-            <Button appearance="primary">Extend membership</Button>
-          </DialogActions>
-        </DialogBody>
-      </DialogSurface>
-    </Dialog>
+            <DialogActions style={{ marginTop: "24px" }}>
+              {/* DialogTrigger inside of a Dialog still works properly */}
+              <DialogTrigger disableButtonEnhancement>
+                <Button appearance="secondary">Close</Button>
+              </DialogTrigger>
+              <Button appearance="primary">Extend membership</Button>
+            </DialogActions>
+          </DialogBody>
+        </DialogSurface>
+      </Dialog>
+
+      {data.membership && (
+        <CancelMembershipAlert
+          mutation={memberUpdateMutation}
+          open={isCancelMembershipDrawerOpen}
+          setOpen={setIsCancelMembershipDrawerOpen}
+          fn={cancelMembership}
+          data={data}
+        />
+      )}
+    </>
   );
 };
