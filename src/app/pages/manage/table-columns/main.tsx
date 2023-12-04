@@ -227,6 +227,17 @@ export const useColumns = () => {
       accessorKey: "id",
     },
     {
+      header: "Avatar",
+      accessorKey: "avatar",
+      cell: (value: any) => (
+        <Avatar
+          name={value.row?.original?.name}
+          size={40}
+          image={{ src: value.row?.original?.avatar }}
+        />
+      ),
+    },
+    {
       header: "Name",
       accessorKey: "name",
     },
