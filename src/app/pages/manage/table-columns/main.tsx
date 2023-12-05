@@ -2,7 +2,7 @@ import {
   MoreVertical24Regular,
   Delete24Regular,
   Edit24Regular,
-  CalendarCancel24Filled,
+  CalendarAdd24Regular,
   Payment24Filled,
   CalendarSettings24Regular,
   CalendarCancel24Regular,
@@ -25,10 +25,12 @@ import {
   DialogActions,
   Spinner,
   Avatar,
-  Tooltip,
+  Field,
   Dropdown,
   Option,
+  Caption1,
 } from "@fluentui/react-components";
+import { DatePicker } from "@fluentui/react-datepicker-compat";
 
 import useMembers from "../hooks/useMembers";
 import useMemberships from "../hooks/useMemberships";
@@ -269,7 +271,7 @@ export const useColumns = () => {
       accessorKey: "membership",
     },
     {
-      header: "Memberhsip Exp/date",
+      header: "Membership Exp/date",
       accessorKey: "membershipExpirationDate",
       sortingFn: (rowA: any, rowB: any, columnId: any) => {
         if (rowA === "" || !rowA || rowB === "" || !rowB) return;
@@ -668,6 +670,8 @@ const ActionsCell = ({
 }: any) => {
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [isMarkPayedDrawerOpen, setIsMarkPayedDrawerOpen] = useState(false);
+  const [isExtendMembershipAlertOpen, setIsExtendMembershipAlertOpen] =
+    useState(false);
   const [isChangeMembershipAlertOpen, setIsChangeMembershipAlertOpen] =
     useState(false);
   const [isManageMemberDialogOpen, setIsManageMemberDialogOpen] =
@@ -726,13 +730,11 @@ const ActionsCell = ({
               <MenuItem
                 disabled={!data?.membership}
                 onClick={() => {
-                  setIsCancelMembershipDrawerOpen(true);
+                  setIsExtendMembershipAlertOpen(true);
                 }}
-                icon={<CalendarCancel24Filled />}
+                icon={<CalendarAdd24Regular />}
               >
-                {data.isMembershipCanceled
-                  ? "Activate membership"
-                  : "Cancel membership"}
+                Extend membership
               </MenuItem>
             )}
 
@@ -750,12 +752,15 @@ const ActionsCell = ({
 
             {isMember && (
               <MenuItem
+                disabled={!data?.membership}
                 onClick={() => {
-                  setIsManageMemberDialogOpen(true);
+                  setIsCancelMembershipDrawerOpen(true);
                 }}
-                icon={<CalendarSettings24Regular />}
+                icon={<CalendarCancel24Regular />}
               >
-                Manage member
+                {data.isMembershipCanceled
+                  ? "Activate membership"
+                  : "Cancel membership"}
               </MenuItem>
             )}
           </MenuList>
@@ -796,19 +801,20 @@ const ActionsCell = ({
       )}
 
       {isMember && (
-        <ManageMemberDialog
-          open={isManageMemberDialogOpen}
-          setOpen={setIsManageMemberDialogOpen}
-          data={data}
-          memberUpdateMutation={memberUpdateMutation}
-        />
-      )}
-
-      {isMember && (
         <ChangeMembershipAlert
           mutation={memberUpdateMutation}
           open={isChangeMembershipAlertOpen}
           setOpen={setIsChangeMembershipAlertOpen}
+          data={data}
+          membershipsQuery={membershipsQuery}
+        />
+      )}
+
+      {isMember && (
+        <ExtendMembershipAlert
+          mutation={memberUpdateMutation}
+          open={isExtendMembershipAlertOpen}
+          setOpen={setIsExtendMembershipAlertOpen}
           data={data}
           membershipsQuery={membershipsQuery}
         />
@@ -962,6 +968,9 @@ const CancelMembershipAlert = ({ mutation, open, setOpen, fn, data }: any) => {
                           }
                         />
                         <p style={{ fontWeight: 900 }}>{data.membership}</p>
+                        <Caption1>
+                          {moment(data.membershipExpirationDate).format("LL")}
+                        </Caption1>
                         <div
                           style={{
                             display: "flex",
@@ -1067,6 +1076,9 @@ const ChangeMembershipAlert = ({
                           }
                         />
                         <p style={{ fontWeight: 900 }}>{data.membership}</p>
+                        <Caption1>
+                          {moment(data.membershipExpirationDate).format("LL")}
+                        </Caption1>
                         <div
                           style={{
                             display: "flex",
@@ -1085,7 +1097,13 @@ const ChangeMembershipAlert = ({
                 ) : membershipsQuery.isPending ? (
                   <Spinner label="Loading memberships..." />
                 ) : (
-                  <div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      marginBottom: "24px",
+                    }}
+                  >
                     <label htmlFor="membership">Select new membership</label>
                     <Dropdown
                       id="membership"
@@ -1137,59 +1155,58 @@ const ChangeMembershipAlert = ({
   );
 };
 
-const ManageMemberDialog = ({ open, setOpen, data, memberUpdateMutation }) => {
-  const [isCancelMembershipDrawerOpen, setIsCancelMembershipDrawerOpen] =
-    useState(false);
-  function cancelMembership() {
-    memberUpdateMutation.mutate({
+const ExtendMembershipAlert = ({
+  mutation,
+  open,
+  setOpen,
+  data,
+  membershipsQuery,
+}: any) => {
+  //FIX BUG: Dialog is closing before the mutation(deleteFn) is finished
+
+  //Dialog is closing immediately after clicking create button i want it to close after mutation is settled
+  //I think the problem is because useMutation is rerending the component and the open state
+  const [newExpDate, setNewExpDate] = useState(new Date());
+  function extendMembership() {
+    mutation.mutate({
       id: data.id,
-      data: { isMembershipCanceled: !data.isMembershipCanceled },
+      data: { membershipExpirationDate: newExpDate },
     });
   }
-  return (
-    <>
-      <Dialog
-        // this controls the dialog open state
-        open={open}
-        onOpenChange={(event, data) => {
-          // it is the users responsibility to react accordingly to the open state change
-          setOpen(data.open);
-        }}
-      >
-        <DialogSurface>
-          <DialogBody>
-            <DialogContent>
-              <div
-                style={{ display: "flex", gap: "8px", alignItems: "center" }}
-              >
-                <Avatar
-                  name={data.name}
-                  image={{
-                    src: data.avatar,
-                  }}
-                  badge={{ icon: <Edit24Regular /> }}
-                  size={64}
-                  style={{ cursor: "pointer" }}
-                />
-                <div>
-                  <p style={{ fontWeight: 600 }}>{data.name}</p>
-                  <p>
-                    {data.email} {data.email && data.phone && " | "}{" "}
-                    {data.phone}
-                  </p>
 
-                  {data.membership && (
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: "8px",
-                        alignItems: "center",
-                      }}
-                    >
-                      <CheckmarkCircle24Filled
-                        color={data.isMembershipCanceled ? "#ff0033" : "green"}
-                      />
-                      <p style={{ fontWeight: 900 }}>{data.membership}</p>
+  return (
+    <Dialog open={open} modalType="alert">
+      <DialogSurface>
+        <DialogBody>
+          <DialogTitle>Change {data.name}'s membership</DialogTitle>
+          <DialogContent>
+            {mutation.isPending ? (
+              <Spinner label="Loading..." />
+            ) : (
+              <>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "8px",
+                    alignItems: "center",
+                    marginBottom: "24px",
+                  }}
+                >
+                  <Avatar
+                    name={data.name}
+                    image={{
+                      src: data.avatar,
+                    }}
+                    size={64}
+                  />
+                  <div>
+                    <p style={{ fontWeight: 600 }}>{data.name}</p>
+                    <p>
+                      {data.email} {data.email && data.phone && " | "}{" "}
+                      {data.phone}
+                    </p>
+
+                    {data.membership && (
                       <div
                         style={{
                           display: "flex",
@@ -1197,66 +1214,54 @@ const ManageMemberDialog = ({ open, setOpen, data, memberUpdateMutation }) => {
                           alignItems: "center",
                         }}
                       >
-                        <Tooltip
-                          relationship="label"
-                          content="Change membership"
-                        >
-                          <Button icon={<Edit24Regular />}></Button>
-                        </Tooltip>
-
-                        <Tooltip
-                          relationship="label"
-                          content={
-                            data.isMembershipCanceled
-                              ? "Activate membership"
-                              : "Cancel membership"
+                        <CheckmarkCircle24Filled
+                          color={
+                            data.isMembershipCanceled ? "#ff0033" : "green"
                           }
-                        >
-                          <Button
-                            onClick={() =>
-                              setIsCancelMembershipDrawerOpen(true)
-                            }
-                            icon={
-                              data.isMembershipCanceled ? (
-                                <CalendarCheckmark24Regular color="green" />
-                              ) : (
-                                <CalendarCancel24Regular color="#ff0033" />
-                              )
-                            }
-                            style={{
-                              borderColor: data.isMembershipCanceled
-                                ? "green"
-                                : "#ff0033",
-                            }}
-                          ></Button>
-                        </Tooltip>
+                        />
+                        <p style={{ fontWeight: 900 }}>{data.membership}</p>
+                        <Caption1>
+                          {moment(data.membershipExpirationDate).format("LL")}
+                        </Caption1>
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "8px",
+                            alignItems: "center",
+                          }}
+                        ></div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
-              </div>
-            </DialogContent>
-
-            <DialogActions style={{ marginTop: "24px" }}>
-              {/* DialogTrigger inside of a Dialog still works properly */}
-              <DialogTrigger disableButtonEnhancement>
-                <Button appearance="secondary">Close</Button>
-              </DialogTrigger>
-              <Button appearance="primary">Extend membership</Button>
-            </DialogActions>
-          </DialogBody>
-        </DialogSurface>
-      </Dialog>
-
-      {data.membership && (
-        <CancelMembershipAlert
-          mutation={memberUpdateMutation}
-          open={isCancelMembershipDrawerOpen}
-          setOpen={setIsCancelMembershipDrawerOpen}
-          fn={cancelMembership}
-          data={data}
-        />
-      )}
-    </>
+                <div>
+                  <Field label="New membership expiration date">
+                    <DatePicker
+                      value={newExpDate}
+                      onSelectDate={setNewExpDate}
+                      placeholder="Select a date..."
+                    />
+                  </Field>
+                </div>
+              </>
+            )}
+          </DialogContent>
+          <DialogActions>
+            <DialogTrigger disableButtonEnhancement>
+              <Button appearance="secondary" onClick={() => setOpen(false)}>
+                Cancel
+              </Button>
+            </DialogTrigger>
+            <Button
+              appearance="primary"
+              onClick={extendMembership}
+              disabled={mutation.isPending}
+            >
+              Extend
+            </Button>
+          </DialogActions>
+        </DialogBody>
+      </DialogSurface>
+    </Dialog>
   );
 };
