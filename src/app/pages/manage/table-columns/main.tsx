@@ -7,6 +7,7 @@ import {
   CalendarSettings24Regular,
   CalendarCancel24Regular,
   CalendarCheckmark24Regular,
+  CalendarEdit24Regular,
 } from "@fluentui/react-icons";
 import {
   Button,
@@ -25,6 +26,8 @@ import {
   Spinner,
   Avatar,
   Tooltip,
+  Dropdown,
+  Option,
 } from "@fluentui/react-components";
 
 import useMembers from "../hooks/useMembers";
@@ -47,7 +50,7 @@ import { CheckmarkCircle24Filled } from "@fluentui/react-icons";
 
 export const useColumns = () => {
   const { memberDeleteMutation, memberUpdateMutation } = useMembers();
-  const { membershipDeleteMutation } = useMemberships();
+  const { membershipDeleteMutation, membershipsQuery } = useMemberships();
   const { programDeleteMutation } = usePrograms();
   const { classDeleteMutation } = useClasses();
   const { gymStaffDeleteMutation } = useGymStaff();
@@ -95,6 +98,7 @@ export const useColumns = () => {
         cancelMembershipFn={cancelMembership}
         title="Delete member?"
         desc="Are you sure you want to delete this member?"
+        membershipsQuery={membershipsQuery}
       />
     ),
   };
@@ -660,9 +664,12 @@ const ActionsCell = ({
   memberUpdateMutation,
   cancelMembershipFn,
   markPayedFn,
+  membershipsQuery,
 }: any) => {
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [isMarkPayedDrawerOpen, setIsMarkPayedDrawerOpen] = useState(false);
+  const [isChangeMembershipAlertOpen, setIsChangeMembershipAlertOpen] =
+    useState(false);
   const [isManageMemberDialogOpen, setIsManageMemberDialogOpen] =
     useState(false);
   const [isCancelMembershipDrawerOpen, setIsCancelMembershipDrawerOpen] =
@@ -731,6 +738,18 @@ const ActionsCell = ({
 
             {isMember && (
               <MenuItem
+                disabled={!data?.membership}
+                onClick={() => {
+                  setIsChangeMembershipAlertOpen(true);
+                }}
+                icon={<CalendarEdit24Regular />}
+              >
+                Change membership
+              </MenuItem>
+            )}
+
+            {isMember && (
+              <MenuItem
                 onClick={() => {
                   setIsManageMemberDialogOpen(true);
                 }}
@@ -782,6 +801,16 @@ const ActionsCell = ({
           setOpen={setIsManageMemberDialogOpen}
           data={data}
           memberUpdateMutation={memberUpdateMutation}
+        />
+      )}
+
+      {isMember && (
+        <ChangeMembershipAlert
+          mutation={memberUpdateMutation}
+          open={isChangeMembershipAlertOpen}
+          setOpen={setIsChangeMembershipAlertOpen}
+          data={data}
+          membershipsQuery={membershipsQuery}
         />
       )}
     </div>
@@ -896,17 +925,67 @@ const CancelMembershipAlert = ({ mutation, open, setOpen, fn, data }: any) => {
             {mutation.isPending ? (
               <Spinner label="Loading..." />
             ) : (
-              <span>
-                You are going to{" "}
-                {data.isMembershipCanceled ? "activate" : "cancel"} {data.name}
-                's membership are you sure?{" "}
-              </span>
+              <>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "8px",
+                    alignItems: "center",
+                    marginBottom: "24px",
+                  }}
+                >
+                  <Avatar
+                    name={data.name}
+                    image={{
+                      src: data.avatar,
+                    }}
+                    size={64}
+                  />
+                  <div>
+                    <p style={{ fontWeight: 600 }}>{data.name}</p>
+                    <p>
+                      {data.email} {data.email && data.phone && " | "}{" "}
+                      {data.phone}
+                    </p>
+
+                    {data.membership && (
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "8px",
+                          alignItems: "center",
+                        }}
+                      >
+                        <CheckmarkCircle24Filled
+                          color={
+                            data.isMembershipCanceled ? "#ff0033" : "green"
+                          }
+                        />
+                        <p style={{ fontWeight: 900 }}>{data.membership}</p>
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "8px",
+                            alignItems: "center",
+                          }}
+                        ></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <span>
+                  You are going to{" "}
+                  {data.isMembershipCanceled ? "activate" : "cancel"}{" "}
+                  {data.name}
+                  's membership are you sure?{" "}
+                </span>
+              </>
             )}
           </DialogContent>
           <DialogActions>
             <DialogTrigger disableButtonEnhancement>
               <Button appearance="secondary" onClick={() => setOpen(false)}>
-                Close
+                No
               </Button>
             </DialogTrigger>
             <Button
@@ -915,6 +994,141 @@ const CancelMembershipAlert = ({ mutation, open, setOpen, fn, data }: any) => {
               disabled={mutation.isPending}
             >
               Yes
+            </Button>
+          </DialogActions>
+        </DialogBody>
+      </DialogSurface>
+    </Dialog>
+  );
+};
+
+const ChangeMembershipAlert = ({
+  mutation,
+  open,
+  setOpen,
+  data,
+  membershipsQuery,
+}: any) => {
+  //FIX BUG: Dialog is closing before the mutation(deleteFn) is finished
+
+  //Dialog is closing immediately after clicking create button i want it to close after mutation is settled
+  //I think the problem is because useMutation is rerending the component and the open state
+  const [selectedMembership, setSelectedMembership] = useState(data.membership);
+  function changeMembership() {
+    mutation.mutate({
+      id: data.id,
+      data: { membership: selectedMembership.id },
+    });
+  }
+
+  return (
+    <Dialog open={open} modalType="alert">
+      <DialogSurface>
+        <DialogBody>
+          <DialogTitle>Change {data.name}'s membership</DialogTitle>
+          <DialogContent>
+            {mutation.isPending ? (
+              <Spinner label="Loading..." />
+            ) : (
+              <>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "8px",
+                    alignItems: "center",
+                    marginBottom: "24px",
+                  }}
+                >
+                  <Avatar
+                    name={data.name}
+                    image={{
+                      src: data.avatar,
+                    }}
+                    size={64}
+                  />
+                  <div>
+                    <p style={{ fontWeight: 600 }}>{data.name}</p>
+                    <p>
+                      {data.email} {data.email && data.phone && " | "}{" "}
+                      {data.phone}
+                    </p>
+
+                    {data.membership && (
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "8px",
+                          alignItems: "center",
+                        }}
+                      >
+                        <CheckmarkCircle24Filled
+                          color={
+                            data.isMembershipCanceled ? "#ff0033" : "green"
+                          }
+                        />
+                        <p style={{ fontWeight: 900 }}>{data.membership}</p>
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "8px",
+                            alignItems: "center",
+                          }}
+                        ></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                {membershipsQuery.isError ? (
+                  <span style={{ color: "#ff0033" }}>
+                    Error loading memberships
+                  </span>
+                ) : membershipsQuery.isPending ? (
+                  <Spinner label="Loading memberships..." />
+                ) : (
+                  <div>
+                    <label htmlFor="membership">Select new membership</label>
+                    <Dropdown
+                      id="membership"
+                      value={selectedMembership.id}
+                      onOptionSelect={(e, data) =>
+                        setSelectedMembership(data.optionValue)
+                      }
+                      defaultValue={selectedMembership}
+                      defaultSelectedOptions={[
+                        selectedMembership.name +
+                          "(" +
+                          selectedMembership.price +
+                          " TND)",
+                      ]}
+                    >
+                      {membershipsQuery.data.map((membership: any) => (
+                        <Option
+                          text={
+                            membership.name + "(" + membership.price + " TND)"
+                          }
+                          value={membership}
+                        >
+                          {membership.name + "(" + membership.price + " TND)"}
+                        </Option>
+                      ))}
+                    </Dropdown>
+                  </div>
+                )}
+              </>
+            )}
+          </DialogContent>
+          <DialogActions>
+            <DialogTrigger disableButtonEnhancement>
+              <Button appearance="secondary" onClick={() => setOpen(false)}>
+                Cancel
+              </Button>
+            </DialogTrigger>
+            <Button
+              appearance="primary"
+              onClick={changeMembership}
+              disabled={mutation.isPending}
+            >
+              Change
             </Button>
           </DialogActions>
         </DialogBody>
