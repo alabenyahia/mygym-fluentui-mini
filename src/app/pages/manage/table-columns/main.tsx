@@ -86,7 +86,7 @@ export const useColumns = () => {
   };
 
   const membersActions = {
-    header: "Actions",
+    header: "",
     accessorKey: "actions",
     footer: "Actions",
     enableSorting: false,
@@ -106,7 +106,7 @@ export const useColumns = () => {
   };
 
   const membershipsActions = {
-    header: "Actions",
+    header: "",
     accessorKey: "actions",
     footer: "Actions",
     enableSorting: false,
@@ -122,7 +122,7 @@ export const useColumns = () => {
   };
 
   const programsActions = {
-    header: "Actions",
+    header: "",
     accessorKey: "actions",
     footer: "Actions",
     enableSorting: false,
@@ -138,7 +138,7 @@ export const useColumns = () => {
   };
 
   const classesActions = {
-    header: "Actions",
+    header: "",
     accessorKey: "actions",
     footer: "Actions",
     enableSorting: false,
@@ -154,7 +154,7 @@ export const useColumns = () => {
   };
 
   const gymStaffActions = {
-    header: "Actions",
+    header: "",
     accessorKey: "actions",
     footer: "Actions",
     enableSorting: false,
@@ -170,7 +170,7 @@ export const useColumns = () => {
   };
 
   const coachesActions = {
-    header: "Actions",
+    header: "",
     accessorKey: "actions",
     footer: "Actions",
     enableSorting: false,
@@ -186,7 +186,7 @@ export const useColumns = () => {
   };
 
   const discountCodesActions = {
-    header: "Actions",
+    header: "",
     accessorKey: "actions",
     footer: "Actions",
     enableSorting: false,
@@ -202,7 +202,7 @@ export const useColumns = () => {
   };
 
   const transactionsActions = {
-    header: "Actions",
+    header: "",
     accessorKey: "actions",
     footer: "Actions",
     enableSorting: false,
